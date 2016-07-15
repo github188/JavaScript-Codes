@@ -72,8 +72,10 @@ function splitArrayToEleInArray( __arr ) {
 
 	// 遍历数组，递归合并数组
 	__arr.forEach( function(element, index) {
-		if ( element instanceof Array ) { // 元素为数组
+		if ( isArrayObj(element) ) { // 元素为数组
 			oneDimenArr = oneDimenArr.concat( element ); // 如果是数组，直接合并
+		} else if ( isObject(element) ) {
+			// 如果是对象就跳过
 		} else {
 			oneDimenArr.push( element );
 		}
