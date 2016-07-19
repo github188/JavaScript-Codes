@@ -10,11 +10,12 @@
 ** 数组处理函数(函数名以"Array"结束)
 ** 1. hasArray					：判断数组中的元素是否存在类型为数组的元素
 ** 2. getMaxAndMinFromArray 	: 获取数组中的最大值和最小值
-** 		例如：[1, -10, 'aa', 5] ==> [5, -10], 会自动过滤调非数字型元素
+** 		例如：[1, -10, 'aa', 5] 	==> [5, -10], 会自动过滤调非数字型元素
 ** 3. splitArrayToEle			：将数组中的数组元素原地拆分，和原数组合并
-**		例如：[1, 2, [11, 22]] ==> [1, 2, 11, 22]
-** 4. sumAllBetweenMinToMax		：将数组中的最大值和最小值之间的所有数值相加，
-**		例如：[1,'aa', 5] ==> 1 + 2 + 3 + 4 + 5 => RES: 15
+**		例如：[1, 2, [11, 22]] 		==> [1, 2, 11, 22]
+** 4. sumAllBetweenMinToMaxOfArray	：将数组中的最大值和最小值之间的所有数值相加，
+**		例如：[1,'aa', 5] 			==> 1 + 2 + 3 + 4 + 5 => RES: 15
+** 5. delEleFromArray			: 从数组中删除指定元素(或替换)  
 *****************************************************************************/
 
 /**
@@ -95,7 +96,7 @@ function splitArrayToEleInArray( __arr ) {
  * @param  {[type]} __arr [description]
  * @return {[type]}       [返回数组中最小值与最大值之间所有数值的和]
  */
-function sumAllBetweenMinToMax( __arr ) {
+function sumAllBetweenMinToMaxOfArray( __arr ) {
 
 	var arr 			= __arr,
 		maxAndMinArr 	= [],
@@ -137,6 +138,44 @@ function sumAllBetweenMinToMax( __arr ) {
 
 	return total;
 }
+
+/**
+ * 删除数组中存在的指定元素，不存在不处理，如果第三个参数存在则用第三个参数去填充
+ * @param  {Array} targetArr      目标数组
+ * @param  {Array/Element} element        被删除的元素
+ * @param  {Array/Element} replaceElement 将要替换的元素
+ * @return {[type]}                [description]
+ * 
+ * 	1. 只有第一个参数，直接清空数组
+ * 	2. 找到指定元素，删除，若有第三个参数，则进行替换
+ * 	3. 如果element为数组，需要遍历查找后逐个删除【TODO】
+ * 	4. 如果replaceElement为数组，同上【TODO】
+ * 
+ * PS: 可以扩展成数组对象的方法，直接通过点语法调用，并return this;达到链式操作目的
+ */
+function delEleFromArray( targetArr, element, replaceElement ) {
+	
+	// illegal arguments
+	if ( !targetArr || !element || element == "undefined" ) return;
+
+	var argLen = arguments.length;
+
+	// only one argument, empty array
+	if ( argLen == 1 ) targetArr.splice(0, targetArr.length);
+
+	var delLen 	=  element instanceof Array ? element.length : 1,
+		index 	= targetArr.indexOf(element);
+
+	// not contain element
+	if ( index == -1 ) return;
+
+	// delete element from array
+	// or replace
+	replaceElement 	? targetArr.splice(index, delLen, replaceElement)
+					: targetArr.splice(index, delLen);
+}
+
+
 
 /**************************************************************************** 
 ** 错误处理函数(函数名以"ErrorHandler"结束)
