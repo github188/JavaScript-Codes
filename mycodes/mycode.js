@@ -16,6 +16,9 @@
 ** 4. sumAllBetweenMinToMaxOfArray	：将数组中的最大值和最小值之间的所有数值相加，
 **		例如：[1,'aa', 5] 			==> 1 + 2 + 3 + 4 + 5 => RES: 15
 ** 5. delEleFromArray			: 从数组中删除指定元素(或替换)  
+** 6. delFalseEleFromArray		: 从数组中删除非真的元素，如："", "undefined", null
+** 7. diffArray					: 取出两个数组中非共有部分组合成新数组返回
+**		例如：arr1[1,2,3,5] - arr2[1,2,3,4]		==> [5,4]
 *****************************************************************************/
 
 /**
@@ -144,7 +147,7 @@ function sumAllBetweenMinToMaxOfArray( __arr ) {
  * @param  {Array} targetArr      目标数组
  * @param  {Array/Element} element        被删除的元素
  * @param  {Array/Element} replaceElement 将要替换的元素
- * @return {[type]}                [description]
+ * @return {[Boolean]}                true: 删除成功，false: 删除失败
  * 
  * 	1. 只有第一个参数，直接清空数组
  * 	2. 找到指定元素，删除，若有第三个参数，则进行替换
@@ -156,7 +159,7 @@ function sumAllBetweenMinToMaxOfArray( __arr ) {
 function delEleFromArray( targetArr, element, replaceElement ) {
 	
 	// illegal arguments
-	if ( !targetArr || !element || element == "undefined" ) return;
+	if ( !targetArr || !element || element == "undefined" ) return false;
 
 	var argLen = arguments.length;
 
@@ -167,15 +170,55 @@ function delEleFromArray( targetArr, element, replaceElement ) {
 		index 	= targetArr.indexOf(element);
 
 	// not contain element
-	if ( index == -1 ) return;
+	if ( index == -1 ) return false;
 
 	// delete element from array
 	// or replace
 	replaceElement 	? targetArr.splice(index, delLen, replaceElement)
 					: targetArr.splice(index, delLen);
+
+	return true;
 }
 
+/**
+ * 删除数组中的非真元素：'undefined', '', null等。
+ * @param  {[type]} targetArr [description]
+ * @return {[type]}           [description]
+ */
+function delFalseEleFromArray( targetArr ) {
+	// 参数检查，错误处理
+	if ( argumentErrorHandler( targetArr ) ) return;
 
+	targetArr.map(function(value, index) {
+		if ( !value || value == "undefined" || value == "" ) {
+			targetArr.splice(index, 1);
+		}
+	});
+}
+
+/**
+ * 获取两个数组中非共有部分
+ * @param  {[type]} arr1 [description]
+ * @param  {[type]} arr2 [description]
+ * @return {[Array]}      返回两个数组中非共有部分组成的新数组
+ */
+function diffArray(arr1, arr2) {
+
+	if ( !arr1 || !arr2 ) return;
+
+	// 过滤arr1中共有部分
+	var arr1Diff = arr1.filter(function(value){
+		return  arr2.indexOf(value) == -1;
+	});
+
+	// 过滤arr2中共有部分
+	var arr2Diff = arr2.filter(function(value){
+		return  arr1.indexOf(value) == -1;
+	});
+
+	// 连接两个非共有数组
+	return arr1Diff.concat(arr2Diff);
+}
 
 /**************************************************************************** 
 ** 错误处理函数(函数名以"ErrorHandler"结束)
