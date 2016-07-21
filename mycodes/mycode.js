@@ -6,6 +6,44 @@
  */
 
 
+/****************************全局变量***************************************/
+
+
+/**************************************************************************** 
+** 数字处理函数(函数名以"Number"结束)
+** 1. convertToRomanNumber 		: 将阿拉伯数字转成罗马数字字符串表示形式
+** 		例如：3425 ==> "MMMCDXXV"
+*****************************************************************************/
+/**
+ * 将1 - 3999数字转成罗马数字表示形式，如：
+ * @param  {[type]} num [description]
+ * @return {[type]}     [description]
+ */
+function convertToRomanNumber( number ) {
+
+	if ( number >= 4000 || number <= 0 ) {
+		console.log( number + " is not between 1 and 3999, please check your number !" );
+		return;
+	}
+
+	var romaStr = "";
+
+	var thousand 	= parseInt(number / 1000), 				// 千位数
+		hundred 	= parseInt(number % 1000 / 100),		// 百位数
+		ten 		= parseInt(number % 1000 % 100 / 10), 	// 十位数
+		single 		= parseInt(number % 1000 % 100 % 10); 	// 个位数
+
+	console.log("thousand = " + thousand + ", hundred = " + hundred + ", ten = " + ten, ", single = " + single);
+
+	if ( thousand > 0 ) romaStr += ["M", "MM", "MMM"][thousand - 1];
+	if ( hundred > 0 ) 	romaStr += ["C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"][hundred - 1];
+	if ( ten > 0 ) 		romaStr += ["X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"][ten - 1];
+	if ( single > 0 )   romaStr += ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][single - 1];
+
+	return romaStr;
+}
+
+
 /**************************************************************************** 
 ** 数组处理函数(函数名以"Array"结束)
 ** 1. hasArray					：判断数组中的元素是否存在类型为数组的元素
@@ -227,14 +265,34 @@ function diffArray(arr1, arr2) {
 
 // 1. 参数判断，错误返回
 // __type: [TODO]
-// 		== 0 : 数值
-// 		== 1 : 字符串
-// 		== 2 : 数组
-// 		== 3 : 对象
+// 		== 0 : 数值   	ERROR_TYPE_ILLEGAL_NUMBER
+// 		== 1 : 字符串	ERROR_TYPE_ILLEGAL_STRING
+// 		== 2 : 数组 	ERROR_TYPE_ILLEGAL_ARRAY
+// 		== 3 : 对象 	ERROR_TYPE_ILLEGAL_OBJECT
 function argumentErrorHandler( __args, __type ) {
-	if ( !isArrayObj(__args) || !__args || __args.length <= 0 ) {
-		console.log("ERROR: not array or empty array, please check your arguments... !");
-		return true;
+
+	switch ( __type ) {
+		case 0: 	// number
+		case "ERROR_TYPE_ILLEGAL_NUMBER":
+			break;
+		case 1: 	// string
+		case "ERROR_TYPE_ILLEGAL_STRING":
+			break;
+		case 2: 	// array
+		case "ERROR_TYPE_ILLEGAL_ARRAY":
+			if ( !isArrayObj(__args) || !__args || __args.length <= 0 ) {
+				console.log("ERROR: not array or empty array, please check your arguments... !");
+				return true;
+			}
+			break;
+		case 3: 	// object
+		case "ERROR_TYPE_ILLEGAL_OBJECT":
+			break;
+		case 4: 	// others
+			break;
+		default:
+			
+			break;
 	}
 
 	return false;
