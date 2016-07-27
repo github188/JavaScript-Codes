@@ -297,15 +297,13 @@ function ArrayHandler( ) {
 		collection.map(function (obj, index) {
 			srcKeys.map(function(keyV){
 				if ( obj.hasOwnProperty(keyV) ) { // has
-					// 判断值是否相同
-					console.log(obj[keyV] + "-" + source[keyV]);
+					// 判断值是否相同，如果不同记录为false
 					if ( obj[keyV] != source[keyV] ) has = false;
 				} else {
+					// 到这里，表示该属性不存在
 					has = false;
 				}
 			});	
-
-			console.log(has);
 
 			// 只要has为false，表示至少有一个source中的键值对不被包含在collection的对象中
 			// 则不符合条件，不添加到最后的符合要求的结果中
