@@ -18,7 +18,7 @@ var mycode = (function () {
 		"tools"			: new Tools(),
 		"test"			: new Test()
 	};
-});
+})();
 
 // 对象别名
 var numberHandler 	= mycode.numberHandler,
@@ -32,7 +32,7 @@ var numberHandler 	= mycode.numberHandler,
 ** 1. convertToRomanNumber 		: 将阿拉伯数字转成罗马数字字符串表示形式
 ** 		例如：3425 ==> "MMMCDXXV"
 *****************************************************************************/
-var NumberHandler = function () {
+function NumberHandler() {
 	/**
 	* 将1 - 3999数字转成罗马数字表示形式，如：
 	* @param  {[type]} num [description]
@@ -80,7 +80,7 @@ var NumberHandler = function () {
 ** 		例如：([{a:1, b:2},{a:1,c:3},{a:1,b:2,c:3}], {a:1,b:2}) ==> [{a:1,b:2}, {a:1,b:2,c:3}]
 *****************************************************************************/
 
-var ArrayHandler = function ( ) {
+function ArrayHandler( ) {
 	/**
 	 * 1. 判断数组中是否存在数组类型的元素
 	 * @param  {[type]}  __arr [description]
@@ -138,7 +138,7 @@ var ArrayHandler = function ( ) {
 		__arr.forEach( function(element, index) {
 			if ( tools.isArrayObj(element) ) { // 元素为数组
 				oneDimenArr = oneDimenArr.concat( element ); // 如果是数组，直接合并
-			} else if ( isObject(element) ) {
+			} else if ( tools.isObject(element) ) {
 				// 如果是对象就跳过
 			} else {
 				oneDimenArr.push( element );
@@ -250,7 +250,7 @@ var ArrayHandler = function ( ) {
 		if ( errorHandler.argumentErrorHandler( targetArr ) ) return;
 
 		targetArr.map(function(value, index) {
-			if ( !value || value == "undefined" || value == "" ) {
+			if ( !value || value == "undefined" || value == "" || value === undefined || value === false ) {
 				targetArr.splice(index, 1);
 			}
 		});
@@ -287,7 +287,7 @@ var ArrayHandler = function ( ) {
 	 * @return {[type]}            [源对象数组中完整包含目标对象的对象元素组成的新对象数组]
 	 */
 	this.findAllRightEleFromObjArray = function (collection, source) {
-		// What's in a name?
+
 		var rightObjArr = [],
 			has = true;
 
@@ -295,18 +295,22 @@ var ArrayHandler = function ( ) {
 		var srcKeys 	= Object.keys(source);
 
 		collection.map(function (obj, index) {
-			srcKeys.map(function(keyV){
+			has = srcKeys.map(function(keyV){
 				if ( obj.hasOwnProperty(keyV) ) { // has
 					// 判断值是否相同
-					has = obj[keyV] == source[keyV] ? true : false;
+					console.log(obj[keyV] + "-" + source[keyV]);
+					if ( obj[keyV] != source[keyV] ) return false;
 				} else {
-					has = false;
+					return false;
 				}
 			});	
 
 			// 只要has为false，表示至少有一个source中的键值对不被包含在collection的对象中
 			// 则不符合条件，不添加到最后的符合要求的结果中
 			if ( has ) rightObjArr.push(obj);
+
+			// 重置判断标识
+			has = true;
 		});
 	 
 	 	// 返回符合条件的对象数组
@@ -322,7 +326,7 @@ var ArrayHandler = function ( ) {
 *****************************************************************************/
 
 
-var ErrorHandler = function ( ) {
+function ErrorHandler( ) {
 
 	// 1. 参数判断，错误返回
 	// __type: [TODO]
@@ -365,7 +369,7 @@ var ErrorHandler = function ( ) {
 ** 1. isArrayObj 	: 是否为数组类型
 ** 2. isObject 		: 是否为对象
 *****************************************************************************/
-var Tools = function( ) {
+function Tools( ) {
 	
 	// 1. 判断参数是否为数组
 	this.isArrayObj = function ( __value ) {
@@ -383,7 +387,7 @@ var Tools = function( ) {
 ** 测试对象(函数名以:'test'开头)
 ** 1. testExecuteTime 	: 测试一段代码执行的时间
 *****************************************************************************/
-var Test = function () {
+function Test() {
 	// 1. 测试代码执行时间
 	this.testExecuteTime = function ( __arr ) {
 		var time = (new Date()).getTime(),
