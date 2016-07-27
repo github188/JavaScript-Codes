@@ -57,6 +57,8 @@ function convertToRomanNumber( number ) {
 ** 6. delFalseEleFromArray		: 从数组中删除非真的元素，如："", "undefined", null
 ** 7. diffArray					: 取出两个数组中非共有部分组合成新数组返回
 **		例如：arr1[1,2,3,5] - arr2[1,2,3,4]		==> [5,4]
+** 8. findAllRightEleFromObjArray 	: 从对象数组中找出包含目标对象的所有元素
+** 		例如：([{a:1, b:2},{a:1,c:3},{a:1,b:2,c:3}], {a:1,b:2}) ==> [{a:1,b:2}, {a:1,b:2,c:3}]
 *****************************************************************************/
 
 /**
@@ -181,7 +183,7 @@ function sumAllBetweenMinToMaxOfArray( __arr ) {
 }
 
 /**
- * 删除数组中存在的指定元素，不存在不处理，如果第三个参数存在则用第三个参数去填充
+ * 5. 删除数组中存在的指定元素，不存在不处理，如果第三个参数存在则用第三个参数去填充
  * @param  {Array} targetArr      目标数组
  * @param  {Array/Element} element        被删除的元素
  * @param  {Array/Element} replaceElement 将要替换的元素
@@ -219,7 +221,7 @@ function delEleFromArray( targetArr, element, replaceElement ) {
 }
 
 /**
- * 删除数组中的非真元素：'undefined', '', null等。
+ * 6. 删除数组中的非真元素：'undefined', '', null等。
  * @param  {[type]} targetArr [description]
  * @return {[type]}           [description]
  */
@@ -235,7 +237,7 @@ function delFalseEleFromArray( targetArr ) {
 }
 
 /**
- * 获取两个数组中非共有部分
+ * 7. 获取两个数组中非共有部分
  * @param  {[type]} arr1 [description]
  * @param  {[type]} arr2 [description]
  * @return {[Array]}      返回两个数组中非共有部分组成的新数组
@@ -257,6 +259,40 @@ function diffArray(arr1, arr2) {
 	// 连接两个非共有数组
 	return arr1Diff.concat(arr2Diff);
 }
+
+/**
+ * 8. 从对象数组中找出包含source中所有键值对的对象，组成新数组返回	
+ * @param  {[type]} collection [源对象数组]
+ * @param  {[type]} source     [目标对象]
+ * @return {[type]}            [源对象数组中完整包含目标对象的对象元素组成的新对象数组]
+ */
+function findAllRightEleFromObjArray(collection, source) {
+	// What's in a name?
+	var rightObjArr = [],
+		has = true;
+
+	// get all keys of source
+	var srcKeys 	= Object.keys(source);
+
+	collection.map(function (obj, index) {
+		srcKeys.map(function(keyV){
+			if ( obj.hasOwnProperty(keyV) ) { // has
+				// 判断值是否相同
+				has = obj[keyV] == source[keyV] ? true : false;
+			} else {
+				has = false;
+			}
+		});	
+
+		// 只要has为false，表示至少有一个source中的键值对不被包含在collection的对象中
+		// 则不符合条件，不添加到最后的符合要求的结果中
+		if ( has ) rightObjArr.push(obj);
+	});
+ 
+ 	// 返回符合条件的对象数组
+  	return rightObjArr;
+}
+
 
 /**************************************************************************** 
 ** 错误处理函数(函数名以"ErrorHandler"结束)
