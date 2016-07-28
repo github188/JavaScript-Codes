@@ -321,6 +321,7 @@ ArrayHandler.prototype.findAllRightEleFromObjArray = function (collection, sourc
 /**************************************************************************** 
 ** 字符串处理对象(函数名以"ErrorHandler"结束)
 ** 1. replaceRetainFirstCaseOfString 	: 替换字符串，保留被替换字符串的首字母大小写特性
+** 2. translatePigLatinString			: 将字符串第一个字符移到最后，然后加上"ay"
 *****************************************************************************/
 function StringHandler( ) {
 	// TODO
@@ -368,6 +369,22 @@ StringHandler.prototype.replaceString = function ( longStr, word, replaceWord ) 
 
 	// return true;
 	return targetArr.join(" ");
+}
+
+/**
+ * 拉丁猪字符串，即：将字符串第一个字符移到最后，然后加上"ay"
+ * @param  {[type]} str [description]
+ * @return {[type]}     [description]
+ */
+StringHandler.prototype.translatePigLatinString = function ( str ) {
+
+	if ( !str ) return;
+
+	var strArr = str.split("");
+
+	strArr.push(strArr.shift());
+
+	return strArr.join("") + "ay";
 }
 
 
