@@ -218,7 +218,7 @@ ArrayHandler.prototype.sumAllBetweenMinToMaxOfArray = function ( __arr ) {
 ArrayHandler.prototype.delEleFromArray = function ( targetArr, element, replaceElement ) {
 		
 	// illegal arguments
-	if ( !targetArr || !element || element == "undefined" ) return false;
+	if ( !targetArr || !element || element == "undefined" ) return;
 
 	var argLen = arguments.length;
 
@@ -229,14 +229,15 @@ ArrayHandler.prototype.delEleFromArray = function ( targetArr, element, replaceE
 		index 	= targetArr.indexOf(element);
 
 	// not contain element
-	if ( index == -1 ) return false;
+	if ( index == -1 ) return;
 
 	// delete element from array
 	// or replace
 	replaceElement 	? targetArr.splice(index, delLen, replaceElement)
 					: targetArr.splice(index, delLen);
 
-	return true;
+	// return true;
+	return targetArr;
 };
 
 /**
@@ -315,6 +316,59 @@ ArrayHandler.prototype.findAllRightEleFromObjArray = function (collection, sourc
  	// 返回符合条件的对象数组
   	return rightObjArr;
 };
+
+
+/**************************************************************************** 
+** 字符串处理对象(函数名以"ErrorHandler"结束)
+** 1. replaceRetainFirstCaseOfString 	: 替换字符串，保留被替换字符串的首字母大小写特性
+*****************************************************************************/
+function StringHandler( ) {
+	// TODO
+}
+
+/**
+ * 用于替换字符串，从longStr字符串中查找出word，找到了就用replaceWord替换掉word，
+ * 并且要求replaceWord的首字母大小写要和word的首字母大小写一致
+ * @param  {String} longStr     一段长字符串
+ * @param  {String} word        单词，它应该存在与longStr中
+ * @param  {String} replaceWord 将要替换word的单词
+ * @return {String}             返回经过替换之后的长字符串
+ */
+StringHandler.prototype.replaceString = function ( longStr, word, replaceWord ) {
+  
+    var targetArr = longStr.split(" ");
+  
+	// illegal arguments
+	if ( !targetArr || !word || word == "undefined" ) return;
+
+	var argLen = arguments.length;
+
+	// only one argument, empty array
+	if ( argLen == 1 ) return targetArr.splice(0, targetArr.length);
+
+	var delLen 	= word instanceof Array ? word.length : 1,
+		index 	= targetArr.indexOf(word);
+
+	// not contain word, return original string
+	if ( index == -1 ) return longStr;
+
+	var tmpStr 	= targetArr[index],
+		tmp 	= "";
+
+	if ( tmpStr[0] >= 'A' && tmpStr[0] <= 'Z' ) { // 大写
+		tmp = replaceWord.replace(/^\S/, function(s){ return s.toUpperCase(); } );
+	} else if ( tmpStr[0] >= 'a' && tmpStr[0] <= 'z' ) {  // 小写
+		tmp = replaceWord.replace(/^\S/, function(s){ return s.toLowerCase(); } );
+	}
+
+	// delete word from array
+	// or replace
+	tmp ? targetArr.splice(index, delLen, tmp)
+		: targetArr.splice(index, delLen);
+
+	// return true;
+	return targetArr.join(" ");
+}
 
 
 /**************************************************************************** 
@@ -406,8 +460,16 @@ Test.prototype.testExecuteTime = function ( __arr ) {
 
 
 
+/**************************************************************************** 
+** 对JavaScript原生API的扩展
+** 1. String对象
+** 		s1. firstUpperCase 	:  字符串首字母大写 
+*****************************************************************************/
 
-
+// s1. 字符串首字母大写 
+String.prototype.firstUpperCase = function( ) {
+    return this.replace(/^\S/, function(s){ return s.toUpperCase(); } );
+} 
 
 
 
