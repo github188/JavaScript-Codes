@@ -327,7 +327,8 @@ ArrayHandler.prototype.findAllRightEleFromObjArray = function (collection, sourc
 ** --------------------------------------------------------------------------
 ** 1. replaceRetainFirstCaseOfString 	: 替换字符串，保留被替换字符串的首字母大小写特性
 ** 2. translatePigLatinString			: 将字符串第一个字符移到最后，然后加上"ay"
-** 3. pairDNAString 					: 
+** 3. pairDNAString 					: DNA配对，根据dna配对编码数据进行配对
+** 4. findVacantCharsFromString			: 找出字符串中不连续的空缺字符
 *****************************************************************************/
 function StringHandler( ) {
 
@@ -342,7 +343,7 @@ StringHandler.prototype.dna = {
 };
 
 /**
- * 用于替换字符串，从longStr字符串中查找出word，找到了就用replaceWord替换掉word，
+ * 1. 用于替换字符串，从longStr字符串中查找出word，找到了就用replaceWord替换掉word，
  * 并且要求replaceWord的首字母大小写要和word的首字母大小写一致
  * @param  {String} longStr     一段长字符串
  * @param  {String} word        单词，它应该存在与longStr中
@@ -386,7 +387,7 @@ StringHandler.prototype.replaceString = function ( longStr, word, replaceWord ) 
 }
 
 /**
- * 拉丁猪字符串，即：将字符串第一个元音字符前面的所有字符移到最后，然后加上"ay"
+ * 2. 拉丁猪字符串，即：将字符串第一个元音字符前面的所有字符移到最后，然后加上"ay"
  * 如果字符串是以元音字符开头，只需要在后面加上"way"【元音字符：a，e，i，0，u】
  * @param  {[type]} str [description]
  * @return {[type]}     [description]
@@ -419,7 +420,7 @@ StringHandler.prototype.translatePigLatinString = function ( str ) {
 }
 
 /**
- * DNA配对，根据dna配对编码数据进行配对
+ * 3. DNA配对，根据dna配对编码数据进行配对
  * @param  {String} str 需要配对的DNA字符串
  * @return {Array}     返回已配对编码数组
  */
@@ -432,6 +433,53 @@ StringHandler.prototype.pairDNAString = function ( str ) {
 			return this.dna[value];
 		}
 	});
+}
+
+
+/**
+ * 4. 找出字符串中不连续的空缺字符
+ * 比如："abce"中间漏掉了个"d"字符串
+ * @param  {String} str 目标字符串
+ * @return {数组}     空缺字符组成的新数组，如果传入的字符串都是连续的则返回"undefined"
+ *
+ * PS：目前只支持中间空缺一个字符的情况(如："abcf"中间空缺"de"两个的还不支持)
+ */
+StringHandler.prototype.findVacantCharsFromString = function ( str ) {
+
+	if ( !str ) return;
+
+	// 1. 将字符串变成数组，用split
+	// 2. 用reduce去遍历该数组
+	// 3. reduce中，用上一个元素转码 + 1 和下一个比较，相等表示挨着不保存
+	// 	  不相等表示中间空了字符，保存该字符（即上一个字符转码后+1）
+	// 4. 把步骤3中找到的空缺字符保存到数组中，最后处理完，
+	// 	  得到的数组就是字符串中空缺的字符组成的数组
+
+	var strArr 		= str.split(""),
+		resArr 		= [];
+
+	// 使用到的原生API
+	// string.charCodeAt(index) : 将字符串中索引指定位置的字符转成ASC编码
+	// String.fromCharCode(num1[, num2 ...]) : 将ASC编码转成字符，
+	// 	> 	支持多个同时转，返回转成功之后字符组成的字符串;
+	// 	
+	// 	PS: 注意编码转字符的方法，是String的类方法
+	strArr.reduce(function ( preV, currV, currIndex, array ) {
+		var preVCode 	= preV.charCodeAt(0),
+			currVCode 	= currV.charCodeAt(0);
+
+		if ( preVCode + 1 != currVCode ) {
+
+			// 先从编码转成字符，保存到空缺字符数组中
+			resArr.push( String.fromCharCode( preVCode + 1 ) );
+		} 
+
+		// 因为reduce的返回值即下一个preV的值
+		// 所以这里将当前的值currV保存到preV
+		return currV;
+	});
+
+	return resArr.length > 0 ? resArr : "undefined";
 }
 
 /**************************************************************************** 
