@@ -322,12 +322,24 @@ ArrayHandler.prototype.findAllRightEleFromObjArray = function (collection, sourc
 
 /**************************************************************************** 
 ** 字符串处理对象(函数名以"ErrorHandler"结束)
+** 属性：
+** 		this.dna 	: DNA配对，每个字符配一个相对应的编码数组
+** --------------------------------------------------------------------------
 ** 1. replaceRetainFirstCaseOfString 	: 替换字符串，保留被替换字符串的首字母大小写特性
 ** 2. translatePigLatinString			: 将字符串第一个字符移到最后，然后加上"ay"
+** 3. pairDNAString 					: 
 *****************************************************************************/
 function StringHandler( ) {
-	// TODO
+
 }
+
+// DNA配对
+StringHandler.prototype.dna = {
+	"A": ["A", "T"],
+	"T": ["T", "A"],
+	"C": ["C", "G"],
+	"G": ["G", "C"]	
+};
 
 /**
  * 用于替换字符串，从longStr字符串中查找出word，找到了就用replaceWord替换掉word，
@@ -406,6 +418,21 @@ StringHandler.prototype.translatePigLatinString = function ( str ) {
 	return strArr.join( "" ) + "ay";
 }
 
+/**
+ * DNA配对，根据dna配对编码数据进行配对
+ * @param  {String} str 需要配对的DNA字符串
+ * @return {Array}     返回已配对编码数组
+ */
+StringHandler.prototype.pairDNAString = function ( str ) {
+
+	if ( !str ) return;
+
+	return str.split("").map(function ( value, index ) {
+		if ( this.dna.hasOwnProperty( value ) ) {
+			return this.dna[value];
+		}
+	});
+}
 
 /**************************************************************************** 
 ** 错误处理对象(函数名以"ErrorHandler"结束)
