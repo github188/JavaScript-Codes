@@ -13,6 +13,7 @@ var mycode = (function () {
 
 	return {
 		"numberHandler"	: new NumberHandler(),
+		"stringHandler"	: new StringHandler(),
 		"arrayHandler"	: new ArrayHandler(),
 		"errorHandler"	: new ErrorHandler(),
 		"tools"			: new Tools(),
@@ -22,6 +23,7 @@ var mycode = (function () {
 
 // 对象别名，也可以根据个人情况，在引入该文件之后，自己定义对象变量名
 var numberHandler 	= mycode.numberHandler,
+	stringHandler 	= mycode.stringHandler,
 	arrayHandler 	= mycode.arrayHandler,
 	errorHandler 	= mycode.errorHandler,
 	tools 			= mycode.tools,
@@ -372,7 +374,8 @@ StringHandler.prototype.replaceString = function ( longStr, word, replaceWord ) 
 }
 
 /**
- * 拉丁猪字符串，即：将字符串第一个字符移到最后，然后加上"ay"
+ * 拉丁猪字符串，即：将字符串第一个元音字符前面的所有字符移到最后，然后加上"ay"
+ * 如果字符串是以元音字符开头，只需要在后面加上"way"【元音字符：a，e，i，0，u】
  * @param  {[type]} str [description]
  * @return {[type]}     [description]
  */
@@ -380,11 +383,27 @@ StringHandler.prototype.translatePigLatinString = function ( str ) {
 
 	if ( !str ) return;
 
-	var strArr = str.split("");
+	// 如果字符串第一个字符就是元音字符，直接在后面追加"way"
+	if ( tools.isVowel(str[0]) ) return str + "way";
 
-	strArr.push(strArr.shift());
+	var strArr 	= str.split(""),
+		preStr 	= "",
+		index 	= -1;
 
-	return strArr.join("") + "ay";
+	/**
+	 * findIndex: 用来查找数组中符合callback条件的元素的索引
+	 * find: 返回的是元素本身
+	 */
+	index = strArr.findIndex(function ( ele, index ) {
+		if ( tools.isVowel(ele) ) return index;
+	});
+
+	// 取出最前面非元音字符的字符
+	preStr = strArr.splice( 0, index ).join( "" );
+
+	strArr.push( preStr );
+
+	return strArr.join( "" ) + "ay";
 }
 
 
@@ -456,6 +475,9 @@ Tools.prototype.isObject = function( __value ) {
 	return (__value instanceof Object);
 };
 
+Tools.prototype.isVowel = function ( __char ) {
+	return ['a', 'e', 'i', 'o', 'u'].indexOf( __char ) != -1;
+}
 
 
 /**************************************************************************** 
