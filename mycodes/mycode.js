@@ -81,6 +81,7 @@ NumberHandler.prototype.convertToRomanNumber = function ( number ) {
 **		例如：arr1[1,2,3,5] - arr2[1,2,3,4]		==> [5,4]
 ** 8. findAllRightEleFromObjArray 	: 从对象数组中找出包含目标对象的所有元素
 ** 		例如：([{a:1, b:2},{a:1,c:3},{a:1,b:2,c:3}], {a:1,b:2}) ==> [{a:1,b:2}, {a:1,b:2,c:3}]
+** 9. uniteUniqueFromArray 		: 从传入的数组中去掉重复的，然后组合成新数组返回
 *****************************************************************************/
 function ArrayHandler( ) {	
 	// TODO
@@ -318,6 +319,61 @@ ArrayHandler.prototype.findAllRightEleFromObjArray = function (collection, sourc
  	// 返回符合条件的对象数组
   	return rightObjArr;
 };
+
+
+/**
+ * 9. 传入 n 个数组，将数组中重复的元素去掉，然后组合成新的数组返回
+ * @param  {Array} arr 	可以是多个参数[或者将参数放到数组里面传入，考虑到严格模式下不能使用arguments]
+ * @return {[Array]}   	返回去重之后的新数组
+ *
+ * 缺陷：
+ * 		1. 只能处理原子数组[TODO]
+ * 		2. 严格模式下，arguments不能使用，需要求传入的实参和形参相对应
+ */
+ArrayHandler.prototype.uniteUniqueFromArray = function (arr) {
+
+	var args 	= arguments,
+		argsNum = arguments.length,
+		argsArr = [],
+		argsTmp = null;
+
+	// 将所有参数保存到数组中，便于处理
+	for (var i = 0; i < argsNum; i++) {
+		argsTmp = args[i];
+		if ( !(argsTmp instanceof(Array)) ) {
+			return "Please confirm your every arguments is array";  // 即：参数中有一个非数组，则直接退出
+		}
+		argsArr.push(argsTmp);
+	}
+
+	// 处理合并数组
+	argsArr.reduce(function(preV, currV, currIndex, array){
+		if (preV instanceof(Array)) {
+			// 保存参考值
+			argsTmp = preV;
+			
+			// 前值和当前值对比
+			preV.map(function(value, index){
+				if (currV instanceof(Array)) {
+					// 查找并删除当前数组中的前一数组中存在的元素
+					var idx = currV.indexOf(value);
+					if (idx != -1) { 
+						currV.splice(idx, 1);
+					}
+				}
+			});
+
+			// 经过上面之后，当前数组元素中包含前一个数组元素中存在的元素就被删除了
+			// 然后再将两者合并
+			argsTmp = argsTmp.concat(currV);
+		}
+
+		// 然后将合并之后的数组作为reduce的返回值，进入下个循环对比
+		return argsTmp;
+	});
+
+	return argsTmp;
+}
 
 
 /**************************************************************************** 
