@@ -3,6 +3,15 @@
  * @authors zc li (lizc@ipanel.cn)
  * @date    2016-07-15 15:44:45
  * @version 1.0.1 create
+ *
+ *	############# 该文件下所有对象和方法 #############	 
+ *
+ *
+ *
+ *
+ *
+ *
+ * 
  */
 
 
@@ -17,7 +26,7 @@ var mycode = (function () {
 		"arrayHandler"	: new ArrayHandler(),
 		"errorHandler"	: new ErrorHandler(),
 		"tools"			: new Tools(),
-		"test"			: new Test()
+		"gclTest"		: new GCLTest()
 	};
 })();
 
@@ -27,7 +36,7 @@ var numberHandler 	= mycode.numberHandler,
 	arrayHandler 	= mycode.arrayHandler,
 	errorHandler 	= mycode.errorHandler,
 	tools 			= mycode.tools,
-	test 			= mycode.test;
+	gclTest 		= mycode.gclTest;
 
 /**************************************************************************** 
 ** 数字处理对象：numberHandler (方法名以"Number"结束)
@@ -591,6 +600,7 @@ ErrorHandler.prototype.argumentErrorHandler = function ( __args, __type ) {
 ** 工具对象(原子函数，尽量不依赖其他函数)
 ** 1. isArrayObj 	: 是否为数组类型
 ** 2. isObject 		: 是否为对象
+** 3. isVowel		: 判断字符是否是元音字符[a, e, i, o, u]
 *****************************************************************************/
 function Tools( ) {
 	
@@ -606,6 +616,7 @@ Tools.prototype.isObject = function( __value ) {
 	return (__value instanceof Object);
 };
 
+// 3. 判断字符是否是元音字符
 Tools.prototype.isVowel = function ( __char ) {
 	return ['a', 'e', 'i', 'o', 'u'].indexOf( __char ) != -1;
 }
@@ -615,12 +626,36 @@ Tools.prototype.isVowel = function ( __char ) {
 ** 测试对象(函数名以:'test'开头)
 ** 1. testExecuteTime 	: 测试一段代码执行的时间
 *****************************************************************************/
-function Test() {
-	// TODO
+function GCLTest() {
+	// 测试数据
+	this.data = [
+		// NumberHandler
+		{ "funcName": "numberHandler.convertToRomanNumber", 		"testData": "" },	// 0
+		// ArrayHandler
+		{ "funcName": "arrayHandler.hasArray", 						"testData": "" },	// 1
+		{ "funcName": "arrayHandler.getMaxAndMinFromArray", 		"testData": "" },	// 2
+		{ "funcName": "arrayHandler.splitArrayToEleInArray", 		"testData": "" },	// 3
+		{ "funcName": "arrayHandler.sumAllBetweenMinToMaxOfArray", 	"testData": "" },	// 4
+		{ "funcName": "arrayHandler.delEleFromArray", 				"testData": "" },	// 5
+		{ "funcName": "arrayHandler.delFalseEleFromArray", 			"testData": "" },	// 6
+		{ "funcName": "arrayHandler.diffArray", 					"testData": "" },	// 7
+		{ "funcName": "arrayHandler.findAllRightEleFromObjArray", 	"testData": "" },	// 8
+		// StringHandler
+		{ "funcName": "stringHandler.replaceString", 				"testData": "" },	// 9
+		{ "funcName": "stringHandlertranslatePigLatinString", 		"testData": "" },	// 10
+		{ "funcName": "stringHandlerpairDNAString", 				"testData": "" },	// 11
+		{ "funcName": "stringHandlerfindVacantCharsFromString", 	"testData": "" },	// 12
+		// ErrorHandler
+		{ "funcName": "errorHandler.argumentErrorHandler", 			"testData": "" },	// 13
+		// Tools
+		{ "funcName": "tools.isArrayObj", 							"testData": "" },	// 14
+		{ "funcName": "tools.isObject", 							"testData": "" },	// 15
+		{ "funcName": "tools.isVowel", 								"testData": "" },	// 16
+	];
 }
 
 // 1. 测试代码执行时间
-Test.prototype.testExecuteTime = function ( __arr ) {
+GCLTest.prototype.testExecuteTime = function ( __arr ) {
 	var time = (new Date()).getTime(),
 		arr = arrayHandler.splitArrayToEleInArray( __arr ),
 		now = (new Date()).getTime();
@@ -628,6 +663,15 @@ Test.prototype.testExecuteTime = function ( __arr ) {
 	console.log( now - time );
 };
 
+// 2. 测试该文件中所有对象的方法
+// 		funcName: 要测试的方法名，字符串格式；
+// 		testData: 要测试的方法，需要传入的参数，字符串形式；
+// 		比如：要测试 hasArray，则：gclTest.testFuncResult(this.data[1]['funcName'], "[1, 2, 3, 'a', ['b', 'c']]");
+GCLTest.prototype.testFuncResult = function (funcName, testData) {
+	if (!funcName || !testData) return;
+
+	return eval(funcName + '(' + testData + ');');
+}
 
 
 /**************************************************************************** 
