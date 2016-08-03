@@ -46,7 +46,7 @@ var fibonacciBasic = function (number) {
 		return 1;
 	} else {
 		count++;
-		return fibonacci1(number - 1) + fibonacci1(number - 2);
+		return fibonacciBasic(number - 1) + fibonacciBasic(number - 2);
 	}
 };
 
@@ -64,7 +64,7 @@ var fibonacciClosure = (function () {
 			// console.log("exist in data!");
 			return res[number];
 		} else {
-			res[number] = fibonacci2(number - 1) + fibonacci2(number - 2);
+			res[number] = fibonacciClosure(number - 1) + fibonacciClosure(number - 2);
 			return res[number];
 		}
 	};
