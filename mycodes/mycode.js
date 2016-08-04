@@ -46,9 +46,10 @@ var numberHandler 	= mycode.numberHandler,
 
 /**************************************************************************** 
 ** 数字处理对象：numberHandler (方法名以"Number"结束)
-** 1. convertToRomanNumber 		: 将阿拉伯数字转成罗马数字字符串表示形式
+** 1. convertToRomanNumber 		：将阿拉伯数字转成罗马数字字符串表示形式
 ** 		例如：3425 ==> "MMMCDXXV"
 ** 2. sumOddFibonacciNumber		：将所有的小于指定参数值的fibonacci数值相加
+** 3. sumPrimeNumber 			：将参数num范围内的所有质数相加
 *****************************************************************************/
 function NumberHandler() {
 	// 
@@ -133,6 +134,49 @@ NumberHandler.prototype.sumOddFibonacciNumber = function (number) {
 		});
 	}
 };
+
+/**
+ * 将参数num范围内的所有质数相加
+ * @param  {[type]} num [description]
+ * @return {[type]}     [description]
+ */
+NumberHandler.prototype.sumPrimeNumber = function (num) {
+
+	if (isNaN(num) || num <= 1) return;
+
+	var total = 0;
+
+	for (var i = 2; i <= num; i++) {
+		if (tools.isPrime(i)) {
+			total += i;
+		}
+	}
+
+	return total;
+}
+
+
+NumberHandler.prototype.smallestCommonMulti = function (arr) {
+
+	// 将数组中的值按从小到大顺序排
+	switchValue(arr);
+
+	var min = arr[0];
+	var max = arr[1];
+
+	for (var i = 1; i <= max; i++) {
+		if (max % i === 0) { // 能整除，找到最大值约数
+			tmp = i * min;
+			if (tmp % max === 0) {
+				// 找到最小公倍数
+				return tmp;
+			}
+		}
+	}
+
+	// 到这里表示没找大公约数，直接返回两个值的积
+	return max * min;
+}
 
 /**************************************************************************** 
 ** 数组处理对象(函数名以"Array"结束)
@@ -660,26 +704,50 @@ ErrorHandler.prototype.argumentErrorHandler = function ( __args, __type ) {
 ** 1. isArrayObj 	: 是否为数组类型
 ** 2. isObject 		: 是否为对象
 ** 3. isVowel		: 判断字符是否是元音字符[a, e, i, o, u]
+** 4. isPrime		: 判断数字是否为质数
 *****************************************************************************/
 function Tools( ) {
 	
 }
 
 // 1. 判断参数是否为数组
-Tools.prototype.isArrayObj = function ( __value ) {
-	return (__value instanceof Array);
+Tools.prototype.isArrayObj = function (value) {
+	return (value instanceof Array);
 };
 
 // 2. 判断是否为对象型数据
-Tools.prototype.isObject = function( __value ) {
-	return (__value instanceof Object);
+Tools.prototype.isObject = function(value) {
+	return (value instanceof Object);
 };
 
 // 3. 判断字符是否是元音字符
-Tools.prototype.isVowel = function ( __char ) {
-	return ['a', 'e', 'i', 'o', 'u'].indexOf( __char ) != -1;
+Tools.prototype.isVowel = function (char) {
+	return ['a', 'e', 'i', 'o', 'u'].indexOf(char) != -1;
 }
 
+// 4. 判断数字是否为质数(只能被1和自身整除的数)
+Tools.prototype.isPrime = function (num) {
+
+	// 质数都是从2开始，所以也需要排除值为1的情况
+	if (isNaN(num) || num <= 1) return;
+
+	var yes = true;
+
+	for (var i = 2; i < num; i++) {
+		if (num % i === 0) return yes = false;
+	}
+
+	return yes;
+};
+
+Tools.prototype.switchValue = function (arr) {
+	var tmp = 0;
+	if (arr[0] > arr[1]) {
+		tmp = arr[0];
+		arr[0] = arr[1];
+		arr[1] = tmp;
+	}
+}
 
 /**************************************************************************** 
 ** 测试对象(函数名以:'test'开头)
@@ -690,27 +758,28 @@ function GCLTest() {
 	this.data = [
 		// NumberHandler
 		{ "funcName": "numberHandler.convertToRomanNumber", 		"testData": "" },	// 0
-		{ "funcName": "numberHandler.sumOddFibonacciNumber",		"testData": "" },   // +1
+		{ "funcName": "numberHandler.sumOddFibonacciNumber",		"testData": "" },   // 
+		{ "funcName": "numberHandler.sumPrimeNumber",				"testData": "" },   // +2
 		// ArrayHandler
 		{ "funcName": "arrayHandler.hasArray", 						"testData": "" },	// 1
-		{ "funcName": "arrayHandler.getMaxAndMinFromArray", 		"testData": "" },	// 2
-		{ "funcName": "arrayHandler.splitArrayToEleInArray", 		"testData": "" },	// 3
-		{ "funcName": "arrayHandler.sumAllBetweenMinToMaxOfArray", 	"testData": "" },	// 4
-		{ "funcName": "arrayHandler.delEleFromArray", 				"testData": "" },	// 5
-		{ "funcName": "arrayHandler.delFalseEleFromArray", 			"testData": "" },	// 6
-		{ "funcName": "arrayHandler.diffArray", 					"testData": "" },	// 7
-		{ "funcName": "arrayHandler.findAllRightEleFromObjArray", 	"testData": "" },	// 8
+		{ "funcName": "arrayHandler.getMaxAndMinFromArray", 		"testData": "" },	
+		{ "funcName": "arrayHandler.splitArrayToEleInArray", 		"testData": "" },	
+		{ "funcName": "arrayHandler.sumAllBetweenMinToMaxOfArray", 	"testData": "" },	
+		{ "funcName": "arrayHandler.delEleFromArray", 				"testData": "" },	
+		{ "funcName": "arrayHandler.delFalseEleFromArray", 			"testData": "" },	
+		{ "funcName": "arrayHandler.diffArray", 					"testData": "" },	
+		{ "funcName": "arrayHandler.findAllRightEleFromObjArray", 	"testData": "" },	
 		// StringHandler
-		{ "funcName": "stringHandler.replaceString", 				"testData": "" },	// 9
-		{ "funcName": "stringHandlertranslatePigLatinString", 		"testData": "" },	// 10
-		{ "funcName": "stringHandlerpairDNAString", 				"testData": "" },	// 11
-		{ "funcName": "stringHandlerfindVacantCharsFromString", 	"testData": "" },	// 12
+		{ "funcName": "stringHandler.replaceString", 				"testData": "" },	// 2
+		{ "funcName": "stringHandlertranslatePigLatinString", 		"testData": "" },	
+		{ "funcName": "stringHandlerpairDNAString", 				"testData": "" },	
+		{ "funcName": "stringHandlerfindVacantCharsFromString", 	"testData": "" },	
 		// ErrorHandler
-		{ "funcName": "errorHandler.argumentErrorHandler", 			"testData": "" },	// 13
+		{ "funcName": "errorHandler.argumentErrorHandler", 			"testData": "" },	// 3
 		// Tools
-		{ "funcName": "tools.isArrayObj", 							"testData": "" },	// 14
-		{ "funcName": "tools.isObject", 							"testData": "" },	// 15
-		{ "funcName": "tools.isVowel", 								"testData": "" },	// 16
+		{ "funcName": "tools.isArrayObj", 							"testData": "" },	// 4
+		{ "funcName": "tools.isObject", 							"testData": "" },	
+		{ "funcName": "tools.isVowel", 								"testData": "" },	
 	];
 }
 

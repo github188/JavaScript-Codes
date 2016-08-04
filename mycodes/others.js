@@ -32,11 +32,9 @@ function convertHTML(str) {
 	return strArr.join("");
 }
 
-/************************* 1. fibonacci ************************
+/************************* 2. fibonacci ************************
  * 效率：for > closure > basic	
  */
-
-
 
 var count = 0;
 
