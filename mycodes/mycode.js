@@ -50,6 +50,8 @@ var numberHandler 	= mycode.numberHandler,
 ** 		例如：3425 ==> "MMMCDXXV"
 ** 2. sumOddFibonacciNumber		：将所有的小于指定参数值的fibonacci数值相加
 ** 3. sumPrimeNumber 			：将参数num范围内的所有质数相加
+** 4. smallestCommonMultiNumber ：获取数组中两个数的最小公倍数
+** 5. smallestCommonsMultiOfAllNumber ：数组中两个数之间的所有数值的最小公倍数
 *****************************************************************************/
 function NumberHandler() {
 	// 
@@ -136,7 +138,7 @@ NumberHandler.prototype.sumOddFibonacciNumber = function (number) {
 };
 
 /**
- * 将参数num范围内的所有质数相加
+ * 3. 将参数num范围内的所有质数相加
  * @param  {[type]} num [description]
  * @return {[type]}     [description]
  */
@@ -155,11 +157,15 @@ NumberHandler.prototype.sumPrimeNumber = function (num) {
 	return total;
 }
 
-
-NumberHandler.prototype.smallestCommonMulti = function (arr) {
+/**
+ * 4. 获取数组中两个数的最小公倍数
+ * @param  {[type]} arr [description]
+ * @return {[type]}     [description]
+ */
+NumberHandler.prototype.smallestCommonMultiNumber = function (arr) {
 
 	// 将数组中的值按从小到大顺序排
-	switchValue(arr);
+	tools.switchValue(arr);
 
 	var min = arr[0];
 	var max = arr[1];
@@ -176,6 +182,36 @@ NumberHandler.prototype.smallestCommonMulti = function (arr) {
 
 	// 到这里表示没找大公约数，直接返回两个值的积
 	return max * min;
+}
+
+/**
+ * 5. 数组中两个数之间的所有数值的最小公倍数
+ * @param  {[type]} arr [description]
+ * @return {[type]}     [description]
+ *
+ * 缺点：1.进行了多次遍历，效率非常低，需要改进
+ * 			a) 把自身和中间的值加入数组，进行了一次遍历
+ * 			b) 对数组用了reduce遍历了一次
+ * 			c) 然后在reduce里面又对每个值又遍历了一次
+ */
+NumberHandler.prototype.smallestCommonsMultiOfAllNumber = function (arr) {
+  
+  	// 限定参数必须是包含两个元素的数组
+	if (!arr || !(arr instanceof(Array)) || arr.length != 2) return;
+
+	// 将数组中的值按从小到大顺序排
+	tools.switchValue(arr);
+
+	var min = arr[0];
+	var max = arr[1];
+	var between = [];
+	for (var i = min; i <= max; i++) {
+		between.push(i);
+	}
+
+	return between.reduce(function(preV, currV, currIndex, array){
+		return this.smallestCommonMultiNumber([preV, currV]);
+	}, 1);
 }
 
 /**************************************************************************** 
@@ -705,6 +741,7 @@ ErrorHandler.prototype.argumentErrorHandler = function ( __args, __type ) {
 ** 2. isObject 		: 是否为对象
 ** 3. isVowel		: 判断字符是否是元音字符[a, e, i, o, u]
 ** 4. isPrime		: 判断数字是否为质数
+** 5. switchValue	: 交换数组中两个值的位置，从小到大排列
 *****************************************************************************/
 function Tools( ) {
 	
@@ -740,7 +777,11 @@ Tools.prototype.isPrime = function (num) {
 	return yes;
 };
 
+// 5. 交换数组中两个值的位置，从小到大排列
 Tools.prototype.switchValue = function (arr) {
+
+	if (!arr || !(arr instanceof(Array)) || arr.length != 2) return;
+
 	var tmp = 0;
 	if (arr[0] > arr[1]) {
 		tmp = arr[0];
