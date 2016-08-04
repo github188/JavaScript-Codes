@@ -48,17 +48,18 @@ var numberHandler 	= mycode.numberHandler,
 ** 数字处理对象：numberHandler (方法名以"Number"结束)
 ** 1. convertToRomanNumber 		: 将阿拉伯数字转成罗马数字字符串表示形式
 ** 		例如：3425 ==> "MMMCDXXV"
+** 2. sumOddFibonacciNumber		：将所有的小于指定参数值的fibonacci数值相加
 *****************************************************************************/
 function NumberHandler() {
 	// 
 }
 
 /**
-* 将1 - 3999数字转成罗马数字表示形式，如：
+* 1. 将1 - 3999数字转成罗马数字表示形式，如：
 * @param  {[type]} num [description]
 * @return {[type]}     [description]
 */
-NumberHandler.prototype.convertToRomanNumber = function ( number ) {
+NumberHandler.prototype.convertToRomanNumber = function (number) {
 	if ( number >= 4000 || number <= 0 ) {
 		console.log( number + " is not between 1 and 3999, please check your number !" );
 		return;
@@ -79,6 +80,58 @@ NumberHandler.prototype.convertToRomanNumber = function ( number ) {
 	if ( single > 0 )   romaStr += ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][single - 1];
 
 	return romaStr;
+};
+
+/**
+ * 2. 得到小于number的所有斐波那契数的和	
+ * @param  {[Number]} number [指定需要相加的fibonacci的最大值]
+ * @return {[Number]}        [返回小于number的所有fibonacci值的和]
+ *
+ * 实现递归有三种方式，经过测试用循环去处理的效率最高
+ * 		a) 直接递归法	最差，且容易引起内存泄漏，慎用
+ * 		b) 闭包			其次，能很好的体现js闭包用法，推荐
+ * 		c) for循环  	效率最高，简单粗暴直观
+ *
+ *  PS：1. 这里实现所有fibonacci奇数值的和用的是for循环，闭包方式还没思考
+ *  	出更优化的方案[TODO]
+ *  	2. 如果想要把所有的偶数fibonacci数相加，只要把push操作的条件修改成
+ *  	z % 2 == 0即可，或者去掉计算所有值的和
+ */
+NumberHandler.prototype.sumOddFibonacciNumber = function (number) {
+
+	// 要求传入的参数为合法的数值类型
+	if (isNaN(number) || number < 0) return;
+
+	var total = [0, 1];  // 保存计算出的fibonacci数
+
+	if (number == 0 || number == 1) {
+		return 1;
+	} else {
+		var x = 0; 	// 保存第一个值
+		var y = 1; 	// 保存第二个值
+		var z = 1; 	// 保存第一个和第二个值的和
+		for (var i = 1; i <= number; i++) {
+
+			if (z > number) break;
+			console.log("total = " + total + ", z = " + z);
+
+			// 过滤调第一个z的值，防止把它的初始值保存进去了
+			if (i > 1 && (z % 2 != 0)) {
+				total.push(z);
+			}
+
+			// 值替换和累加操作
+			z = y + x;
+			y = x;
+			x = z;
+		}
+
+		// 上述操作结束后，total就保存了小于number的所有fibonacci数值
+		// 然后将他们全部相加，得到我们想要的值
+		return total.reduce(function(preV, currV, currIndex, array){
+			return preV + currV;
+		});
+	}
 };
 
 /**************************************************************************** 
@@ -637,6 +690,7 @@ function GCLTest() {
 	this.data = [
 		// NumberHandler
 		{ "funcName": "numberHandler.convertToRomanNumber", 		"testData": "" },	// 0
+		{ "funcName": "numberHandler.sumOddFibonacciNumber",		"testData": "" },   // +1
 		// ArrayHandler
 		{ "funcName": "arrayHandler.hasArray", 						"testData": "" },	// 1
 		{ "funcName": "arrayHandler.getMaxAndMinFromArray", 		"testData": "" },	// 2
