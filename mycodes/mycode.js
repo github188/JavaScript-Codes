@@ -45,13 +45,16 @@ var numberHandler 	= mycode.numberHandler,
 	gclTest 		= mycode.gclTest;
 
 /**************************************************************************** 
-** 数字处理对象：numberHandler (方法名以"Number"结束)
+** 数字处理对象：numberHandler (方法名一般都以"Number"结束)
 ** 1. convertToRomanNumber 		：将阿拉伯数字转成罗马数字字符串表示形式
 ** 		例如：3425 ==> "MMMCDXXV"
 ** 2. sumOddFibonacciNumber		：将所有的小于指定参数值的fibonacci数值相加
 ** 3. sumPrimeNumber 			：将参数num范围内的所有质数相加
 ** 4. smallestCommonMultiNumber ：获取数组中两个数的最小公倍数
 ** 5. smallestCommonsMultiOfAllNumber ：数组中两个数之间的所有数值的最小公倍数
+** 6. decimalToOther 			：十进制转换成指定进制的类型，返回的是其他格式的字符串形式
+** 7. otherToDecimal 			：其他进制转成10进制
+** 8. prefixHandler 			：各种进制的前缀处理, 前提是将进制字符串转成数组即第一个参数
 *****************************************************************************/
 function NumberHandler() {
 	// 
@@ -213,6 +216,137 @@ NumberHandler.prototype.smallestCommonsMultiOfAllNumber = function (arr) {
 		return this.smallestCommonMultiNumber([preV, currV]);
 	}, 1);
 }
+
+/**
+ * 6. 十进制转换成指定进制的类型，返回的是其他格式的字符串形式
+ * @param  {[type]} number [description]
+ * @param  {[Number]} type   数字类型，表示number被转换成什么进制(比如：2,8,16进制)
+ * @return {[String]}        除10进制是返回数字之外，其他均返回转换之后的字符表示形式
+ */
+NumberHandler.prototype.decimalToOther = function (number, type) {
+	
+	// 保证参数都是数字
+	// type一般取值：2, 8, 10, 16
+	if (isNaN(number) || isNaN(type) || number < 0) return;
+
+	if (type === 10) return number;
+
+	var hexAlpha = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+	
+	var bitArr = [];	// 存储计算得到的每一位上的数
+	var rema = 0; 		// 保存余数
+	var prefix = "";	// 每种进制的前缀，如：16进制的"0x", 8进制的'0'等
+
+	while (number !== 0) {
+		// 取余数保存，用来组合成最后进制字符串
+		rema = number % type;
+		// 当type == 16时，需要处理10-15到ABCDEF的转换
+		if (type === 16 && rema > 9 && rema < 16) {
+			rema = hexAlpha[rema - 10];
+		}  
+		bitArr.unshift(rema);
+
+		// 取除数，进行下一个循环
+		number = Math.floor(number / type);
+	}
+
+	// 添加前缀
+	this.prefixHandler(bitArr, type, 1);
+
+	return bitArr.join("");
+}
+
+/**
+ * 7. 其他进制转成10进制
+ * @param  {[Number/String]} numberStr 如果是数值直接返回该值，字符串则往下处理转成10进制数
+ * @param  {[Number]} type      十进制数值，表示第一个参数的类型
+ * @return {[Number]}           返回十进制数值
+ */
+NumberHandler.prototype.otherToDecimal = function (numberStr, type) {
+	
+	// 如果是十进制就直接返回
+	if (type === 10 && !isNaN(numberStr)) return numberStr;
+
+	// 保证除十进制外传进来的都是其他进制的字符串形式
+	if (typeof numberStr != "string") return;
+
+	// 将numberStr变成数组
+	var bitArr = numberStr.split("");
+	var hexAlpha = ['A', 'B', 'C', 'D', 'E', 'F'];
+	var alphaIdx = 0;
+
+	// 去掉前缀
+	this.prefixHandler(bitArr, type, 2);
+
+	// 16进制转换成数字
+	if (type === 16) {
+		bitArr.map(function (value, index) {
+			alphaIdx = hexAlpha.indexOf(value);
+			if (alphaIdx != -1) {
+				// 用数字去替换字母
+				bitArr.splice(index, 1, 10 + alphaIdx);
+			}
+		});
+	}
+
+	var len = bitArr.length;
+	return bitArr.reduce(function (preV, currV, currIndex, array) {
+		return preV + parseInt(currV) * Math.pow(type, len - currIndex - 1);
+	}, 0);
+}
+
+/**
+ * 8. 各种进制的前缀处理, 前提是将进制字符串转成数组即第一个参数
+ * @param  {Array} bitArr 保存着各种进制的数值字符串用split("")分割成的数组
+ * @param  {Number} type   表示进制数
+ * @param  {Number} method 表示操作类型，0 - 什么都不做，1 - 添加前缀，2 - 删除前缀
+ * @return {[type]}        [description]
+ */
+NumberHandler.prototype.prefixHandler = function (bitArr, type, method) {
+	// method: 0 - 什么都不做，1 - 添加，2 - 删除
+
+	if (!bitArr || isNaN(type)) return;
+
+	// 如果method == 0, 什么都不做
+	if (method === 0) return;
+
+	var prefix = "";
+	var count = 0;
+
+	switch (type) {
+		case 2:
+			if (method === 1) { 
+				prefix = '0'; // 2进制前位补0
+				while (bitArr.length < 8) {
+					bitArr.unshift(prefix);
+				}
+			}
+			break;
+		case 10:
+			break;
+		case 8: // 八进制则删除最左边的'0'
+			prefix = '0';
+			count = 1; // 删除一位
+			break;
+		case 16: // 十六进制删除'0x'
+			prefix = '0x';
+			count = 2; // 删除两位
+			break;
+		default:
+			break;
+	}
+
+	// 2进制单独在switch里处理
+	if (type === 2) return;
+
+	// 1 - 添加，2 - 删除，0 - 什么都不做
+	method === 1 ? bitArr.unshift(prefix)
+				 : bitArr.splice(0, count);
+
+	return bitArr;
+}
+
 
 /**************************************************************************** 
 ** 数组处理对象(函数名以"Array"结束)
