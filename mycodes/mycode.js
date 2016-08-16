@@ -6,14 +6,18 @@
  *
  *  ############# 该文件下所有对象和方法 #############  
  *  1. NumberHandler
- *      1) 
  *  2. StringHandler
  *  3. ArrayHandler
  *  4. ErrorHandler
  *  5. Tools
  *  6. GCLTest
  *
- *
+ *  >> 2016/8/15 17:41:05
+ *  ADD: checkCashRegister      : 模拟收银抽屉
+ *  ADD: updateInventory        : 更新库存，即用新数组数据更新老数组数据
+ *   
+ *  >> 2016/8/16 17:39:26 
+ *  ADD: getPermutation         : 获取字符串的所有排列家结果
  *
  *
  *
@@ -483,6 +487,7 @@ NumberHandler.prototype.checkCashRegister = function (price, cash, cid) {
 **      例如：([{a:1, b:2},{a:1,c:3},{a:1,b:2,c:3}], {a:1,b:2}) ==> [{a:1,b:2}, {a:1,b:2,c:3}]
 ** 9. uniteUniqueFromArrays     : 从传入的多个数组中去掉重复的，然后组合成新数组返回
 ** 10. delRepeatElement         : 删除一个数组中重复的元素
+** 11. updateInventory          : 更新库存，用第二个数组数据去更新第一个数组数据
 *****************************************************************************/
 function ArrayHandler( ) {  
     // TODO
@@ -807,6 +812,69 @@ ArrayHandler.prototype.delRepeatElement = function (arr) {
     return tmpArr;
 };
 
+/**
+ * 11. 用第二个数组的数据去更新第一个数组数据(更新库存)
+ * @param  {Array} oldArr 原始数据
+ * @param  {Array} newArr 新数据
+ * @return {Array}        返回更新后的老数据数组并且根据名称排序后的二维数组
+ *
+ * PS: 1. 两个数组都是二维数组
+ *     2. 两个数组的内容要一致即元素的第一个元素为数量，第二个元素为名称，
+ *         比如：oldArr = [[22, "hello"]], newArr = [[33, "hello"]];  更新后就是：[[55, "hello"]]
+ */
+ArrayHandler.prototype.updateInventory = function (oldArr, newArr) {
+
+    if (!oldArr || !newArr) return;
+
+    var compare = function (a, b) {
+        var ua = a[1].toUpperCase();
+        var ub = b[1].toUpperCase();
+
+        if (ua < ub) {
+            return -1;
+        }
+
+        if (ua > ub) {
+            return 1;
+        }
+
+        if (ua == ub) {
+            return 0;
+        }
+    };
+
+    if (oldArr.length === 0) return newArr.sort(compare);
+
+    if (newArr.length === 0) return oldArr.sort(compare);
+
+    var findFlag = 0; // 找到存在的库存标识
+
+    newArr.map(function (newValue) {
+
+        oldArr.map(function (oldValue) {
+            if (oldValue[1] == newValue[1]) {
+                oldValue[0] += newValue[0]; // 同类产品库存数累加
+                findFlag = 1;
+                return;
+            }
+        });
+
+        // 到这里表示没有库存，直接添加
+        if (!findFlag) {
+            oldArr.push(newValue);  // 新产品直接添加
+        }
+
+        // 复位库存标识
+        findFlag = 0;
+    });
+
+    // 排序
+    oldArr.sort(compare);
+
+    return oldArr;
+}
+
+
 
 /**************************************************************************** 
 ** 字符串处理对象(函数名以"ErrorHandler"结束)
@@ -817,6 +885,7 @@ ArrayHandler.prototype.delRepeatElement = function (arr) {
 ** 2. translatePigLatinString           : 将字符串第一个字符移到最后，然后加上"ay"
 ** 3. pairDNAString                     : DNA配对，根据dna配对编码数据进行配对
 ** 4. findVacantCharsFromString         : 找出字符串中不连续的空缺字符
+** 5. getPermutation                    : 获得字符串的排列结果
 *****************************************************************************/
 function StringHandler( ) {
 
@@ -970,6 +1039,39 @@ StringHandler.prototype.findVacantCharsFromString = function ( str ) {
     return resArr.length > 0 ? resArr : "undefined";
 }
 
+/**
+ * 5. 获得指定字符串的所有排列结果的数组
+ * @return {[type]} [description]
+ */
+StringHandler.prototype.getPermutation = function () {
+
+    var resArr      = [];
+
+    return function perm(str, start) {
+
+
+        var permArr     = str.split("");
+        var end         = permArr.length;
+
+        for (var j = start; j < end; j++) {
+
+            // 交换数组中两个索引位置的值
+            swap(permArr, j, start);
+
+            // 保存交换后的字符串，如果曾经保存过则过滤掉，避免重复
+            var tmpStr = permArr.join("");
+            if (resArr.indexOf(tmpStr) == -1) {
+                resArr.push(tmpStr);
+            }
+
+            // 重置交换起始位置，递归直到最后一位字符结束，即：start > end
+            perm(tmpStr, start + 1, end);
+        }
+
+        return resArr;
+    };
+}();
+
 /**************************************************************************** 
 ** 错误处理对象(函数名以"ErrorHandler"结束)
 ** 1. argumentErrorHandler  : 参数不合法，参数错误处理，给出相应的提示
@@ -1081,12 +1183,12 @@ Tools.prototype.switchValue = function (arr) {
 function GCLTest() {
     // 测试数据
     this.data = [
-        // NumberHandler
-        { "funcName": "numberHandler.convertToRomanNumber",         "testData": "" },   // 0
+        // NumberHandler 0
+        { "funcName": "numberHandler.convertToRomanNumber",         "testData": "" },   // 0-0
         { "funcName": "numberHandler.sumOddFibonacciNumber",        "testData": "" },   // 
-        { "funcName": "numberHandler.sumPrimeNumber",               "testData": "" },   // +2
-        // ArrayHandler
-        { "funcName": "arrayHandler.hasArray",                      "testData": "" },   // 1
+        { "funcName": "numberHandler.sumPrimeNumber",               "testData": "" },   // 0-2
+        // ArrayHandler 1
+        { "funcName": "arrayHandler.hasArray",                      "testData": "" },   // 1-0
         { "funcName": "arrayHandler.getMaxAndMinFromArray",         "testData": "" },   
         { "funcName": "arrayHandler.splitArrayToEleInArray",        "testData": "" },   
         { "funcName": "arrayHandler.sumAllBetweenMinToMaxOfArray",  "testData": "" },   
@@ -1094,15 +1196,15 @@ function GCLTest() {
         { "funcName": "arrayHandler.delFalseEleFromArray",          "testData": "" },   
         { "funcName": "arrayHandler.diffArray",                     "testData": "" },   
         { "funcName": "arrayHandler.findAllRightEleFromObjArray",   "testData": "" },   
-        // StringHandler
-        { "funcName": "stringHandler.replaceString",                "testData": "" },   // 2
+        // StringHandler 2
+        { "funcName": "stringHandler.replaceString",                "testData": "" },   // 2-0
         { "funcName": "stringHandlertranslatePigLatinString",       "testData": "" },   
         { "funcName": "stringHandlerpairDNAString",                 "testData": "" },   
         { "funcName": "stringHandlerfindVacantCharsFromString",     "testData": "" },   
-        // ErrorHandler
-        { "funcName": "errorHandler.argumentErrorHandler",          "testData": "" },   // 3
-        // Tools
-        { "funcName": "tools.isArrayObj",                           "testData": "" },   // 4
+        // ErrorHandler 3
+        { "funcName": "errorHandler.argumentErrorHandler",          "testData": "" },   // 3-0
+        // Tools        4
+        { "funcName": "tools.isArrayObj",                           "testData": "" },   // 4-0
         { "funcName": "tools.isObject",                             "testData": "" },   
         { "funcName": "tools.isVowel",                              "testData": "" },   
     ];
