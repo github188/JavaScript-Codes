@@ -74,7 +74,8 @@ body {
 	width: 100%;
 	right: 0;
 	bottom: 0;
-	background-color: #D44646;
+	/*background-color: #D44646;*/
+	overflow: hidden;
 }
 
 #result-down {
@@ -84,6 +85,7 @@ body {
 	/*background-color: #094F2B;*/
 	font-size: 20px;
 	color: #857F7F;
+	overflow: hidden;
 }
 
 #board-keys {
