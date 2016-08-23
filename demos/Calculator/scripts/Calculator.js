@@ -38,6 +38,8 @@ function Calculator() {
 	this.hasEqual 	= false;				// 判断是否按下了'='键
 	this.lastRes 	= 0;					// 上一次计算的结果，即上一次按等号后计算出的值
 
+	this.timer 		= null;					// 时间日期计时器
+
 
 	// 私有方法
 
@@ -47,8 +49,19 @@ Calculator.prototype.test = "hello world!";
 
 /************************** 计算器对象方法 **************************/
 
+// 计算器初始化
 Calculator.prototype.init = function () {
 	this.addTdClick();
+
+	// 时间显示
+	this.showDate();
+};
+
+// 计算器销毁工作，在页面关闭时候触发onunload时候调用
+Calculator.prototype.destory = function () {
+	if (this.timer) {
+		clearTimeout(this.timer);
+	} 
 };
 
 // 为td添加点击事件
@@ -143,7 +156,7 @@ Calculator.prototype.showCurrRes = function (digit, expression) {
 		return;
 	} 
 
-	// 解决第一次按键是操作符的情况
+	// BUG01 - 解决第一次按键是操作符的情况
 	if (this.isOperator(expression[0])) {
 		expression = this.zero + expression;
 	}
@@ -285,6 +298,17 @@ Calculator.prototype.delHeadZero = function (str) {
 	}
 
 	return tmp;
+};
+
+// 在屏显区左上角显示时间日期
+Calculator.prototype.showDate = function () {
+	$("result-date").innerText = new Date().format("hh:mm:ss EEE yyyy-MM-dd");
+
+	var that 	= this;
+	if (this.timer) clearTimeout(this.timer);
+	this.timer = setTimeout(function(){
+		that.showDate();
+	}, 1000); 
 };
 
 // 获取输入的数字显示区对象

@@ -51,8 +51,6 @@ body {
 	color: #4723AB;
 }
 
-
-
 #board-result {
 	/*position: relative;*/
 	width: 90%;
@@ -63,6 +61,11 @@ body {
 	border-radius: 8px;
 	border: 2px solid #EAEAEA;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+#result-date {
+	float: left;
 }
 
 /* 显示结果屏显区域，up显示数字，down显示表达式 */
@@ -90,7 +93,6 @@ body {
 	color: #857F7F;
 	overflow: hidden;
 }
-
 
 
 /* 按键区 */
@@ -122,5 +124,8 @@ body {
 #board-keys table td:hover {
 	cursor: pointer;
 }
+
+
+
 
 /* 主面板 --------- end ----------- */

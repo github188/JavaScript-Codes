@@ -3,24 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+
+	<script type="text/javascript" src="mycodes/mycode.js"></script>
 </head>
 <body>
+
+	<div id="time"></div>
+
 	<script type="text/javascript">
-		function Test () {
-			 this.a = "hello";
-			 this.b = " ";
-			 this.c = "world"; 
-		}
+	
+	 var timer = null;
+	(function showTime () {
 
-		Test.prototype.combine = function  () {
-			 return this.com() + this.b + this.c + '!'; 
-		}
-
-		Test.prototype.com = function () {
-			return this.a = "Hello";
-		}
+		 $("time").innerText = new Date().format("hh:mm:ss EEE yyyy-MM-dd");
+		 if (timer) clearTimeout(timer);
+		 timer = setTimeout(function(){
+		 	showTime();
+		 }, 1000); 
+	})();
 
 
+	function $(id) {
+		return document.getElementById(id);
+	}
 	</script>
 </body>
 </html>

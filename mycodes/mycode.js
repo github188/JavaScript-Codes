@@ -19,7 +19,9 @@
  *  >> 2016/8/16 17:39:26 
  *  ADD: getPermutation         : 获取字符串的所有排列家结果
  *
+ * >> 2016/8/23 16:34:36
  *
+ * ADD: Date对象扩展
  *
  * 
  */
@@ -1279,6 +1281,79 @@ GCLRegex.prototype.isUSPhoneNum = function (str) {
 };
 
 
+/***************************************************************************
+**  对原生的Date对象的扩展
+** 
+** 1. format      : 时间格式化
+****************************************************************************/
+
+/**
+ * 1. 根据传入的字符串，格式化时间日期
+ * @param  {[type]} dateStr [description]
+ * @return {[type]}         [description]
+ *
+ * 格式化字符串可能格式：
+ *     hh:mm:ss yyyy-MM-dd
+ *     hh:mm:ss.S yy-MM-dd
+ *     yyyy-MM-dd
+ *     等等。
+ *
+ * 此方法通过灵活运用了正则表达式来达到根据传入字符串对应字段的长度来格式化时间日期
+ *
+ * 比如：如果传入的字符串中只有一个M，则会根据月份值做相应的变化，直接显示获取到的值；
+ *       如果传入的字符串中有两个MM，则当获取到的月份小于10时，则会在开头补0，如：01-09
+ *
+ * 知识点：
+ *     1. test()，正则表达式的查找判断方法，返回正则字符串是否在目标字符串中找到匹配项，
+ *                找到则返回true，没有则返回false
+ *     2. ()：正则表达式里的小括号会将匹配到的项缓存起来，可以通过RexExp.$n逐个去取查找到的匹配项
+ */
+Date.prototype.format = function (dateStr) {
+
+    var o = {
+        "M+": (this.getMonth() + 1),        // Month
+        "d+": this.getDate(),               // Date
+        // "E+": this.getDay(),                // day
+        "h+": this.getHours(),              // hour
+        "H+": this.getHours(),              // hour
+        "m+": this.getMinutes(),            // minute
+        "s+": this.getSeconds(),            // second
+        "S":  this.getMilliseconds()        // milli second
+    };
+
+    var week = ["一", "二", "三", "四", "五", "六", "日"];
+
+    // 因为年份一般都是四位数，所以单独处理
+    if (/(y+)/.test(dateStr)) {
+
+        var year    = this.getFullYear() + "";
+
+        // RegExp，if中正则表达式找到的第一个匹配项
+        // 通过year.length - RegExp.$1.length可以达到，根据传入的格式化字符串中需要的长度去设置年份值
+        dateStr = dateStr.replace(RegExp.$1, year.substr(year.length - RegExp.$1.length));
+    }
+
+    // 星期
+    if (/(E+)/.test(dateStr)) {
+        var w       = week[this.getDay() - 1];
+        var len     = RegExp.$1.length; 
+
+        dateStr = dateStr.replace(RegExp.$1, (len > 1 ? (len > 2 ? "星期" : "周") : "") + w);
+    }
+
+    // 由于月日，时分秒最长都为两位数，所以放在一起处理
+    for (var k in o) {
+
+        // 组织需要查找新的正则字符串
+        var regx    = new RegExp("(" + k + ")");
+
+        if (regx.test(dateStr)) {
+            dateStr = dateStr.replace(RegExp.$1, (RegExp.$1.length === 1) ? o[k] : ('00' + o[k]).substr(("" + o[k]).length));
+        }
+    }
+
+    return dateStr;
+};
 
 
 
