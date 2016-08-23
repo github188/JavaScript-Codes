@@ -143,6 +143,11 @@ Calculator.prototype.showCurrRes = function (digit, expression) {
 		return;
 	} 
 
+	// 解决第一次按键是操作符的情况
+	if (this.isOperator(expression[0])) {
+		expression = this.zero + expression;
+	}
+
 	// 3. 处理表达式字符串，且计算出结果
 	var start 	= 0;
 	for (var i = 0; i < expression.length; i++) {
@@ -163,6 +168,7 @@ Calculator.prototype.showCurrRes = function (digit, expression) {
 			start = i + 1; // 重设数字起始位置，即操作符的下一个字符开始
 		}
 	}
+
 
 	// 用allDigits和ops去计算结果
 	var res = this.calResult();
