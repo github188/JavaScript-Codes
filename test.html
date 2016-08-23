@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function Test () {
+			 this.a = "hello";
+			 this.b = " ";
+			 this.c = "world"; 
+		}
+
+		Test.prototype.combine = function  () {
+			 return this.com() + this.b + this.c + '!'; 
+		}
+
+		Test.prototype.com = function () {
+			return this.a = "Hello";
+		}
+
+
+	</script>
+</body>
+</html>

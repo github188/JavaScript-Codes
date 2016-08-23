@@ -1,0 +1,120 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors zc li (lizc@ipanel.cn)
+ * @date    2016-08-16 18:45:59
+ * @version $Id$
+ */
+
+@font-face {
+	font-family: digifacewide;
+	src: url("font/digifacewide.ttf");
+}
+
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #E0E0E0;
+	font-size: 25px;
+	font-family: "digifacewide", "Comic Sans MS", "微软雅黑";
+}
+
+/* 全局 */
+#board-keys table td.bg-red {
+	background-color: #FC0A0A;
+}
+
+
+/* 主面板 --------- start ----------- */
+#main-board {
+	width: 300px;
+	height: 450px;
+	margin: 100px auto;
+	background-color: #C5C5C5;
+	border-radius: 25px;
+	/*box-shadow: 2px 2px #D6BDBD;*/
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#board-title {
+	width: 100%;
+	height: 50px;
+	/*background-color: #ccccff;*/
+	text-align: center;
+	letter-spacing: 2px;
+	/* font-size/line-height font-family*/
+	font: 30px/50px "Comic Sans MS", "微软雅黑";
+	color: #4723AB;
+}
+
+#board-result {
+	width: 90%;
+	height: 80px;
+	background-color: #cce5ff;
+	text-align: right;
+	margin: 10px auto;
+	border-radius: 8px;
+	border: 2px solid #EAEAEA;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* 显示结果屏显区域，up显示数字，down显示表达式 */
+#result-up {
+	width: 100%;
+	height: 50px;
+	position: relative;
+}
+
+#result-up span {
+	position: absolute;
+	width: 100%;
+	right: 0;
+	bottom: 0;
+	/*background-color: #D44646;*/
+	overflow: hidden;
+}
+
+#result-down {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	/*background-color: #094F2B;*/
+	font-size: 20px;
+	color: #857F7F;
+	overflow: hidden;
+}
+
+#board-keys {
+	width: 100%;
+	height: 280px;
+	/*background-color: #E8A4A4;*/
+	/*margin: 0 auto;*/
+	margin-bottom: 20px;
+	color: #FFFFFF;
+}
+
+#board-keys table {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#board-keys table td {
+	width: 35px;
+	height: 35px;
+	background-color: #2B2828;
+	/*border: 1px solid #2C2929; */
+	border-radius: 8px;
+	box-shadow: #2B2828, 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#board-keys table td:hover {
+	cursor: pointer;
+}
+
+/* 主面板 --------- end ----------- */
