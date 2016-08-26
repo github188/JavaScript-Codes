@@ -22,6 +22,7 @@
  * >> 2016/8/23 16:34:36
  *
  * ADD: Date对象扩展
+ * ADD: Date.prototype.format   : 日期格式化
  *
  * 
  */

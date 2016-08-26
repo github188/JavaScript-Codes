@@ -5,27 +5,21 @@
 	<title>Document</title>
 
 	<script type="text/javascript" src="mycodes/mycode.js"></script>
+	<script type="text/javascript" src="mycodes/jQuery.js"></script>
 </head>
 <body>
 
-	<div id="time"></div>
+	<div id="time">hello world!</div>
 
 	<script type="text/javascript">
-	
-	 var timer = null;
-	(function showTime () {
-
-		 $("time").innerText = new Date().format("hh:mm:ss EEE yyyy-MM-dd");
-		 if (timer) clearTimeout(timer);
-		 timer = setTimeout(function(){
-		 	showTime();
-		 }, 1000); 
-	})();
 
 
-	function $(id) {
-		return document.getElementById(id);
-	}
+	var d = $('div');
+
+	d.setBackgroundColor("red").setColor("white");
+	// d.setColor("blue");
+
+
 	</script>
 </body>
 </html>
