@@ -27,14 +27,14 @@ var DEBUG_OPEN = false; // 日志开关
 var eleDatas    = [
 
     // 中心盒子
-    { "eid": "box-1", "left": "lbox-1"  , "right": "box-2"  , "up": "ubox-8"    , "down": "box-3" },
+    { "eid": "box-1", "left": "lbox-1"  , "right": "box-2"  , "up": "ubox-5"    , "down": "box-3" },
     { "eid": "box-2", "left": "box-1"   , "right": "rbox-1" , "up": "ubox-8"    , "down": "box-4" },
     { "eid": "box-3", "left": "lbox-2"  , "right": "box-4"  , "up": "box-1"     , "down": "box-5" },
-    { "eid": "box-4", "left": "box-3"   , "right": "rbox-1" , "up": "box-2"     , "down": "box-6" },
+    { "eid": "box-4", "left": "box-3"   , "right": "rbox-4" , "up": "box-2"     , "down": "box-6" },
     { "eid": "box-5", "left": "lbox-3"  , "right": "box-6"  , "up": "box-3"     , "down": "box-7" },
-    { "eid": "box-6", "left": "box-5"   , "right": "rbox-1" , "up": "box-4"     , "down": "box-8" },
-    { "eid": "box-7", "left": "lbox-4"  , "right": "box-8"  , "up": "box-5"     , "down": "dbox-8" },
-    { "eid": "box-8", "left": "box-7"   , "right": "rbox-1" , "up": "box-6"     , "down": "dbox-8" },
+    { "eid": "box-6", "left": "box-5"   , "right": "rbox-6" , "up": "box-4"     , "down": "box-8" },
+    { "eid": "box-7", "left": "lbox-4"  , "right": "box-8"  , "up": "box-5"     , "down": "dbox-5" },
+    { "eid": "box-8", "left": "box-7"   , "right": "rbox-8" , "up": "box-6"     , "down": "dbox-8" },
 
 
     // 左边盒子
@@ -47,11 +47,11 @@ var eleDatas    = [
     { "eid": "ubox-1", "left": "ubox-8" , "right": "ubox-2"     , "up": ""  , "down": "lbox-1" },
     { "eid": "ubox-2", "left": "ubox-1" , "right": "ubox-3"     , "up": ""  , "down": "lbox-1" },
     { "eid": "ubox-3", "left": "ubox-2" , "right": "ubox-4"     , "up": ""  , "down": "lbox-1" },
-    { "eid": "ubox-4", "left": "ubox-3" , "right": "ubox-5"     , "up": ""  , "down": "lbox-1" },
-    { "eid": "ubox-5", "left": "ubox-4" , "right": "ubox-6"     , "up": ""  , "down": "lbox-1" },
-    { "eid": "ubox-6", "left": "ubox-5" , "right": "ubox-7"     , "up": ""  , "down": "lbox-1" },
-    { "eid": "ubox-7", "left": "ubox-6" , "right": "ubox-8"     , "up": ""  , "down": "lbox-1" },
-    { "eid": "ubox-8", "left": "ubox-7" , "right": "rbox-1"     , "up": ""  , "down": "lbox-1" },
+    { "eid": "ubox-4", "left": "ubox-3" , "right": "ubox-5"     , "up": ""  , "down": "box-1" },
+    { "eid": "ubox-5", "left": "ubox-4" , "right": "ubox-6"     , "up": ""  , "down": "box-1" },
+    { "eid": "ubox-6", "left": "ubox-5" , "right": "ubox-7"     , "up": ""  , "down": "box-1" },
+    { "eid": "ubox-7", "left": "ubox-6" , "right": "ubox-8"     , "up": ""  , "down": "box-2" },
+    { "eid": "ubox-8", "left": "ubox-7" , "right": "rbox-1"     , "up": ""  , "down": "box-2" },
 
     // 底部盒子
     { "eid": "dbox-1", "left": "dbox-8"  , "right": "dbox-2"    , "up": "lbox-4"  , "down": "" },
@@ -80,3 +80,7 @@ var eleDatas    = [
 /* 焦点元素相关 */
 var currFocusEleId  = "ubox-1",  // 当前焦点元素ID
     DftFocusEleId   = "ubox-1";  // 默认焦点元素ID
+
+
+/* 需要鼠标事件的元素ID数组 */
+var mouseEles = ["lbox-1", "lbox-2", "lbox-3", "lbox-4"];
