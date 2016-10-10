@@ -1,0 +1,13 @@
+List<AddCardToWXCardPackage.WXCardItem> cardItems = new ArrayList<AddCardToWXCardPackage.WXCardItem>();
+				AddCardToWXCardPackage.WXCardItem item = new AddCardToWXCardPackage.WXCardItem();
+				item.cardId = "cardid1";
+				item.cardExtMsg = "ext1";
+				
+				cardItems.add(item);
+				item.cardId = "cardid2";
+				item.cardExtMsg = "ext2";
+				cardItems.add(item);
+				
+				AddCardToWXCardPackage.Req req = new AddCardToWXCardPackage.Req();
+				req.cardArrary = cardItems;
+				boolean ret = api.sendReq(req);

@@ -137,8 +137,12 @@ var styleHandler = (function () {
 
         var ele         = $(id),
             currCls     = ele.getAttribute("class");
-
-        ele.setAttribute("class", currCls + " " + clsName);
+            
+        if ( !currCls || currCls == "" || currCls == "undefined" ) {
+            ele.setAttribute("class", clsName);
+        } else {
+            ele.setAttribute("class", currCls + " " + clsName);
+        }
     };
 
 
@@ -151,8 +155,15 @@ var styleHandler = (function () {
         var ele         = $(id),
             currCls     = ele.getAttribute("class");
 
-        // 找出样式并删除
-        var resultCls   = currCls.replace(new RegExp(clsName + " " + "|" + " " + clsName), '');
+        var resultCls = "";
+        
+        if ( currCls == clsName ) {
+            // 只有一个样式且与要删除的样式一致时直接清空
+            resultCls = "";
+        } else {
+            // 找出样式并删除
+            resultCls   = currCls.replace(new RegExp(clsName + " " + "|" + " " + clsName), '');
+        }
 
         // 重新设置样式
         ele.setAttribute("class", resultCls);
