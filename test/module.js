@@ -1,5 +1,4 @@
-
-
+// module
 
 export function square( x ) {
 	return x * x;
@@ -8,4 +7,9 @@ export function square( x ) {
 
 export function cube( x ) {
 	return x * x * x;
+}
+
+
+export function sub( a, b ) {
+	return a + b;
 }
