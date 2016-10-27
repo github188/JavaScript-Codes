@@ -3,11 +3,14 @@ var init = function(jQuery){
         if (!selector) {
             return this;
         } else {
-            var elem = document.querySelector(selector);
-            if (elem) {
-                this[0] = elem;
-                this.length = 1;
+            // var elem = document.querySelector(selector);
+            var elemList = jQuery.find( selector );
+            if ( elemList.length ) {
+                // this[0] = elem;
+                // this.length = 1;
+                jQuery.merge( this, elemList );
             }
+            
             return this;
         }
     };

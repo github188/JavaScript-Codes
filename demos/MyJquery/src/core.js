@@ -10,6 +10,7 @@ var version = "0.0.1",
 
 jQuery.fn = jQuery.prototype = {
     jquery: version,
+    length: 0, // 增加长度属性，方便数组到类数组对象的转换
     constructor: jQuery,
     setBackground: function(){
         this[0].style.background = 'yellow';
@@ -108,7 +109,29 @@ jQuery.extend = jQuery.fn.extend = function () {
 // [new mod 2]
 // 扩展工具函数对象
 jQuery.extend( {
+
+	// 将数组转成类数组对象
+	merge: function ( first, second ) {
+
+		var len = +second.length,
+			j = 0,
+			i = first.length; // 被扩展的对象的长度属性
+
+		for ( ; j < len; j++ ) {
+			// 用被扩展对象的长度属性值自加作为键，
+			// 值为对应的被合并的数组中的元素
+			first[ i++ ] = second[ j ];
+		}
+
+		// 更新被扩展的对象长度属性值
+		first.length = i;
+
+		// 返回扩展后的对象
+		return first;
+	},
+
 	isArray: Array.isArray,
+
 	isPlainObject: function ( obj ) {
 		var proto, Ctor;
 
