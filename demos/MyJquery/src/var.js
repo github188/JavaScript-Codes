@@ -10,3 +10,5 @@ export const hasOwn   = class2type.hasOwnProperty;
 export const fnToString = hasOwn.toString; // ==> Object.toString 或 Function.toString
 
 export const ObjectFunctionString = fnToString.call( Object ); // PlainObject, 简单对象，通过{}或者new创建的对象
+
+export const slice = [].slice; 

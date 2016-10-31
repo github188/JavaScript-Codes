@@ -226,6 +226,25 @@ jQuery$1.fn = jQuery$1.prototype = {
 	jquery: version,
 	length: 0, // 增加长度属性，方便数组到类数组对象的转换
 	constructor: jQuery$1,
+
+	/**
+  * 入栈操作
+  *
+  * @param  {[Array]} elems [DOM元素数组]
+  * @return {[type]}       [description]
+  */
+	pushStack: function pushStack(elems) {
+
+		// elems数组转成类数组对象
+		var ret = jQuery$1.merge(this.constructor(), elems);
+
+		// 关系链处理，新jQuery对象的属性指向旧的对象
+		// 达到保存前一个对象的功能
+		ret.preObject = this;
+
+		return ret;
+	},
+
 	setBackground: function setBackground() {
 		this[0].style.background = 'yellow';
 		return this;
@@ -396,6 +415,36 @@ jQuery$1.extend({
 		class2type[toString.call(obj)] || 'object'
 		// 基础类型，直接用typeof即可
 		: typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
+	}
+});
+
+jQuery$1.fn.extend({
+	end: function end() {
+		return this.preObject || this.constructor();
+	},
+
+	find: function find(selector) {
+		// 链式支持find
+		var i,
+		    ret,
+		    len = this.length,
+		    self = this;
+
+		// 先进行入栈，保存下原先的对象
+		// 执行下入栈作用主要有二：
+		// 1. 元素数组转换成类数组对象；
+		// 2. 保存查找之前的对象；
+		ret = this.pushStack([]);
+
+		for (i = 0; i < len; i++) {
+			jQuery$1.find(selector, self[i], ret);
+		}
+
+		// 也可以在返回之前执行入栈处理
+		// 比如：return this.pushStack( ret );
+		// 但是在这里执行的时候 ret 里面可能包含了多个DOM元素对象了
+		// 操作起来肯定比在前面使用 '[]' 时执行耗时，性能相对较差
+		return ret;
 	}
 });
 
