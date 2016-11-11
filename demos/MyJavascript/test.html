@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>My Javascript Test</title>
+</head>
+<body>
+	
+
+<script>
+	var inherit = (function ( ) {
+		var F = function () {};
+
+		return function ( C, P ) {
+			F.prototype = P.prototype;
+			C.prototype = new F();
+			C.prototype.constructor = C;
+			C.uber = P.prototype;
+		};
+	}() );
+
+	function Parent() {
+		this.name = "lizc";
+	}
+
+	Parent.prototype.name = "fll";
+	Parent.prototype.say = function () {
+		console.log( this.name );
+	};
+
+	function Child() {
+		this.name = "lizc+fll";
+	}
+
+	inherit( Child, Parent );
+	var p1 = Child.prototype;
+	inherit( Child, Parent );
+	var p2 = Child.prototype;
+</script>	
+</body>
+</html>
