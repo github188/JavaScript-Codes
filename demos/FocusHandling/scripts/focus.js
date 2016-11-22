@@ -119,11 +119,13 @@ var styleHandler = (function () {
 
     // 获得焦点
     o.gotFocus = function ( id ) {
+        $( id ).focus();
         this.addClass(id, this.focus);
     };
 
     // 失去焦点
     o.loseFocus = function ( id ) {
+        $( id ).blur();
         this.removeClass(id, this.focus);
     }
 
@@ -138,7 +140,12 @@ var styleHandler = (function () {
         var ele         = $(id),
             currCls     = ele.getAttribute("class");
 
-        ele.setAttribute("class", currCls + " " + clsName);
+        console.log( ele + " --- " + currCls );
+        // 当前样式没有时才添加
+        if ( currCls.indexOf( clsName ) === -1 ) {
+            console.log( ele + " --- " + currCls + " " + clsName );
+            ele.setAttribute("class", currCls + " " + clsName);
+        }
     };
 
 
