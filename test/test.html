@@ -15,71 +15,119 @@
 <body>
 	<div id="question"></div>
 	
-	
-	<div id="list" style="width:600px;height:600px;background-color: gray;display:block;">
-		<table cellpadding="0" cellspacing="0" style="position:absolute;left:30px;top:40px;width:220px;background-color:transparent;border-collapse: collapse;">
-			<tr id="line0" style="height:60px;border:3px solid green;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>				
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:100px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line1" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+	<table id="tbl"></table>
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:160px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line2" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+	<script>
+		var a = {
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:220px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line3" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+			id: 0
+		};
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:280px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line4" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+		function change( value ) {
+			
+			var id = a.id;
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:340px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line5" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+			a.id = value
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:400px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line6" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
+			console.log( a.id );
+		}
 
-				
-			</tr>
-			<div style="position:absolute;left:40px;top:460px;width:200px;height:1px;background-color:red;"></div>
-			<tr id="line7" style="height:58px;">
-				<td style="text-align: center;"></td>
-				<td><span></span><br /><span></span></td>
-
-				
-			</tr>
-		</table>
-
-	</div>
+		var str = 'tr&{"width":"100px","backgroundColor":"red","text":"hello"}.td&{"text":"world","backgroundColor":"blue"}.span';
 
 
+		function createElementByString( str ) {
+			
+			var eleArr = str.split( '.' );
 
+			var eleObj 	= {}, i = 0,
+				len 	= eleArr.length,
+				tmp 	= null,
+				frag 	= null,
+				parent 	= null,
+				node 	= null;
+
+			frag = document.createDocumentFragment();
+
+			parent = frag;
+
+			for ( ; i < len; i++ ) {
+
+				eleObj = eleObj || {};
+
+				if ( eleArr[ i ].indexOf( '&' ) >= 0 ) {
+
+					tmp = eleArr[ i ].split( '&' );
+
+					eleObj.tagName = tmp[ 0 ];
+
+					eleObj.styles = eval( "(" + tmp[ 1 ] + ")" );
+				} else {
+
+					eleObj.tagName = eleArr[ i ];
+					eleObj.styles = null;
+				}
+
+				// 开始创建
+				node = createEle( eleObj.tagName, eleObj.styles );
+
+				parent.appendChild( node );
+
+				parent = node;
+			}
+
+			return frag;
+		}
+
+		function createEle( tag, styles ) {
+		
+			var node 		= null,
+				textNode 	= null,
+				prop 		= '';
+
+			node 		= document.createElement( tag );
+			textNode 	= document.createTextNode( '' );
+			node.appendChild( textNode );
+
+			if ( styles === null ) {
+
+				return node;
+			}
+
+			for ( prop in styles ) {
+
+				if ( styles.hasOwnProperty( prop ) ) {
+
+					if ( styles.id ) {
+
+						node.id = styles.id;
+					}
+
+					if ( typeof node.style[ prop ] !== 'undefined' ) {
+
+						node.style[ prop ] = styles[ prop ];
+					}
+
+					if ( styles.text ) { // 文本内容
+
+						textNode.nodeValue = styles.text;
+					}
+				}
+			}
+
+			return node;
+		}
+
+		$( 'tbl' ).appendChild( createElementByString( str ) );
+
+		function $(id) {
+			return document.getElementById( id );
+		}
+	</script>
+
+
+	<script type="text/javascript" src="../mycodes/myApis.js"></script>
 	<script type="text/javascript" src="playControl/pageData.js"></script>
-	<script type="text/javascript" src="playControl/playControl.js"></script>
+	<!-- <script type="text/javascript" src="playControl/playControl.js"></script> -->
 	<!-- <script type="text/javascript" src="./SOLID-OCP.js"></script> -->
 </body>
 </html>
