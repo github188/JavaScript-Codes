@@ -1,6 +1,11 @@
 /**
  * 1. convertHTML  	将字符串中的特殊字符，转义成html中相应的字符
  * 2. fibonacci 	经典算法实现[效率：基础递归 < 闭包递归 < for循环]
+ *
+ *
+ * 2016/12/7 12:22:56
+ *
+ * [ADD] convertSingleNumToString
  */
 
 
@@ -90,4 +95,20 @@ var fibonacciCircle = function (number) {
 	}
 }
 
+/**
+ * 将 0 - 9 的数字转成带'0'开头的字符串形式
+ * @param  {[type]} digit [description]
+ * @return {[type]}       [description]
+ */
+function convertSingleNumToString( digit ) {
+	
+	if ( typeof digit !== 'number' ) {
+		return -1;
+	}
 
+	if ( digit > 9 || digit < 0 ) {
+		return digit + '';
+	}
+
+	return '0' + digit;
+}

@@ -24,11 +24,25 @@
  * ADD: Date对象扩展
  * ADD: Date.prototype.format   : 日期格式化
  *
+ * >> 2016/11/24 15:52:51
+ *
+ * ADD: GCLDate                 : 时间对象 Date 的扩展
  * 
  */
 
 
 /****************************全局变量***************************************/
+
+// 命名空间
+var WanYu = {};
+
+WanYu.namespace = function ( name ) {
+
+    // var 
+
+};
+
+
 
 // 所有对象集合
 var mycode = (function () {
@@ -40,7 +54,8 @@ var mycode = (function () {
         "errorHandler"  : new ErrorHandler(),
         "tools"         : new Tools(),
         "gclTest"       : new GCLTest(),
-        "gclRegex"      : new GCLRegex()
+        "gclRegex"      : new GCLRegex(),
+        "gclDate"       : new GCLDate()
     };
 })();
 
@@ -1125,6 +1140,24 @@ ErrorHandler.prototype.argumentErrorHandler = function ( __args, __type ) {
 
 
 /**************************************************************************** 
+** GCLDate 对象，时间日期控制对象
+** 1. String对象
+**      s1. firstUpperCase  :  字符串首字母大写 
+*****************************************************************************/
+function GCLDate() {
+    
+}
+
+/**
+ * 将时间对象转换成UTC字符串，如：'20161124T155822Z'
+ * @param  {[type]} date [description]
+ * @return {[type]}      [description]
+ */
+GCLDate.prototype.convertToUTC = function ( date ) {};
+
+
+
+/**************************************************************************** 
 ** 工具对象(原子函数，尽量不依赖其他函数)
 ** 1. isArrayObj    : 是否为数组类型
 ** 2. isObject      : 是否为对象
@@ -1233,19 +1266,6 @@ GCLTest.prototype.testFuncResult = function (funcName, testData) {
 }
 
 
-/**************************************************************************** 
-** 对JavaScript原生API的扩展
-** 1. String对象
-**      s1. firstUpperCase  :  字符串首字母大写 
-*****************************************************************************/
-
-// s1. 字符串首字母大写 
-String.prototype.firstUpperCase = function () {
-    return this.replace(/^\S/, function(s){ return s.toUpperCase(); } );
-} 
-
-
-
 
 
 /***************************************************************************
@@ -1281,6 +1301,17 @@ GCLRegex.prototype.isUSPhoneNum = function (str) {
     return !!str.match(/\d{0,1}(?:\s\d{3}\s|\(\d{3}\)|\d{3}|\d{3}\-)\s{0,1}\d{3}(?:\s{0,1}|\-)\d{4}/);
 };
 
+
+/**************************************************************************** 
+** 对JavaScript原生API的扩展
+** 1. String对象
+**      s1. firstUpperCase  :  字符串首字母大写 
+*****************************************************************************/
+
+// s1. 字符串首字母大写 
+String.prototype.firstUpperCase = function () {
+    return this.replace(/^\S/, function(s){ return s.toUpperCase(); } );
+} 
 
 /***************************************************************************
 **  对原生的Date对象的扩展
@@ -1355,6 +1386,9 @@ Date.prototype.format = function (dateStr) {
 
     return dateStr;
 };
+
+
+
 
 
 
