@@ -175,6 +175,17 @@ function TableGenerator( ) {
     // 是否需要分割线
     this.flag = false;
 
+    // 分割线
+    this.lineObj = {
+
+        icon: "", // 线条背景图
+        position: "absolute", 
+        top: "-1px",
+        width: "100px", 
+        height: "1px", 
+        background: ""
+    };
+
     // others
 }
 
@@ -185,17 +196,18 @@ function TableGenerator( ) {
  * @param  {Boolean} flag   保留字段，可用做其他标识
  * @return {[type]}        [description]
  */
-TableGenerator.prototype.init = function ( string, lines, flag ) {
+TableGenerator.prototype.init = function ( string, lines, flag, lineObj ) {
 
-    this.string = string;
-    this.lines = lines || 1;
-    this.flag = flag || false;
+    this.string     = string;
+    this.lines      = lines || 1;
+    this.flag       = flag || false;
+    this.lineObj    = lineObj || this.lineObj;
 
     return this.createTable();
 };
 
 /**
- * [createTable description]
+ * 创建表格
  * @return {[type]} [description]
  */
 TableGenerator.prototype.createTable = function () {
@@ -204,28 +216,55 @@ TableGenerator.prototype.createTable = function () {
         string  = that.string,
         lines   = that.lines,
         flag    = that.flag,
-        str     = string.split( '>' ),
+        str     = string,
         frag    = null,
         tbl     = null,
-        trs     = null;
+        trs     = null,
+        trString  = '',
+        needTable = true;
+
+    // 表示没有<table>，只需要创建行即可
+    if ( string.indexOf( '>' ) < 0 ) {
+
+        needTable = false;
+
+        trString = str;
+    } else {
+
+        str = string.split( '>' );
+
+        // 创建 <table> 标签元素
+        tbl = that.createElementByString( str[0] );
+
+        trString = str[1];
+    }
 
     // 片段
     frag = document.createDocumentFragment();
 
-    // 创建 <table> 标签元素
-    tbl = that.createElementByString( str[0] );
-
     // 创建所有行
-    trs = that.createTableTrs( str[1], lines, flag );
+    trs = that.createTableTrs( trString, lines, flag );
 
-    // 创建后的所有行添加到表中
-    that.tableAddTrs( tbl, trs );
+    if ( needTable ) { // 有table时才添加，否则会与下面一步重复
 
-    frag.appendChild( tbl );
+        // 创建后的所有行添加到表中
+        that.tableAddTrs( tbl, trs );
+
+        frag.appendChild( tbl );
+    } else {
+
+        that.tableAddTrs( frag, trs );
+    }
 
     return frag;
 };
 
+/**
+ * 将创建好的行添加到表中
+ * @param  {DOMElement} tbl 指定表格
+ * @param  {DOMElement} trs 创建行的行
+ * @return {[type]}     [description]
+ */
 TableGenerator.prototype.tableAddTrs = function ( tbl, trs ) {
 
     var i = 0, len = 0;
@@ -241,6 +280,13 @@ TableGenerator.prototype.tableAddTrs = function ( tbl, trs ) {
     }
 };
 
+/**
+ * 创建表行
+ * @param  {String} string 元素字符串
+ * @param  {Number} lines  要创建多少行
+ * @param  {Boolean} flag   是否需要分割线
+ * @return {[type]}        [description]
+ */
 TableGenerator.prototype.createTableTrs = function ( string, lines, flag ) {
 
     var that    = this, 
@@ -259,7 +305,7 @@ TableGenerator.prototype.createTableTrs = function ( string, lines, flag ) {
         if ( flag && i < lines - 1 ) { // 最后一行下面不需要分割线
 
             // 将 tr 作为参数是希望分割线紧跟在其下面
-            line = that.pcCreateLine( tr, i + 1 );
+            line = that.createLine( tr, i + 1 );
 
             tr.appendChild( line );
         }
@@ -396,4 +442,32 @@ TableGenerator.prototype.createEle = function ( tag, styles ) {
     }
 
     return node;
+}
+
+/**
+ * 分割线，根据传入的元素设置
+ * @param  {[type]} element [description]
+ * @param  {[type]} n           元素在表中的索引
+ * @return {[type]}             [description]
+ */
+TableGenerator.prototype.createLine = function ( element, n ) {
+        
+    var that    = this,
+        line    = null,
+        pTop    = 0, 
+        style   = that.lineObj,
+        icons   = '';
+
+    if ( !parent ) {
+        return false;
+    }
+
+    pTop = parseInt( element.style.height, 10 ) * n;
+
+    style.top = pTop + 'px';
+    style.background = 'url(' + style.icons + ')';
+
+    line = that.createEle( 'div', style );
+
+    return line;
 }

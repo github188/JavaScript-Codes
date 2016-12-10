@@ -48,11 +48,12 @@
 
 	<script>
 		
-
-		var str = 'table&{"width":"100px","height":"100px","backgroundColor":"red"}>tr&{"backgroundColor":"blue"}+td.span+td.i';
+		var str = 'table>tr&{"backgroundColor":"blue"}+td.span+td.i';
 
 
 		var table = new TableGenerator().init(  str, 3  );
+
+
 
 		document.body.appendChild( table );
 
