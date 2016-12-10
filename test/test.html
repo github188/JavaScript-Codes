@@ -32,101 +32,32 @@
 			console.log( a.id );
 		}
 
-		var str = 'tr&{"width":"100px","backgroundColor":"red","text":"hello"}.td&{"text":"world","backgroundColor":"blue"}.span';
-
-
-		function createElementByString( str ) {
-			
-			var eleArr = str.split( '.' );
-
-			var eleObj 	= {}, i = 0,
-				len 	= eleArr.length,
-				tmp 	= null,
-				frag 	= null,
-				parent 	= null,
-				node 	= null;
-
-			frag = document.createDocumentFragment();
-
-			parent = frag;
-
-			for ( ; i < len; i++ ) {
-
-				eleObj = eleObj || {};
-
-				if ( eleArr[ i ].indexOf( '&' ) >= 0 ) {
-
-					tmp = eleArr[ i ].split( '&' );
-
-					eleObj.tagName = tmp[ 0 ];
-
-					eleObj.styles = eval( "(" + tmp[ 1 ] + ")" );
-				} else {
-
-					eleObj.tagName = eleArr[ i ];
-					eleObj.styles = null;
-				}
-
-				// 开始创建
-				node = createEle( eleObj.tagName, eleObj.styles );
-
-				parent.appendChild( node );
-
-				parent = node;
-			}
-
-			return frag;
-		}
-
-		function createEle( tag, styles ) {
-		
-			var node 		= null,
-				textNode 	= null,
-				prop 		= '';
-
-			node 		= document.createElement( tag );
-			textNode 	= document.createTextNode( '' );
-			node.appendChild( textNode );
-
-			if ( styles === null ) {
-
-				return node;
-			}
-
-			for ( prop in styles ) {
-
-				if ( styles.hasOwnProperty( prop ) ) {
-
-					if ( styles.id ) {
-
-						node.id = styles.id;
-					}
-
-					if ( typeof node.style[ prop ] !== 'undefined' ) {
-
-						node.style[ prop ] = styles[ prop ];
-					}
-
-					if ( styles.text ) { // 文本内容
-
-						textNode.nodeValue = styles.text;
-					}
-				}
-			}
-
-			return node;
-		}
-
-		$( 'tbl' ).appendChild( createElementByString( str ) );
-
 		function $(id) {
 			return document.getElementById( id );
 		}
+
+		// var table = new TableGenerator().init( 'table&{"width":"100px","height":"100px","backgroundColor":"red"}>tr+td+td' );
+
+		// document.body.appendChild( new TableGenerator().init( 'table&{"width":"100px","height":"100px","backgroundColor":"red"}>tr+td+td' ) );
+
 	</script>
 
 
 	<script type="text/javascript" src="../mycodes/myApis.js"></script>
 	<script type="text/javascript" src="playControl/pageData.js"></script>
+
+	<script>
+		
+
+		var str = 'table&{"width":"100px","height":"100px","backgroundColor":"red"}>tr&{"backgroundColor":"blue"}+td.span+td.i';
+
+
+		var table = new TableGenerator().init(  str, 3  );
+
+		document.body.appendChild( table );
+
+	</script>
+
 	<!-- <script type="text/javascript" src="playControl/playControl.js"></script> -->
 	<!-- <script type="text/javascript" src="./SOLID-OCP.js"></script> -->
 </body>
