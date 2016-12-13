@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+            <title>
+                播控页面
+            </title>
+    </head>
+    <body bgColor="transparent" leftmargin="0" topmargin="0">
+      	<div id="pf">
+			<!-- 全局 -->
+			<div id="pf_global" style="position:absolute;left:182px;top:482px; width:713px; height:147px; background:url(images/tab_bg1.png);">
+				
+				<!-- 1. 左边，播放状态控制栏 -->
+				<div id="pfg_status" style="position: absolute;left: 14px;top: 12px;width: 320px;height: 30px;">
+					<!-- LEFT -->
+					<div style="float: left; width:50%; height:30px;display: none;">
+						<img id="pfgs_left" src="images/ctrl_fast.png" width="128" height="32">
+					</div>
+					<!-- RIGHT -->
+					<div style="float:left; width:50%; height:30px;display: none;">
+						<img id="pfgs_right" src="images/ch_list.png" width="128" height="32">
+					</div>
+				</div> <!-- 1. 左边，播放状态控制栏 END -->
+
+				<!-- 2. 右边，日期时间 -->
+				<div id="pfg_date" style="position:absolute;left:504px;width:100px; line-height:53px; font-size:22px; color:#eaeaea;">
+				</div>
+				<div id="pfg_time" style="position:absolute;left:600px;width:100px; line-height:53px; font-size:35px; color:#f9f9f9;">
+				</div> <!-- 2. 右边，日期时间 END -->
+			
+	      		<!-- 3. 回看/时移 -->
+				<div id="pfg_tvodTstv" style="display:none;">
+					<!-- 开始时间 -->
+					<div id="pfgt_start" style="position:absolute;left:14px;top:76px;font-size:20px; color:#dde0e0;">15:30</div>
+					<!-- 结束时间 -->
+					<div id="pfgt_end" style="position:absolute;left:647px;top:76px;font-size:20px; color:#dde0e0;">16:30</div>
+					<!-- 状态图标 -->
+					<div style="position:absolute;left:14px;top:97px; width:40px; height:40px;">
+						<img id="pfgt_status" src="images/icon_hk.png" width="39" height="39">
+					</div>
+					<!-- 正在播放的节目信息 -->
+					<div style="position:absolute;left:83px;top:104px;font-size:22px; color:#e2e2e2;">
+						<span id="pfgt_programTitle">回看播放</span>：
+						<span id="pfgt_programName">如果蜗牛有爱情  22集（</span>
+						<span id="pfgt_programTime">2016-12-01  14:32</span>）
+					</div>
+					<!--播放条-->
+					<div style="position:absolute;left:83px;top:83px; width:559px; height:4px; background:url(images/pf_bg.png);">
+						<div style="position:absolute;left:-14px;top:-14px; width:29px; height:32px; background:url(images/pf_bar01.png);"></div>
+						<div id="pfgt_process" style="position:absolute;left:15px;top:-14px; width:215px; height:32px; background:url(images/pf_bar02.png);"></div>
+						<div style="position:absolute;left:230px;top:-14px; width:29px; height:32px; background:url(images/pf_bar03.png);"></div>
+					</div>
+				</div> <!-- 3. 回看/时移 END -->
+
+				<!-- 4. 直播 -->
+				<div id="pf_live" style="display:none;">
+					<div id="pfl_chanNo" style="position:absolute;left:14px;top:73px;font-size:24px; color:#fff;">015</div>
+					<div id="pfl_chanName" style="position:absolute;left:14px;top:104px;font-size:26px; color:#fff;">东方卫视</div>
+					<div style="position:absolute;left:149px;top:69px; width:1px; height:61px; background:url(images/line01.png);"></div>
+					<div style="position:absolute;left:172px;top:78px; width:1px; height:61px;">
+						<img id="pfl_channIcon" src="images/icon_play.png" width="55" height="47">
+					</div>
+
+					<!-- 当前播放频道时间点和名称 -->
+					<div style="position:absolute;left:242px;top:62px;font-size:22px; color:#e2e2e2;">正在直播&nbsp;&nbsp;
+						<span id="pfl_progTime">19:20</span>&nbsp;&nbsp;
+						<span id="pfl_progName">非诚勿扰</span>
+					</div>
+
+					<!-- 下一个频道时间点和名称 -->
+					<div style="position:absolute;left:242px;top:116px;font-size:22px; color:#b0b0b1;">下一节目&nbsp;&nbsp;
+						<span id="pfl_nextProgTime">19:00</span>&nbsp;&nbsp;
+						<span id="pfl_nextProgName">新闻联播</span>
+					</div>
+					<!--播放条-->
+					<div style="position:absolute;left:244px;top:99px; width:426px; height:4px; background:url(images/pf_bg2.png);">
+						<div style="position:absolute;left:-14px;top:-14px; width:29px; height:32px; background:url(images/pf_bar01.png);"></div>
+						<div id="pfl_process" style="position:absolute;left:15px;top:-14px; width:116px; height:32px; background:url(images/pf_bar02.png);"></div>
+						<div style="position:absolute;left:131px;top:-14px; width:29px; height:32px; background:url(images/pf_bar03.png);"></div>
+					</div>
+				</div> <!-- 4. 直播 END -->
+			</div>
+      	</div>
+
+		<!--广告-->
+		<div id="ad_wrap" style="position:absolute;left:900px;top:481px; width:100px; height:100px;visibility:visible;"><img id="ad" src="images/ad1.jpg" width="251" height="149">
+		</div>
+
+		<!-- 列表 -->
+		<div id="list" style="position:absolute;left:0px;top:0px; width:1050px; height:720px; background:url(images/cover02.png);visibility:visible;overflow:hidden;">
+			
+			<div id="l_container" style="position:absolute;left:73px;top:44px;width:977px;height:720px;">
+
+				<!-- 左侧表 -->
+				<table id="lc_date" border="0" cellpadding="0" cellspacing="0" width="172" height="546" style="position:absolute;left:0;top:0;width:172px; height:546px;font-size:24px;color:#727374; text-align:center;display:block;">
+
+					<div style="position:absolute;left:-50px;top:306px; width:40px; height:40px;"><img src="images/arrow_left.png" width="36" height="39"></div>
+				</table>
+			
+				<!-- 右侧表 -->
+				<table id="lc_progs" cellpadding="0" cellspacing="0" width="330" height="640" style="position:absolute;left:242px;top:0px;width:330px; height:640px;font-size:24px;color:#a0a2a4;display:block;">
+				</table>
+				<!-- 焦点框 -->
+				<div id="lc_focus" style="position:absolute;left:172px;top:-16px; width:400px; height:113px; background:url(images/list_focus.png);display:none;">
+					<!-- 回看图标 + 箭头 -->
+					<div style="width:400px; height:113px; background:url(images/icon_hk_list.png) no-repeat 315px center;">
+						<i style="position:absolute;right:-35px;top:37px;width:40px;height:40px;background:url(images/arrow_right.png) no-repeat">	
+						</i>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+        <script src="scripts/ui_pageData.js"></script>
+        <script src="scripts/ui_table.js"></script>
+        <script src="scripts/ui_playControl.js"></script>
+    </body>
+</html>

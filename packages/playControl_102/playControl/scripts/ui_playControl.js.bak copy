@@ -1,0 +1,1406 @@
+/**
+ * 
+ * @authors zc li (lizc@ipanel.cn)
+ * @date    2016-12-07 09:08:29
+ * @version $Id$
+ *
+ *
+ * 2016/12/7 18:14:12
+ * [NEW] 新建
+ *
+ * ---------------------- 以下记录文件更新记录
+ * 
+ */
+
+var pc = (function () {
+
+    // 内部全局命名空间
+    var UIPC = {
+
+        // 系统时间计时器
+        sysTimeTimer: null,
+
+        /*
+            播放类型：LiveTV-0, TSTV-1, TVOD-2, VOD-3
+            可根据该类型来决定状态控制栏显示的内容
+         */
+        playType: 0,
+
+        /*
+            数据类型：
+            0 - 直播列表数据
+            1 - 回看列表数据
+            2 - 回看日期列表数据
+            3 - 回看日期下的节目列表数据
+
+            在使用前先设置数据类型，再显示列表
+         */
+        dataType: 0,
+
+        // 当前进度条 id
+        currProcessId: '',
+
+        // 列表显示行数，默认显示8行
+        listLines: 8,
+
+        // 列表焦点行
+        currTblFocusLine: 0,
+
+        // 列表第一行数据在数据数组中的索引 
+        tblFirstLineIdxInData: 0,
+
+        focusDiv: {
+
+            id: 'lc_focus',
+            // 焦点框元素顶部偏移量
+            topOffset: -16
+        },
+
+        // 播放类型标题
+        titles: {
+            tvod: '回看播放',
+            tstv: '时移播放'
+        },
+
+        prefix: {
+
+            dateTr: '',
+            progTr: '',
+            chanTr: ''
+        },
+
+        // 日期列表当前焦点
+        dateFocus: 0,
+
+        // 回看日期列表 tr
+        tvodDateTr: 'tr&{"prefix":"date_list","height":"80px"}+td&{"width":"172px","background":"url(images/dlist_bg.png) no-repeat center"}',
+
+        // 回看节目列表 tr
+        tvodProgTr: 'tr&{"prefix":"prog_list","height":"80px"}+td&{"width":"85px","text-align":"center"}+td&{"width":"221px"}',
+
+        // 频道列表 tr
+        chanListTr: 'tr&{"prefix":"chan_list","height":"80px"}+' +
+                    'td&{"width":"245px","fontSize":"30px"}+' + 
+                    'td&{"width":"245px"}$' +
+                    'span&{"fontSize":"20px","color":"#c6d2dd"}',
+
+        // 节目列表水平偏移量
+        listTblOffsetX: 172,
+
+        // 分割线
+        cutLine: { 
+
+            position: "absolute", 
+            top: "-1px", 
+            width: "309px", 
+            height: "1px", 
+            background: ""
+        },
+
+        // ids
+        ids: {
+
+            // 时间区元素 ID
+            date: 'pfg_date',
+            time: 'pfg_time',
+
+            // 广告元素 ID
+            adWrap: 'ad_wrap', // 广告外层div
+            ad: 'ad',
+
+            // 播放列表表格 ID
+            plist: 'list',
+            plistContainer: 'l_container',
+            plistDate: 'lc_date',
+            plistProg: 'lc_progs',
+            plistChan: 'lc_progs',
+            plistProgFocus: 'lc_focus',
+
+            // 频道/节目焦点框
+            plistProgFocus: 'lc_focus',
+            plistDateFocus: '',
+
+            // 播控状态区元素 ID
+            statusCtrl: 'pfg_status',
+            statusCtrlL: 'pfgs_left',
+            statusCtrlR: 'pfgs_right',
+
+            // 回看时移进度条区元素 id
+            tvodTstv: 'pfg_tvodTstv',
+            tvodTstvStart: 'pfgt_start',
+            tvodTstvEnd: 'pfgt_end',
+            tvodTstvStatus: 'pfgt_status',
+            tvodTstvProgTitle: 'pfgt_programTitle',
+            tvodTstvProgName: 'pfgt_programName',
+            tvodTstvProgTime: 'pfgt_programTime',
+            tvodTstvProcess: 'pfgt_process',
+
+            // 直播进度条区元素 ID
+            chan: 'pf_live',
+            chanNo: 'pfl_chanNo',
+            chanName: 'pfl_chanName',
+            chanIcon: 'pfl_channIcon',
+            chanProgTime: 'pfl_progTime',
+            chanProgName: 'pfl_progName',
+            chanNextProgTime: 'pfl_nextProgTime',
+            chanNextProgName: 'pfl_nextProgName',
+            chanProcess: 'pfl_process'
+        },
+
+        icons: {
+            fastIcon: 'images/ctrl_fast.png',
+            tvodIcon: 'images/icon_hk.png',
+            tvodBigIcon: 'images/icon_hk_big.png',
+            tvodBtnIcon: 'images/icon_hk_btn.png',
+            goTvodIcon: 'images/left_2tvod.png',
+            tstvIcon: 'images/icon_sy.png',
+            tstvBigIcon: 'images/icon_sy_big.png',
+            goTstvIcon: 'images/enter_tstv.png',
+            exitTvodIcon: 'images/exit_tvod.png',
+            exitTstvIcon: 'images/exit_tstv.png',
+            chanListIcon: 'images/ch_list.png',
+            playPauseIcon: 'images/play_pause.png',
+            lineIcon: 'images/line03.png'
+        },
+    };
+
+    // 播放对象
+    // mp = new MediaPlayer(), 
+
+    // 当前播放的媒体对象
+    // mediaObj = mp.mediaObj,
+
+    // eventpage.htm 页面
+    // ep = iPanel.eventFrame;
+
+    /****************************** 1. 按键处理 START ******************************/
+
+    function pcEventHandler( event ) {
+        
+        var event   = event || window.event,
+            keycode = event.which ? event.which : event.keycode;
+
+        switch ( keycode ) {
+
+            // 方向键
+            case 37:    // left
+
+                pcDirectionKeyHandler( 'left' );
+                return false;
+                break;
+            case 39:    // right
+
+                pcDirectionKeyHandler( 'right' );
+                return false;;
+                break;
+            case 38:    // up
+                
+                pcDirectionKeyHandler( 'up' );
+                break; 
+            case 40:    // down
+
+                pcDirectionKeyHandler( 'down' );
+                return false;
+                break;
+            case 106:   // play or pause
+
+                pcPauseOrPlay();
+                break;
+            case 13:    // ok
+
+                pcConfirmKeyHandler();
+                return false;
+                break;
+            case 8:
+
+                pcGoBack();
+                return false;
+                break;
+            default:
+                return true;
+                break;
+        }
+    }
+
+    function pcDirectionKeyHandler( direction ) {
+        
+        var directions = [ 'left', 'up', 'right', 'down' ],
+            dInt = 0; 
+
+        if ( directions.indexOf( direction ) === -1 ) {
+            return false;
+        }
+
+        // 左右
+        if ( direction === 'up' || direction === 'down' ) {
+
+            dInt = direction === 'up' ? -1 : 1;
+
+            pcKeyUpDownHandler( dInt );
+        }
+
+        // 上下
+        if ( direction === 'left' || direction === 'right' ) {
+
+            dInt = direction === 'left' ? -1 : 1;
+
+            pcKeyLeftRightHandler( dInt );
+        }
+
+        return true;
+    }
+
+    /**
+     * 左右键处理
+     * @param  {[type]} direction [description]
+     * @return {[type]}           [description]
+     */
+    function pcKeyLeftRightHandler( direction ) {
+        
+        /* TODO
+            
+            1. 进度条显示时，快进快退，或拖动播放
+
+            2. 频道列表显示时，控制焦点移动
+         */
+    }
+
+    /**
+     * 上下键处理
+     * @param  {[type]} direction [description]
+     * @return {[type]}           [description]
+     */
+    function pcKeyUpDownHandler( direction ) {
+
+        var prefix      = UIPC.tbl.trIdPrefix,
+            id          = prefix + UIPC.currTblFocusLine,
+            oldFocus    = UIPC.currTblFocusLine,
+            total       = pcGetData().length,
+            lines       = UIPC.listLines,
+            tmpV        = 0;
+
+        // console.log( '111 direction = ' + direction + ' - lines: ' + lines + ", focus: " + UIPC.currTblFocusLine + ", idx: " + UIPC.tblFirstLineIdxInData );
+
+        if ( direction > 0 && UIPC.currTblFocusLine === lines - 1 ) {
+
+            if ( UIPC.tblFirstLineIdxInData < total - lines ) {
+
+                UIPC.tblFirstLineIdxInData++;
+            } else { // 到尾了
+
+                return;
+            }
+
+        } else if ( direction < 0 && UIPC.currTblFocusLine === 0 ) {
+
+            if ( UIPC.tblFirstLineIdxInData > 0 ) {
+
+                UIPC.tblFirstLineIdxInData--;
+            } else { // 到头了
+
+                return;
+            }
+        }
+
+        UIPC.currTblFocusLine += direction;
+
+        if ( UIPC.currTblFocusLine < 0 ) {
+
+            UIPC.currTblFocusLine = 0;
+        } else if ( UIPC.currTblFocusLine > lines - 1 ) {
+
+            UIPC.currTblFocusLine = lines - 1;
+        }
+
+        id = prefix + UIPC.currTblFocusLine;
+
+        pcGetFocus( id );
+
+        if ( UIPC.currTblFocusLine === 0 || UIPC.currTblFocusLine === lines - 1 ) {
+
+            // console.log( '333333333333333 tblFirstLineIdxInData = ' + UIPC.tblFirstLineIdxInData );
+            pcUpdateTblData( UIPC.tblFirstLineIdxInData );
+        }
+
+        return true;
+    }
+
+    /**
+     * 确认键处理
+     *
+     * 1. 列表页面：播放当前选中行视频
+     * 2. 进度条页面：暂停或者不响应
+     * 
+     * @return {[type]} [description]
+     */
+    function pcConfirmKeyHandler() {
+        
+        var id          = UIPC.ids.plist;
+            isListShow  = isDivShow( $( id ) );
+
+        if ( isListShow ) {
+
+            // 列表显示的时候，确定去播放
+
+            pcDisplayDiv( id );
+        } else { 
+
+            // 列表隐藏的时候，显示列表
+            pcShowTable();
+        }
+    }
+
+    // 显示节目列表或频道列表焦点框
+    function pcShowChanFocus() {
+        
+        pcDisplayDiv( UIPC.focusDiv.id );
+    }
+
+    // 隐藏节目列表或频道列表焦点框
+    function pcHideChanFocus() {
+        
+        pcHideDiv( UIPC.focusDiv.id );
+    }
+
+    // 元素得到焦点
+    function pcGetFocus( id ) {
+
+        var ele         = $( id ),
+            focusObj    = UIPC.focusDiv,
+            focusDiv    = $( focusObj.id ),
+            currFocusLine = UIPC.currTblFocusLine,
+            eleH        = ele.style.height;
+
+        eleH = parseInt( eleH.replace( /px/, '' ), 10 );
+
+        focusDiv.style.top = ( eleH * currFocusLine + focusObj.topOffset ) + 'px';
+    }
+
+    // 元素失去焦点
+    function pcLoseFocus( id ) {
+
+    }
+
+    /****************************** 按键处理 END ******************************/
+
+
+    /****************************** 2. 获取数据 START ******************************/
+
+    /**
+     * 获取直播频道信息
+     * @return {[type]} [description]
+     */
+    function pcGetChannelInfo() {
+        
+        // TODO
+
+        return pageData;
+    }
+
+    /**
+     * 获取时移视频数据
+     * @return {[type]} [description]
+     */
+    function pcGetTSTVInfo() {
+        
+        return {
+            name: '我在时移看片',
+            start: '10:22',
+            end: '12:22',
+        };
+    }
+
+    /**
+     * 获取回看视频数据
+     * @return {[type]} [description]
+     */
+    function pcGetTVODInfo() {
+        
+        return {
+            name: '我在时移看片',
+            start: '10:22',
+            end: '12:22'
+        };
+    }
+
+    /**
+     * 获取回看列表数据，里面包含日期和日期下的节目列表
+     *
+     * 这个接口，需要在显示回看列表的时候就要执行
+     *
+     * @return {Array} [返回回看列表数据对象数组]
+     *
+     * 依赖此接口函数：
+     *     1. pcGetDateListData：获取日期列表数据
+     *     2. pcGetProgListData：获取对应日期的节目列表
+     */
+    function pcGetTvodListData() {
+
+        return tvodListData;
+    }
+
+    // 从回看列表中获取日期和节目数据
+    function pcGetDataFromTvodList( dataName ) {
+        
+        var tvodData = pcGetTvodListData(),
+            i = 0, len = tvodData.length,
+            data = null,
+            result = [];
+
+
+        for ( ; i < len; i++ ) {
+
+            data = tvodData[i];
+
+            if ( data.hasOwnProperty( dataName ) ) {
+
+                result.push( data[ dataName ] );
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 根据日期获取节目列表
+     * @return {[type]} [description]
+     */
+    function pcGetProgListData() {
+        
+        return pcGetDataFromTvodList( 'programs' );
+    }
+
+    /**
+     * 获取回看日期列表
+     * @return {[type]} [description]
+     */
+    function pcGetDateListData() {
+        
+        return pcGetDataFromTvodList( 'date' );
+    }
+
+    /**
+     * 获取直播列表数据
+     * @return {Array} 返回直播列表对象数组
+     */
+    function pcGetChannListData() {
+
+        return channelListData;
+    }
+
+
+    /**
+     * 获取数据
+     * @param  {Number} type 数据类型
+     *                       0 - 直播列表
+     *                       1 - 回看列表
+     *                       2 - 节目列表
+     *                       3 - 时间列表
+     *  
+     * @return {[type]}      [description]
+     */
+    function pcGetData( type ) {
+        
+        // 根据类型去获取列表数据
+        var data = null;
+
+        if ( typeof type !== 'number' ) {
+
+            return null;
+        }
+
+        // 各种方式通过接口去获取数据
+        if ( type === 0 ) {
+
+            data = pcGetChannListData();
+        } else if ( type === 1 ) {
+
+            data = pcGetTvodListData();
+        } else if ( type === 2 ) {
+
+            data = pcGetProgListData();
+        } else if ( type === 3 ) {
+
+            data = pcGetDateListData();
+        }
+
+        return data;
+    }
+
+    function setDataType( type ) {
+        
+        var types = [ 0, 1 ];
+
+        if ( typeof type !== 'number' || types.indexOf( type ) === -1 ) {
+
+            return false;
+        }
+
+        UIPC.dataType = type;
+
+        pcShowTable( type );
+
+        return true;
+    }
+
+    function getDataType() {
+        
+        return UIPC.dataType;
+    }
+
+    // 获取字符串中的  ID 前缀
+    function pcGetTrIdPrefix( str ) {
+        
+        var match = str.match(/\"prefix\"\:\"\w+\"/)[0];
+
+        return match.split( ':' )[ 1 ].replace( /\"/g, "" );
+    }
+
+    function pcPrefixValueInit() {
+        
+        UIPC.prefix.dateTr = pcGetTrIdPrefix( UIPC.tvodDateTr );
+        UIPC.prefix.progTr = pcGetTrIdPrefix( UIPC.tvodProgTr );
+        UIPC.prefix.chanTr = pcGetTrIdPrefix( UIPC.chanListTr );
+    }
+
+    /****************************** 2. 按键处理 START ******************************/
+
+
+    /****************************** 3. 界面绘制 START ******************************/
+
+    /**
+     * 1. 更新右上角当前显示的时间
+     * @return {[type]} [description]
+     */
+    function pcUpdateCurrentTimeDiv() {
+        // body...
+
+        var ids     = UIPC.ids,
+            d       = new Date(),
+            month   = d.getMonth() + 1,
+            date    = d.getDate(),
+            hour    = d.getHours(),
+            minute  = d.getMinutes();
+
+
+        month   = convertSingleNumToString( month );
+        date    = convertSingleNumToString( date );
+        hour    = convertSingleNumToString( hour );
+        minute  = convertSingleNumToString( minute );
+
+        // 更新时间
+        $( ids.date ).innerHTML = month + '月' + date + '日';
+        $( ids.time ).innerHTML = hour + ':' + minute;
+
+        clearTimeout( UIPC.sysTimeTimer );
+        UIPC.sysTimeTimer = setTimeout( function () {
+
+            pcUpdateCurrentTimeDiv();
+
+        }, 1000 );
+    }
+
+    /**
+     * 2. 更新进度条上面，左边的控制状态显示
+     * @param  {[type]} type [description]
+     * @return {[type]}      [description]
+     */
+    function pcUpdateStatusCtrlDiv() {
+        
+        var ids         = UIPC.ids,
+            type        = UIPC.playType
+            icons       = UIPC.icons,
+            leftIcon    = '',
+            rightIcon   = '';
+
+        switch ( type ) {
+
+            case 0:     // LiveTV
+                leftIcon    = '';
+                rightIcon   = icons.chanListIcon;
+                UIPC.currProcessId = ids.chanProcess;
+                break;
+            case 1:     // TSTV
+                leftIcon    = icons.exitTstvIcon;
+                rightIcon   = icons.chanListIcon;
+                UIPC.currProcessId = ids.tvodTstvProcess;
+                break;
+            case 2:     // TVOD
+                leftIcon    = icons.exitTvodIcon;
+                rightIcon   = icons.playPauseIcon;
+                UIPC.currProcessId = ids.tvodTstvProcess;
+                break;
+            case 3:     // 直播暂停状态
+                leftIcon    = icons.goTstvIcon;
+                rightIcon   = icons.chanListIcon;
+                UIPC.currProcessId = ids.chanProcess;
+                break;
+            case 4:     // 直播回看状态
+                leftIcon    = icons.fastIcon;
+                rightIcon   = icons.chanListIcon;
+                UIPC.currProcessId = ids.chanProcess;
+                break;
+
+            // no default
+        }
+
+        if ( leftIcon !== '' ) {
+
+            $( ids.statusCtrlL ).parentNode.style.display = 'block';
+            $( ids.statusCtrlL ).src = leftIcon;
+        }
+
+        if ( rightIcon !== '' ) {
+
+            $( ids.statusCtrlR ).parentNode.style.display = 'block';
+            $( ids.statusCtrlR ).src = rightIcon;
+        }
+    }
+
+    /**
+     * 显示进度条区域，根据播放类型决定显示什么
+     * @return {[type]} [description]
+     */
+    function pcUpdateProcessCtrlDiv() {
+        
+        var type    = UIPC.playType,
+            ids     = UIPC.ids,
+            titles  = UIPC.titles,
+            icons   = UIPC.icons,
+            stIcon  = '';
+
+        pcUpdateStatusCtrlDiv();
+
+        if ( type === 0 || type === 3 || type === 4 ) { // liveTV 或者 直播暂停 或 直播回看
+
+            pcDisplayDiv( ids.chan );
+            pcHideDiv( ids.tvodTstv );
+
+            // 类型图标
+            pcReplaceImg( ids.chanIcon, type === 4 ? icons.tvodIcon : icons.tstvIcon );
+
+        } else if ( type === 1 || type === 2 ) { // TSTV 或 TVOD
+
+            // title 需要修改
+            $( ids.tvodTstvProgTitle ).innerHTML = ( type === 1 ? titles.tstv : titles.tvod );
+
+            // 播放类型图标
+            stIcon = ( type === 1 ? icons.tstvIcon : icons.tvodIcon ); 
+
+            // 类型图标
+            pcReplaceImg( ids.tvodTstvStatus, stIcon );
+
+            pcDisplayDiv( ids.tvodTstv );
+            pcHideDiv( ids.chan );
+        }
+    }
+
+    /**
+     * 直播暂停进入时移更新
+     * @return {[type]} [description]
+     */
+    function pcUpdateLiveToTstv() {
+        
+        UIPC.playType = 3;
+
+        pcUpdateProcessCtrlDiv();
+    }
+
+    /**
+     * 更新广告入口
+     * @param  {String} img 图片路径
+     * @return {[type]}     [description]
+     */
+    function pcUpdateAd( imgSrc ) {
+        
+        if ( typeof imgSrc !== 'string' ) {
+            return false;
+        }
+
+        pcReplaceImg( UIPC.ids.ad, imgSrc );
+    }
+
+    /**
+     * 根据 id 显示某元素，依据元素'display'属性
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    function pcDisplayDiv( id ) {
+
+        if ( typeof id !== 'string' ) {
+            return false;
+        }
+
+        var display = $( id ).style.display,
+            visible = $( id ).style.visibility;
+
+        // 如果未定义的属性，结果为空，display和visibility不应该同时存在
+        if ( display !== '' ) {
+
+            $( id ).style.display = 'block';
+        } else if ( visible !== '' ) {
+
+            $( id ).style.visibility = 'visible';
+        }
+
+        return true;
+    }
+
+    /**
+     * 根据 id 隐藏某元素
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    function pcHideDiv( id ) {
+        
+        if ( typeof id !== 'string' ) {
+            return false;
+        } 
+
+        var display = $( id ).style.display,
+            visible = $( id ).style.visibility;
+
+        // 如果未定义的属性，结果为空，display和visibility不应该同时存在
+        if ( display !== '' ) {
+
+            $( id ).style.display = 'none';
+        } else if ( visible !== '' ) {
+
+            $( id ).style.visibility = 'hidden';
+        }
+
+        return true;
+    }
+
+    /**
+     * 更换元素图片或背景图
+     * @param  {[type]} id  [description]
+     * @param  {[type]} img [description]
+     * @return {[type]}     [description]
+     */
+    function pcReplaceImg( id, img ) {
+        
+        if ( typeof id !== 'string' ) {
+            return false;
+        }
+
+        $( id ).src = img;
+
+        return true;
+    }
+
+    /**
+     * 替换元素 innerHTML 内容
+     * @param  {String} inner 替换的内容
+     * @return {[type]}       [description]
+     */
+    function pcReplaceInnerHTML( id, inner ) {
+        
+        if ( typeof id !== 'string' ) {
+            return false;
+        }
+
+        $( id ).innerHTML = inner;
+
+        return true;
+    }
+
+    function pcCreateTable( string, flag ) {
+
+        return new TableGenerator().init( string, UIPC.listLines, flag, UIPC.line );
+    }
+
+    // 创建日期表格
+    function pcCreateDateTable() {
+       
+        return pcCreateTable( UIPC.tvodDateTr, false );
+    }
+
+    // 创建节目列表
+    function pcCreateProgTable() {
+        
+        return pcCreateTable( UIPC.tvodProgTr, true );
+    }
+
+    // 创建频道列表
+    function pcCreateChannTable( ) {
+        
+        return pcCreateTable( UIPC.chanListTr, true );
+    }
+
+    // 更新日期表
+    function pcUpdateDateTable( start ) {
+        
+        pcUpdateTable( start, 0 );
+    }
+
+    // 更新节目表格
+    function pcUpdateProgTable( start ) {
+        
+        pcUpdateTable( start, 1 );
+    }
+
+    // 更新频道表
+    function pcUpdateChannTable( start ) {
+        
+        pcUpdateTable( start, 2 );
+    }
+
+    /**
+     * 更新表格数据
+     * @param  {Number} start  数据开始位置
+     * @param  {Number} type  表格类型
+     *                        0 - 日期表
+     *                        1 - 节目表
+     *                        2 - 频道表
+     * @return {[type]}       [description]
+     */
+    function pcUpdateTable( start, type ) {
+        
+        var data    = null,
+            tr      = null,
+            td      = null,
+            prog    = null,
+            span    = null,
+
+            pfix    = UIPC.prefix,
+            dataLen = 0, lines = 0, i = 0,
+            start   = start || 0,
+
+            getData = null,
+            ids = [], id = '';
+
+        if ( type === 0 ) { // date
+
+            id      = UIPC.ids.plistDate;
+            prefix  = pfix.dateTr;
+            getData = pcGetDateListData;
+
+        } else if ( type === 1 ) { // prog
+
+            id      = UIPC.ids.plistProg;
+            prefix  = pfix.progTr;
+            getData = pcGetProgListData;
+
+        } else if ( type === 2 ) { // channel
+
+            id      = UIPC.ids.plistChan;
+            prefix  = pfix.chanTr;
+            getData = pcGetChannListData;
+
+        }
+
+        // console.log( 'id = ' + id + ', prefix = ' + prefix );
+
+        // 获取更新的数据
+        data    = getData();
+        dataLen = data.length;
+
+        if ( type === 1 ) {
+
+            data    = data[ UIPC.dateFocus ];
+            dataLen = data.length;
+        }
+
+        // 到这里，表示表格已经创建完成了，可获取实际行数
+        lines = $( id ).getElementsByTagName( 'tr' ).length;
+
+        for ( ; i < lines; i++ ) {
+
+            tr = $( prefix + i );
+
+            // 数据长不足表格行数时
+            if ( i < dataLen ) {
+
+                tds     = tr.getElementsByTagName( 'td' );
+                prog    = data[ start + i ];
+
+                if ( type === 0 ) { // date
+
+                    // <tr><td>12/7</td></tr>
+                    tds[0].innerText = prog;  // 日期数据格式是数组，所以直接使用
+                } else if ( type === 1 ) { // prog
+
+
+                    // <tr><td>12:20</td><td>景秀未央</td></tr>
+                    // 节目数据格式是数组中的数组 [ [{},{}, [{},{}] ]
+                    tds[0].innerText = prog.time;
+                    tds[1].innerText = prog.name;
+                } else if ( type === 2 ) { // channel
+
+                    // <tr><td>012</td><td>中央一套<span>黄金档：潘金莲</span></td></tr>
+                    tds[0].innerText = prog.no;
+                    tds[1].innerText = prog.name;
+
+                    span = tds[1].getElementsByTagName( 'span' );
+                    span.innerText = prog.prog;
+                }
+            }
+        }
+    }
+
+    // 改变列表水平偏移量
+    function pcChangeProgTblOffsetX( direction ) {
+        
+        var ids = UIPC.ids,
+            focusID = UIPC.ids.plistProgFocus,
+            tblID   = UIPC.ids.plistProg,
+            offset  = UIPC.listTblOffsetX,
+            focusLeft    = $( focusID ).style.left,
+            tblLeft      = $( tblID ).style.left;
+
+        tblLeft     = parseInt( $( tblID ).style.left.replace( /px/, '' ), 10 );
+        focusLeft   = parseInt( $( focusID ).style.left.replace( /px/, '' ), 10 );
+
+        $( tblID ).style.left   = ( tblLeft + offset * direction ) + 'px';
+        $( focusID ).style.left = ( focusLeft + offset * direction ) + 'px';
+    }
+
+    // 根据 flag 决定显示什么表，-1: 频道，1：回看
+    function pcShowTable( flag ) {
+        
+        if ( typeof flag !== 'number' ) {
+
+            return false;
+        }
+
+        if ( flag === 0 ) {
+
+            pcShowChannelTbl();
+        } else if ( flag === 1 ) {
+
+            pcShowTvodTbl();
+        }
+    }
+
+    // 显示频道列表
+    function pcShowChannelTbl() {
+        
+        var data = null,
+            tbl  = null,
+            tblId   = UIPC.ids.plistProg,
+            dateId  = UIPC.ids.plistDate,
+            focusId = UIPC.ids.plistProgFocus;
+
+        // 先隐藏日期列表
+        pcHideDateListDiv()
+        // 显示频道列表
+        pcDisplayDiv( tblId );
+        // 显示焦点框
+        pcDisplayDiv( focusId );
+
+        // 创建频道列表
+        tbl = pcCreateChannTable( data );
+
+        // 添加表格
+        $( tblId ).appendChild( tbl );
+
+        pcUpdateChannTable( 0 );
+    }
+
+    // 隐藏日期表
+    function pcHideDateListDiv() {
+        
+        pcHideDiv( UIPC.ids.plistDate );
+
+        // 更新频道表偏移
+        pcChangeProgTblOffsetX( -1 );
+    }
+
+    // 显示日期表
+    function pcShowDateListDiv() {
+        
+        pcDisplayDiv( UIPC.ids.plistDate );
+
+        // 更新频道表偏移
+        pcChangeProgTblOffsetX( 1 );
+    }
+
+    // 显示回看列表
+    function pcShowTvodTbl() {
+
+        // 日期列表
+        pcShowTvodDateTbl();
+
+        // 节目列表
+        pcShowTvodProgTbl();
+    }
+
+    // 显示回看日期表
+    function pcShowTvodDateTbl() {
+        
+        var dateId  = UIPC.ids.plistDate,
+            data    = null;
+
+        // 显示日期表格
+        pcShowDateListDiv();
+
+        // 创建日期表
+        dateTbl = pcCreateDateTable();
+        $( dateId ).appendChild( dateTbl );
+
+        pcUpdateDateTable( 0 );
+    }
+
+    // 显示回看节目表
+    function pcShowTvodProgTbl() {
+        
+        var progId  = UIPC.ids.plistProg,
+            data    = null,
+            progTbl = null;
+
+        pcDisplayDiv( progId );
+
+        pcShowChanFocus();
+
+        data = pcGetProgListData();
+
+        progTbl = pcCreateProgTable( data );
+
+        $( progId ).appendChild( progTbl );
+
+        pcUpdateProgTable( 0 );
+    }
+
+    /****************************** 界面绘制 END ******************************/
+
+
+    /****************************** 页面控制 START ******************************/
+
+    /**
+     * 从播控页面返回（到播放页面或者其他）
+     * @return {[type]} [description]
+     */
+    function pcGoBack() {
+        
+        // 其他，如：location 跳转
+
+        // widget 形式，minimize关闭
+        ep.hidePlayCtrlPage();
+    }
+
+
+    /****************************** 页面控制 END ******************************/
+
+
+    /****************************** 4. 初始化工作 START ******************************/
+
+    /**
+     * 播控页面关闭时调用，清理数据
+     * @return {[type]} [description]
+     */
+    function destroy() {
+        
+        // 1. 关闭时间定时器
+        clearTimeout( UIPC.sysTimeTimer );
+
+        UIPC = null;
+    }
+
+    /**
+     * 播控页面初始化处理
+     * @return {[type]} [description]
+     */
+    function init( type ) {
+
+        // 0. 根据类型决定显示那种类型的播放器
+        UIPC.playType = type;
+
+
+        // 更新ID前缀
+        pcPrefixValueInit();
+
+        // 1. 更新时间
+        pcUpdateCurrentTimeDiv();
+
+        // 2. 更新进度条正文
+        pcUpdateProcessCtrlDiv();
+    }
+
+    /****************************** 初始化工作 START ******************************/
+
+
+    /****************************** 5. 播控控制 START ******************************/
+
+    /**
+     * 更新节目开始时间
+     * @return {[type]} [description]
+     */
+    function pcUpdateProcessInfo( mp ) {
+
+        switch ( playType ) {
+            case 0:     // 直播
+
+                pcUpdateChannelInfo();
+                break;
+            case 1:     // 时移
+
+                pcUpdateTstvTvodInfo();
+                break;
+            case 2:     // 回看
+
+                pcUpdateTstvTvodInfo();
+                break;
+            case 3:     // 直播暂停
+
+                pcUpdateChannelPauseInfo();
+                break;
+            case 4:     // 直播回看
+
+                pcUpdateChannelTvodInfo();
+                break;
+
+            // no default
+        }
+
+    }
+
+    /**
+     * 更新直播
+     * @return {[type]} [description]
+     */
+    function pcUpdateChannelInfo() {
+        
+        var chanInfo    = pcGetChannelInfo(),
+            ids         = UIPC.ids;
+
+        if ( !chanInfo ) {
+            return false;
+        }
+
+        pcReplaceInnerHTML( $( ids.chanNo ), chanInfo.No );
+        pcReplaceInnerHTML( $( ids.chanName ), chanInfo.name );
+        pcReplaceInnerHTML( $( ids.chanProgName ), chanInfo.progName );
+        pcReplaceInnerHTML( $( ids.chanProgTime ), chanInfo.progTime );
+
+        return true;
+    }
+
+
+    /**
+     * 更新时移或回看
+     *
+     * @return {[type]} [description]
+     */
+    function pcUpdateTstvTvodInfo() {
+        
+        var mediaInfo   = null,
+            ids         = UIPC.ids,
+            type        = playType;
+
+
+        // 1 - tstv, 2 - tvod
+        mediaInfo = ( type === 1 
+                        ? pcGetTSTVInfo()
+                        : pcGetTVODInfo() 
+                    );
+
+        if ( !mediaInfo ) {
+            return false;
+        }
+
+        pcReplaceInnerHTML( $( ids.tvodTstvProgName ), mediaInfo.name );
+        pcReplaceInnerHTML( $( ids.tvodTstvStart ), mediaInfo.start );
+        pcReplaceInnerHTML( $( ids.tvodTstvEnd ), mediaInfo.end );
+
+        return true;
+    }
+
+    /**
+     * 直播暂停
+     * @return {[type]} [description]
+     */
+    function pcUpdateChannelPauseInfo() {
+        
+        // TODO
+    }
+    
+    /**
+     * 直播回看
+     * @return {[type]} [description]
+     */
+    function pcUpdateChannelTvodInfo() {
+        
+        // TODO
+    }
+
+    /**
+     * 播放直播，可从列表播放，也可以从其他页面跳转进来时候调用
+     * @param  {[type]} channelID [description]
+     * @return {[type]}           [description]
+     */
+    function pcPlayChannel( channelID ) {
+
+        // TODO 
+    }
+
+    /**
+     * 播放回看
+     * @return {[type]} [description]
+     */
+    function pcPlayTvod( url ) {
+        
+        // TODO
+    }
+
+    /****************************** 播放控制 END ******************************/
+
+
+    /****************************** 6. 小工具 START ******************************/
+
+    // 将 0 - 9 数字转成 '00' - '09' 的字符串
+    function convertSingleNumToString( digit ) {
+        
+        if ( typeof digit !== 'number' ) {
+            return -1;
+        }
+
+        if ( digit > 9 || digit < 0 ) {
+            return digit + '';
+        }
+
+        return '0' + digit;
+    }
+
+    // UI调试
+    function ui_debug( str ) {
+        
+        iPanel.debug( '[ui_playControl.js] ---- ' + str );
+    }
+
+    function $( id ) {
+        return document.getElementById( id );
+    }
+
+    function isArray( arr ) {
+        
+        return Object.prototype.toString.call( arr ) === '[object Array]';
+    }
+
+    function isObject( obj ) {
+        
+        return Object.prototype.toString.call( obj ) === '[object Object]';
+    }
+    function isTextNode( node ) {
+        
+        return Object.prototype.toString.call( node ) === '[object Text]'; 
+    }
+
+    // 判断 div 实现显示
+    function isDivShow( id ) {
+        
+        if ( typeof id !== 'string' ) {
+            return false;
+        }
+
+        var e = $( id ),
+            v = e.style.visibility,
+            d = e.style.display;
+
+        if ( v !== '' ) {
+
+            return v !== 'hidden';
+        }
+
+        if ( d !== '' ) {
+
+            return d !== 'none';
+        }
+    }
+
+    function getEleFirstTextNode( parent ) {
+        
+        if ( !parent ) {
+            return null;
+        }
+
+        var childs = parent.childNodes,
+            i = 0,
+            len = childs.length;
+
+        for ( ; i < len; i++ ) {
+
+            // 只要第一个
+            if ( isTextNode( childs[ i ] ) ) {
+
+                return childs[ i ];
+            }
+        }
+
+        // not found
+        return null;
+    }
+
+    /****************************** 小工具 END ******************************/
+
+    // 暴露出去的接口
+    return {
+
+        /**************** 初始化相关 ****************/
+
+        // 初始化
+        init: init,
+
+        /**************** 数据相关 ****************/
+
+        // 设置数据类型
+        setDataType: setDataType,
+
+        // 获取数据类型
+        getDataType: getDataType,
+
+
+        /**************** 列表相关 ****************/
+
+        // 创建列表
+        table: pcShowTable,
+
+
+        /**************** 更新相关 ****************/
+
+        // 更新广告
+        updateAd: pcUpdateAd,
+
+
+        /**************** 按键处理相关 ****************/
+
+        // 播控页面事件处理
+        eventHandler: pcEventHandler
+    };
+
+}());
+
+/*
+    该文件使用方法：搭配 ui_playControl.htm 使用
+
+    1. 初始化
+
+ */
+
+// 按键处理
+window.document.onkeydown = pc.eventHandler;
+
+window.onload = function () {
+
+    var table = null;
+
+    // 初始化播控页面
+    pc.init();
+
+    // 设置列表数据类型
+    pc.setDataType( 0 );
+
+    // 根据上一步设置的数据类型自动创建列表
+    // table = pc.table();
+
+    // $( 'lc_progs' ).appendChild( table );
+};
+
+function $( id ) {
+
+    return document.getElementById( id );
+}
+
+function debug( str ) {
+    console.log( str );
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script type="text/javascript" src="scripts/ui_table.js"></script>
+
+	<script type="text/javascript">
+		
+
+	var name = 'fll';
+
+	var a = {
+
+		name: 'lizc',
+
+		who: 'i am is ' + this.name
+
+		, 
+
+		test: function () { return this; } 
+	};
+
+
+	a.test().name;
+
+	var string = 'tr&{"prefix":"chan_list","height":"80px"}';
+	function pcGetTrIdPrefix( str ) {
+        
+        var match = str.match(/\"prefix\"\:\"\w+\"/)[0];
+
+        return match.split( ':' )[ 1 ].replace( /\"/g, "" );
+    }
+
+	</script>
+</body>
+</html>
