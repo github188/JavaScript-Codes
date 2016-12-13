@@ -58,6 +58,8 @@ function TableGenerator( ) {
         son: '$'
     };
 
+    this.brs = 0;
+
     // others
 }
 
@@ -75,7 +77,6 @@ TableGenerator.prototype.init = function ( string, lines, flag, lineObj ) {
     this.flag       = flag || false;
     this.lineObj    = lineObj || this.lineObj;
 
-    console.log( string )
 
     return this.createTable();
 };
@@ -96,6 +97,7 @@ TableGenerator.prototype.createTable = function () {
         trs     = null,
         trString  = '',
         needTable = true,
+
 
         // 分隔符
         superSeparator   = that.separator.super;
@@ -122,7 +124,6 @@ TableGenerator.prototype.createTable = function () {
 
     // 创建所有行
     trs = that.createTableTrs( trString, lines, flag );
-
 
     if ( needTable ) { // 有table时才添加，否则会与下面一步重复
 
@@ -188,13 +189,21 @@ TableGenerator.prototype.createTableTrs = function ( string, lines, flag ) {
 
     style = eval( "(" + styleJSON + ")" );
 
-    prefix = style.prefix || that.trIdPrefix;
+    debug(style)
+
+    if ( style ) {
+
+        prefix = style.prefix;
+    }
 
     for( ; i < lines; i++ ) {
 
         tr = that.createElements( string );
 
-        tr.id = prefix + i;
+        if ( prefix ) {
+
+            tr.id = prefix + i;
+        }
 
         // 根据需要创建分割线
         if ( flag && i < lines - 1 ) { // 最后一行下面不需要分割线
@@ -281,14 +290,12 @@ TableGenerator.prototype.createElementByString = function ( str ) {
         return null;
     }
 
-
     eleArr  = str.split( sonSeperator );
     len     = eleArr.length;
 
     for ( ; i < len; i++ ) {
 
         eleObj = eleObj || {};
-
 
         if ( eleArr[ i ].indexOf( styleSeperator ) >= 0 ) {
 
@@ -299,7 +306,6 @@ TableGenerator.prototype.createElementByString = function ( str ) {
             // eval -> JSON.parse
             eleObj.styles = eval( "(" + tmp[ 1 ] + ")" );
         } else {
-
             eleObj.tagName = eleArr[ i ];
             eleObj.styles = null;
         }
@@ -309,18 +315,15 @@ TableGenerator.prototype.createElementByString = function ( str ) {
 
         if ( parent === null ) {
 
-            parent = node;
+            frag = node;
+            parent = frag;
+
         } else {
 
+            debug(parent);
             parent.appendChild( node );
 
             parent = node;
-        }
-
-        // 保存顶级元素，最终返回的结果
-        if ( frag === null && parent !== null ) {
-
-            frag = parent;
         }
     }
 
@@ -335,7 +338,8 @@ TableGenerator.prototype.createEle = function ( tag, styles ) {
 
     var node        = null,
         textNode    = null,
-        prop        = '';
+        prop        = '',
+        br          = null;
 
     if ( typeof tag !== 'string' || tag === '' ) {
 
@@ -350,6 +354,14 @@ TableGenerator.prototype.createEle = function ( tag, styles ) {
     if ( styles === null ) {
 
         return node;
+    }
+
+    // 元素后面是否需要换行
+    if ( parseInt( styles.needBr, 10 ) === 1 ) {
+
+        br = document.createElement( 'br' );
+
+        node.appendChild( br );
     }
 
     if ( styles.id ) {
@@ -410,5 +422,10 @@ function isString( str ) {
     return typeof str === 'string' && str !== '';
 }
 
+
+function debug( str ) {
+    
+    // console.log( str );
+}
 
 // var table = new TableGenerator();
