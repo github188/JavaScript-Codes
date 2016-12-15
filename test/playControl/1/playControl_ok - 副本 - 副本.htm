@@ -114,128 +114,126 @@
 
 			var o = {};
 
-			
+		
+			// 当前进度条 id
+			o.pid = '';
 
+			// 系统时间计时器
+			o.timer = null;
 
+			/*
+			    播放类型，
+			    直播：'LiveTV'
+			    时移：'TSTV'
+			    回看：'TVOD'
+			    直播时移状态：'LiveTSTV'
+			    直播回看状态：'LiveTVOD'
+			 */
+			o.type = 'LiveTV';
+
+			// 当前播放的频道 id 
+			o.currChannelId = 2;
+
+			// 当前频道是否支持时移
+			// [ 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1 ]
+			o.currChannelSupportTSTV = 0,
+
+			/*
+			    播放状态：play, pause, fastforward, fastrewind, stop
+			 */
+			o.status = 'play';
+
+			o.speed = 0;
+
+			// 进度条显示标识
+			o.isProgressShow = false;
+
+			// 列表
+			o.chanFocus 	= 0;
+			o.lines 		= 8;
+			o.focusTop 		= -16;
+			o.chanDatas 	= null;
+			o.channelListData = [];
+			o.focusId 		= 'lc_focus';
+			o.prefix 		= 'chanList';
+			o.chan 			= '';
+			o.isChanListShow = false;
+			o.chanLines 		= 0;
+			o.dataIndex 	= 0;
+			o.totalPages 	= 0;
+			o.currPage 		= 0;
+
+			// 节目标题
+			o.titles = {
+
+			    tvod: '回看播放',
+			    tstv: '时移播放'
+			};
+
+			// 播控相关元素 id
+			o.ids = {
+
+			    progress: 'pf',
+
+			    // 时间区元素 ID
+			    date: 'pfg_date',
+			    time: 'pfg_time',
+
+			    // 广告元素 ID
+			    adWrap: 'ad_wrap', // 广告外层div
+			    ad: 'ad',
+
+			    // 播控状态区元素 ID
+			    status: 'pfg_status',
+			    statusL: 'pfgs_left',
+			    statusR: 'pfgs_right',
+
+			    // 回看时移进度条区元素 id
+			    tvodTstv: 'pfg_tvodTstv',
+			    tvodTstvStart: 'pfgt_start',
+			    tvodTstvEnd: 'pfgt_end',
+			    tvodTstvStatus: 'pfgt_status',
+			    tvodTstvProgTitle: 'pfgt_programTitle',
+			    tvodTstvProgName: 'pfgt_programName',
+			    tvodTstvProgTime: 'pfgt_programTime',
+			    tvodTstvProcess: 'pfgt_process',
+
+			    // 直播进度条区元素 ID
+			    chan: 'pf_live',
+			    chanNo: 'pfl_chanNo',
+			    chanName: 'pfl_chanName',
+			    chanIcon: 'pfl_channIcon',
+			    chanProgTime: 'pfl_progTime',
+			    chanProgName: 'pfl_progName',
+			    chanNextProgTime: 'pfl_nextProgTime',
+			    chanNextProgName: 'pfl_nextProgName',
+			    chanProcess: 'pfl_process'
+			};
+
+			// 播控相关的元素图片路径
+			o.icons = {
+
+			    fast: 'images2/ctrl_fast.png',
+			    tvod: 'images2/icon_hk.png',
+			    tvodBig: 'images2/icon_hk_big.png',
+			    tvodBtn: 'images2/icon_hk_btn.png',
+			    goTvod: 'images2/left_2tvod.png',
+			    tstv: 'images2/icon_sy.png',
+			    tstvBig: 'images2/icon_sy_big.png',
+			    goTstv: 'images2/enter_tstv.png',
+			    exitTvod: 'images2/exit_tvod.png',
+			    exitTstv: 'images2/exit_tstv.png',
+			    chanList: 'images2/ch_list.png',
+			    playPause: 'images2/play_pause.png',
+			    play: 'images2/icon_play.png'
+			    
+			};
 
 
 		}( window ));
 
 
 
-			// 当前进度条 id
-			var pcPid = '',
-
-			// 系统时间计时器
-				pcTimer = null,
-
-				/*
-				    播放类型，
-				    直播：'LiveTV'
-				    时移：'TSTV'
-				    回看：'TVOD'
-				    直播时移状态：'LiveTSTV'
-				    直播回看状态：'LiveTVOD'
-				 */
-				pcType = 'LiveTV',
-
-				// 当前播放的频道 id 
-				pcCurrChannelId = 2,
-
-				// 当前频道是否支持时移
-				// [ 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1 ]
-				pcCurrChannelSupportTSTV = 0,
-
-				/*
-				    播放状态：play, pause, fastforward, fastrewind, stop
-				 */
-				pcStatus = 'play',
-
-				pcSpeed = 0,
-
-				// 进度条显示标识
-				pcIsProgressShow = false,
-
-				// 节目标题
-					pcTitles = {
-
-				    tvod: '回看播放',
-				    tstv: '时移播放'
-				},
-
-				// 播控相关元素 id
-				pcIds = {
-
-				    progress: 'pf',
-
-				    // 时间区元素 ID
-				    date: 'pfg_date',
-				    time: 'pfg_time',
-
-				    // 广告元素 ID
-				    adWrap: 'ad_wrap', // 广告外层div
-				    ad: 'ad',
-
-				    // 播控状态区元素 ID
-				    status: 'pfg_status',
-				    statusL: 'pfgs_left',
-				    statusR: 'pfgs_right',
-
-				    // 回看时移进度条区元素 id
-				    tvodTstv: 'pfg_tvodTstv',
-				    tvodTstvStart: 'pfgt_start',
-				    tvodTstvEnd: 'pfgt_end',
-				    tvodTstvStatus: 'pfgt_status',
-				    tvodTstvProgTitle: 'pfgt_programTitle',
-				    tvodTstvProgName: 'pfgt_programName',
-				    tvodTstvProgTime: 'pfgt_programTime',
-				    tvodTstvProcess: 'pfgt_process',
-
-				    // 直播进度条区元素 ID
-				    chan: 'pf_live',
-				    chanNo: 'pfl_chanNo',
-				    chanName: 'pfl_chanName',
-				    chanIcon: 'pfl_channIcon',
-				    chanProgTime: 'pfl_progTime',
-				    chanProgName: 'pfl_progName',
-				    chanNextProgTime: 'pfl_nextProgTime',
-				    chanNextProgName: 'pfl_nextProgName',
-				    chanProcess: 'pfl_process'
-				},
-
-				// 播控相关的元素图片路径
-				pcIcons = {
-
-				    fast: 'images2/ctrl_fast.png',
-				    tvod: 'images2/icon_hk.png',
-				    tvodBig: 'images2/icon_hk_big.png',
-				    tvodBtn: 'images2/icon_hk_btn.png',
-				    goTvod: 'images2/left_2tvod.png',
-				    tstv: 'images2/icon_sy.png',
-				    tstvBig: 'images2/icon_sy_big.png',
-				    goTstv: 'images2/enter_tstv.png',
-				    exitTvod: 'images2/exit_tvod.png',
-				    exitTstv: 'images2/exit_tstv.png',
-				    chanList: 'images2/ch_list.png',
-				    playPause: 'images2/play_pause.png',
-				    play: 'images2/icon_play.png'
-				    
-				},
-
-				// 列表
-				pcChanFocus 	= 0,
-				pcLines 		= 8,
-				pcFocusTop 		= -16,
-				pcChanDatas 	= null,
-				pcChannelListData = [],
-				pcFocusId 		= 'lc_focus',
-				pcPrefix 		= 'chanList',
-				pcChan 			= '',
-				pcIsChanListShow = false,
-				pcChanLines 		= 0,
-				pcDataIndex 	= 0,
-				pcTotalPages 	= 0,
-				pcCurrPage 		= 0;
 
 			function pcListInit() {
 
