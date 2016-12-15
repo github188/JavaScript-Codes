@@ -40,7 +40,7 @@ var pc = (function () {
         progress: {
 
             /*
-                播放类型：LiveTV-0, TSTV-1, TVOD-2, VOD-3
+                播放类型：LiveTV, TSTV, TVOD, VOD, 
                 可根据该类型来决定状态控制栏显示的内容
              */
             playType: 0,
@@ -88,38 +88,30 @@ var pc = (function () {
 
             icons: {
 
-                fast: 'images/ctrl_fast.png',
-                tvod: 'images/icon_hk.png',
-                tvodBig: 'images/icon_hk_big.png',
-                tvodBtn: 'images/icon_hk_btn.png',
-                goTvod: 'images/left_2tvod.png',
-                tstv: 'images/icon_sy.png',
-                tstvBig: 'images/icon_sy_big.png',
-                goTstv: 'images/enter_tstv.png',
-                exitTvod: 'images/exit_tvod.png',
-                exitTstv: 'images/exit_tstv.png',
-                chanList: 'images/ch_list.png',
-                playPause: 'images/play_pause.png'
+                fast: 'images2/ctrl_fast.png',
+                tvod: 'images2/icon_hk.png',
+                tvodBig: 'images2/icon_hk_big.png',
+                tvodBtn: 'images2/icon_hk_btn.png',
+                goTvod: 'images2/left_2tvod.png',
+                tstv: 'images2/icon_sy.png',
+                tstvBig: 'images2/icon_sy_big.png',
+                goTstv: 'images2/enter_tstv.png',
+                exitTvod: 'images2/exit_tvod.png',
+                exitTstv: 'images2/exit_tstv.png',
+                chanList: 'images2/ch_list.png',
+                playPause: 'images2/play_pause.png',
+                play: 'images2/icon_play.png'
                 
             }
-        },
-
-        plist: {
-
         },
 
         // ids
         ids: {
             
-
             // 频道/节目焦点框
             plistProgFocus: 'lc_focus',
             plistDateFocus: ''
-        },
-
-        icons: {
-            
-        },
+        }
     };
 
     var tools = (function () {
@@ -206,8 +198,20 @@ var pc = (function () {
         // 系统时间计时器
         o.timer = null;
 
-        // 播放类型
-        o.type = pb.playType;
+        /*
+            播放类型，
+            直播：'LiveTV'
+            时移：'TSTV'
+            回看：'TVOD'
+            直播时移状态：'LiveTSTV'
+            直播回看状态：'LiveTVOD'
+         */
+        o.type = 'LiveTV';
+
+        /*
+            播放状态：play, pause, fastforward, fastrewind, stop
+         */
+        o.status = 'play';
 
         // 节目标题
         o.titles = pb.titles;
@@ -223,7 +227,7 @@ var pc = (function () {
             o.type = type;
 
             // 启动系统时间
-            // o.timing();
+            o.timing();
 
             o.show();
         };
@@ -262,25 +266,37 @@ var pc = (function () {
                 ids     = that.ids,
                 titles  = that.titles,
                 icons   = that.icons,
-                stIcon  = '';
+                stIcon  = '',
+                src     = '';
 
             that.update();
 
-            if ( type === 0 || type === 3 || type === 4 ) { // liveTV 或者 直播暂停 或 直播回看
+            if ( type === 'LiveTV' || type === 'LiveTSTV' || type === 'LiveTVOD' ) { // liveTV 或者 直播暂停 或 直播回看
 
                 tools.show( ids.chan );
                 tools.hide( ids.tvodTstv );
 
-                // 类型图标
-                $( ids.chanIcon ).src = type === 4 ? icons.tvod : icons.tstv;
+                if ( type === 'LiveTV' ) {
 
-            } else if ( type === 1 || type === 2 ) { // TSTV 或 TVOD
+                    src = icons.play;
+                } else if ( type === 'LiveTSTV' ) {
+
+                    src = icons.tstv;
+                } else if ( type === 'LiveTVOD' ) {
+
+                    src = icons.tvod;
+                }
+
+                // 类型图标
+                $( ids.chanIcon ).src = src;
+
+            } else if ( type === 'TSTV' || type === 'TVOD' ) { // TSTV 或 TVOD
 
                 // title 需要修改
-                $( ids.tvodTstvProgTitle ).innerHTML = ( type === 1 ? titles.tstv : titles.tvod );
+                $( ids.tvodTstvProgTitle ).innerHTML = ( type === 'TSTV' ? titles.tstv : titles.tvod );
 
                 // 类型图标
-                $( ids.tvodTstvStatus ).src = type === 1 ? icons.tstv : icons.tvod;
+                $( ids.tvodTstvStatus ).src = type === 'TSTV' ? icons.tstv : icons.tvod;
 
                 tools.show( ids.tvodTstv );
                 tools.hide( ids.chan );
@@ -297,27 +313,27 @@ var pc = (function () {
 
             switch ( that.type ) {
 
-                case 0:     // LiveTV
+                case 'LiveTV':     // LiveTV
                     leftIcon    = '';
                     rightIcon   = icons.chanList;
                     o.pid       = ids.chanProcess;
                     break;
-                case 1:     // TSTV
+                case 'TSTV':     // TSTV
                     leftIcon    = icons.exitTstv;
                     rightIcon   = icons.chanList;
                     o.pid       = ids.tvodTstvProcess;
                     break;
-                case 2:     // TVOD
+                case 'TVOD':     // TVOD
                     leftIcon    = icons.exitTvod;
                     rightIcon   = icons.playPause;
                     o.pid       = ids.tvodTstvProcess;
                     break;
-                case 3:     // 直播暂停状态
+                case 'LiveTSTV':     // 直播暂停状态
                     leftIcon    = icons.goTstv;
                     rightIcon   = icons.chanList;
                     o.pid       = ids.chanProcess;
                     break;
-                case 4:     // 直播回看状态
+                case 'LiveTVOD':     // 直播回看状态
                     leftIcon    = icons.fast;
                     rightIcon   = icons.chanList;
                     o.pid       = ids.chanProcess;
@@ -326,10 +342,15 @@ var pc = (function () {
                 // no default
             }
 
+            debug( 'left: ' + leftIcon + ', rightIcon = ' + rightIcon );
+
             if ( leftIcon !== '' ) {
 
                 $( ids.statusL ).parentNode.style.display = 'block';
                 $( ids.statusL ).src = leftIcon;
+            } else {
+
+                $( ids.statusL ).parentNode.style.display = 'none';
             }
 
             if ( rightIcon !== '' ) {
@@ -342,6 +363,110 @@ var pc = (function () {
         o.updateAd = function ( image ) {
             
             $( o.ids.ad ).src = image;
+        }
+
+        o.pauseOrPlay = function () {
+
+            if ( o.type === 'LiveTV' && o.status === 'play' ) { // 直播暂停
+
+                o.type = 'LiveTSTV';
+
+                // 要暂停播放
+                pause();
+
+            } else if ( o.type === 'LiveTSTV' ) { // 直播时移状态，再按播放进入时移
+
+                o.type = 'TSTV';
+
+                play();
+            } else if ( o.type === 'LiveTVOD' ) { // 直播回看状态，再按播放进入回看
+
+                // 先不处理
+                
+                o.type = 'TVOD';
+            } else if ( 'TSTV' || 'TVOD' ) { // 时移暂停，暂停或播放
+
+                if ( o.status === 'play' ) {
+
+                    pause();
+                } else if ( o.status === 'pause' ) {
+
+                    play();
+                }
+            }
+
+            o.show();
+        };
+
+        o.back = function () {
+
+            var channelID = 0; // test
+
+            // 统统返回到直播
+            o.type = 'LiveTV';
+
+            o.show();
+
+            playChannel();
+        };
+
+
+        o.eventHandler = function ( event ) {
+
+            var keycode = event.which ? event.which : event.keycoe;
+
+            debug( 'eh ---------------- keycode = ' + keycode );
+
+            switch ( keycode ) {
+                case 37:
+                    
+                    return false;
+                    break;
+                case 39:
+                    return false;
+                    break;
+                // for test start
+                case 96: // 0  暂停
+
+                    o.pauseOrPlay();
+                    return false;
+                    break;
+                case 97: // 1
+
+                    o.back();
+                    return false;
+                    break;
+                case 98: // 2
+                    return false;
+                    break; 
+                // for test end
+                default:
+                    return true;    
+                    break;
+            }
+        }
+
+        /* ---------------------- 私有方法 ----------------------- */
+
+        function pause() {
+            
+            o.status = 'pause';
+
+            debug( ' ------------- pause' );
+        }
+
+        function play() {
+            
+            o.status = 'play';
+
+            debug( ' ------------- play' );
+        }
+
+        function playChannel( channelID ) {
+            
+            o.status = 'play';
+
+            debug( ' ------------- playChannel' );
         }
 
         return o;
@@ -365,6 +490,8 @@ var pc = (function () {
 
         // 频道列表或节目列表焦点索引
         o.chanFocus = 0;
+
+        o.progFocus = 0;
 
         o.line = null;
 
@@ -398,40 +525,21 @@ var pc = (function () {
             tblDate: 'lc_date',
             tblProg: 'lc_progs',
             tblChan: 'lc_progs',
-            chanFocus: 'lc_focus'
-        };
-
-        /*
-            创建表格用的行属性字符串
-
-            表生成器需要用到
-         */
-        o.tr = {
-
-            // 日期列表行
-            date: 'tr&{"prefix":"date_list","height":"80px"}+' +
-                  'td&{"width":"172px","background":"url(images/dlist_bg.png) no-repeat center"}',
-
-            // 节目列表行
-            prog: 'tr&{"prefix":"prog_list","height":"80px"}+' + 
-                  'td&{"width":"85px","text-align":"center"}+' + 
-                  'td&{"width":"221px"}',
-
-            // 频道列表行
-            chan: 'tr&{"prefix":"chan_list","height":"80px"}+' +
-                  'td&{"width":"245px","fontSize":"30px"}+' + 
-                  'td&{"width":"245px"}$' +
-                  'span&{"fontSize":"20px","color":"#c6d2dd"}'
+            chanFocus: 'lc_focus',
+            progFocus: 'lc_focus'
         };
 
         o.icons = {
 
-            dateFocus: 'images/dlist_bg_focus.png'
+            dateFocus: '../images2/dlist_bg_focus.png'
         };
 
         o.init = function ( type ) {
 
             o.type = type;
+
+
+            // o.initData();
 
             // 初始化表中行的 id 前缀
             o.prefixInit();
@@ -454,13 +562,16 @@ var pc = (function () {
 
             var type = o.type;
 
+            debug(type)
+
             // type: 0 - channel, 1 - tvod
             if ( type === o.attrs.chan ) {
 
                 /* ------------- 频道表 --------------- */
 
                 // 创建频道列表
-                $( o.ids.tblChan ).appendChild( o.create( o.attrs.chan ) );
+                $( o.ids.tblChan ).innerHTML = o.create( o.attrs.chan );
+                // $( o.ids.tblChan ).appendChild( o.create( o.attrs.chan ) );
 
                 // 显示表
                 showChannelList( start );
@@ -470,7 +581,8 @@ var pc = (function () {
                 /* ------------- 日期表 --------------- */
 
                 // 创建日期列表
-                $( o.ids.tblDate ).appendChild( o.create( o.attrs.date ) );
+                $( o.ids.tblDate ).innerHTML = o.create( o.attrs.date );
+                // $( o.ids.tblDate ).appendChild( o.create( o.attrs.date ) );
 
                 // 显示日期列表
                 showTvodDateList( start );
@@ -478,7 +590,8 @@ var pc = (function () {
                 /* ------------- 节目表 --------------- */
 
                 // 创建节目表
-                $( o.ids.tblProg ).appendChild( o.create( o.attrs.prog ) );
+                $( o.ids.tblProg ).innerHTML = o.create( o.attrs.prog );
+                // $( o.ids.tblProg ).appendChild( o.create( o.attrs.prog ) );
 
                 // 显示节目表
                 showTvodProgList( start );
@@ -487,21 +600,51 @@ var pc = (function () {
 
         o.create = function ( type ) {
 
-            var flag = true,
-                attrs = o.attrs;
+            var i = 0,
+                len = o.rows,
+                content = '',
+                prefix = '';
 
-            if ( typeof type !== 'string' ) {
+            if ( type === o.attrs.date ) {
 
-                return null;
+                prefix  = o.prefix.dateTr;
+            } else if ( type === o.attrs.prog ) {
+
+                prefix = o.prefix.progTr;
+            } else if ( type === o.attrs.chan ) {
+
+                prefix = o.prefix.chanTr;
             }
 
-            // 日期表不需要分割线
-            if ( type === attrs.date ) {
+            for ( ; i < len; i++ ) {
 
-                flag = false;
+                if ( type === o.attrs.date ) {
+
+                    content += '<tr id=' + prefix + i + ' style="height:80px;">'
+                                + '<td style="width:172px;'
+                                + 'background:url(images2/dlist_bg.png) no-repeat center"></td>'
+                            + '</tr>';
+
+                } else if ( type === o.attrs.prog ) {
+            
+                    content += '<tr id=' + prefix + i + ' style="height:80px;">'
+                                + '<td style="width:85px;text-align:center;"></td>'
+                                + '<td sytle="width:221px;"></td>'
+                            + '</tr>';
+
+                } else if ( type === o.attrs.chan ) {
+
+                    content += '<tr id=' + prefix + i + ' style="height: 80px; color: rgb(255, 255, 255);">'
+                                + '<td style="width: 85px; font-size: 30px;"></td>'
+                                    + '<td style="width: 245px;">'
+                                    + '<br />'
+                                    + '<span style="font-size: 20px;"></span>'
+                                + '</td>'
+                            + '</tr>';
+                }
             }
 
-            return new TableGenerator().init( o.tr[ type ], o.rows, flag, o.line );
+            return content;
         };
 
         o.table = function ( start, type ) {
@@ -635,9 +778,9 @@ var pc = (function () {
 
         o.prefixInit = function () {
 
-            o.prefix.dateTr = o.findPrefix( o.tr.date );
-            o.prefix.progTr = o.findPrefix( o.tr.prog );
-            o.prefix.chanTr = o.findPrefix( o.tr.chan );
+            o.prefix.dateTr = 'dlist';
+            o.prefix.progTr = 'plist';
+            o.prefix.chanTr = 'clist';
         };
 
         o.findPrefix = function ( str ) {
@@ -727,22 +870,10 @@ var pc = (function () {
             // 显示列表
             $( o.ids.tblChan ).style.display = 'block';
 
-            // // 显示焦点框
-            // $( o.ids.chanFocus ).style.display = 'block';
+            $( o.ids.chanFocus ).style.display = 'block';
 
             // 偏移
             o.changeChanTblOffsetX( -1 );
-        }
-
-        // 频道列表行获取焦点
-        function chanTrGetFocus( id ) {
-            
-
-        }
-
-        // 频道列表行失去焦点
-        function chanTrLoseFocus( id ) {
-            
         }
 
         // 显示回看列表，包括日期和节目
@@ -760,24 +891,6 @@ var pc = (function () {
             $( o.ids.tblDate ).style.display = 'block';
 
             id = prefix + o.dateFocus;
-
-            // dateTrGetFocus( id );
-        }
-
-        // 日期行获取焦点
-        function dateTrGetFocus( id ) {
-            
-            // $( id ).style.background = 'url(' + o.icons.dateFocus + ') no-repeat center';
-
-            // $( id ).style.color = '#fff';
-        }
-
-        // 日期行失去焦点
-        function dateTrLostFocus( id ) {
-            
-            // $( id ).style.background = '';
-
-            // $( id ).style.color = '#727374';
         }
 
         // 显示回看节目表
@@ -792,7 +905,21 @@ var pc = (function () {
             // 显示节目表
             $( o.ids.tblProg ).style.display = 'block';
             // 显示焦点框
-            $( o.ids.chanFocus ).style.display = 'block';
+            $( o.ids.progFocus ).style.display = 'block';
+        }
+
+
+
+        function initChanListFocus() {
+            
+        }
+
+        function initProgListFocus() {
+            
+        }
+
+        function initDateListFocus() {
+            
         }
 
         return o;
@@ -837,7 +964,9 @@ var pc = (function () {
 
         o.init = function () {
 
-            
+            var type = o.pl.type;
+
+
         };
 
         function keyUp() {
@@ -916,15 +1045,15 @@ var pc = (function () {
 
         function dateListGetFocus( index ) {
             
-            var id = 'dlist' + index;
+            var id = o.prefix.dateTr + index;
 
-            $( id ).style.background = 'url(dlist_bg_focus.png) no-repeat center';
+            $( id ).style.background = 'url(' + o.icons + ') no-repeat center';
             $( id ).style.color = '#FFFFFF';
         }
 
         function dateListLoseFocus( index ) {
 
-            var id = 'dlist' + index;
+            var id = id.prefix.dateTr + index;
 
             $( id ).style.background = '';
             $( id ).style.color = '#727374';
@@ -952,26 +1081,30 @@ var pc = (function () {
             progListGetFocus();
         }
 
-        function progListGetFocus( direction ) {
+        function progListGetFocus() {
 
-            var id      = 'plist_focus',
+            var id      = o.ids.progFocus,
                 top     = 0,
-                trH     = 78;
+                trH     = 0,
+                tr      = null,
+                focus   = o.prefix.progTr + o.progFocus;
 
-            console.log( direction + ', ' + progFocus );
+            tr = $( o.ids.tblProg ).getElementsByTagName( 'tr' );
 
-            $( 'plist' + progFocus ).style.color = '#ffffff';
+            trH = tr.style.height.replace( /px/, 10 );
+
+            debug( 'trH --------- ' + trH );
+
+            $( focus ).style.color = '#ffffff';
 
             $( id ).style.visibility = 'visible';
 
             $( id ).style.top = ( o.focusTop + trH * o.progFocus ) + 'px';
         }
 
-        function progListLoseFocus( index ) {
+        function progListLoseFocus() {
             
-            $( 'plist' + o.progFocus ).style.color = '#a0a2a4';
-
-            $( 'plist_focus' ).style.visibility = 'hidden';
+            $( o.prefix.progTr + o.progFocus ).style.color = '#a0a2a4';
 
             // no need
         }
@@ -1038,30 +1171,32 @@ var pc = (function () {
 
         tblUpdate: plist.update,
 
+        progressControl: progress.eventHandler
+
         // 按键处理
-        eventHandler: pageController.eventHandler
+        // eventHandler: pageController.eventHandler
     };
 
 }());
 
-
+/*
 
 // 按键处理
-window.document.onkeydown = pc.eventHandler;
+window.document.onkeydown = pc.progressControl;
 
 window.onload = function () {
 
     var table = null;
 
     // 初始化播控页面
-    pc.init( 1 );
+    pc.init( 'LiveTV' );
 
-    pc.tblInit( 'tvod' );
+    // pc.tblInit( 'tvod' );
 
 
     // 设置列表数据类型
     // pc.setDataType( 0 );
-};
+}; */
 
 function $( id ) {
 
