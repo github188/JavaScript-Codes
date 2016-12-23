@@ -12,7 +12,92 @@
  * [ADD] ccGetEleFirstTextNode
  *
  * 修改前缀：-> cc
+ *
+ * 2016/12/23 9:55:39
+ * [ADD] ccWordFlow: 标签内文字超出标签实际宽度时的动画消息
  */
+
+/**
+ * 
+ * 
+ * @return {[type]}    [description]
+ *
+ * PS: 'marquee'标签已经被标准不推荐使用了，不过可以通过纯js 实现动画效果【TODO】
+ *
+ * 这个接口假设已经存在参考标签: <p id="word" style="display:inline-block;visibility:hidden;"></p>
+ */
+
+
+/**
+ * 文字超出标签宽度时，左右流动处理
+ * @param  {String/DomObject} eleOrId      需要处理的包含文字的标签 ID 或者标签元素
+ * @param  {Boolean} need   决定是否需要判断超出  
+ * @param  {Boolean} on     是否需要滚动，不传或true滚动，false取消滚动
+ * @return {[type]}    [description]
+ *
+ * PS: 兼容传入 元素ID 或者 直接元素对象
+ */
+ function ccWordFlow( eleOrId, need, on ) {
+    
+    var frag    = null,
+        marquee = null,
+        width   = 0,
+        wordW   = 0
+        textNode = null,
+        srcEle = null,
+        target = $ID( 'word' );
+
+    if ( typeof need !== 'boolean' || typeof on !== 'boolean' ) {
+
+        debug( 'ccWordFlow --- flow --- argument error.' );
+        return false;
+    }
+
+    srcEle = typeof eleOrId === 'string' ? $ID( eleOrId ) : eleOrId;
+
+    // 取消滚动
+    if ( on === false ) {
+
+        marquee = srcEle.getElementsByTagName( 'marquee' )[0];
+
+        if ( marquee ) {
+            
+            srcEle.innerHTML = marquee.innerText;
+        }
+
+        return true;
+    }
+
+    // 下面滚动逻辑
+
+    width = pcPX2Num( srcEle.style.width );
+
+    target.innerText = srcEle.innerText;
+
+    wordW = target.offsetWidth;
+
+    debug( 'wordFlow --- word width = ' + wordW + ', width = ' + width );
+
+    // 文字未超出不处理, 可根据参数来决定是否需要判断超出
+    if ( wordW < width && need ) {
+
+        return false;
+    }
+
+    frag = document.createDocumentFragment();
+
+    marquee = document.createElement( 'marquee' );
+    textNode = document.createTextNode( srcEle.innerText );
+    marquee.appendChild( textNode );
+
+    frag.appendChild( marquee );
+
+    srcEle.innerHTML = '';
+
+    srcEle.appendChild( frag );
+
+    return true;
+}
 
 
 /**
@@ -123,28 +208,15 @@ function generateObj(n, template, flag) {
 
 ////////////////////////////////////////////////////////////////
 
-function $(id) {
-    return document.getElementById(id);
-}
-
-function isArray(arr) {
-    return Object.prototype.toString.call(arr) === '[object Array]';
-}
-
-function isObject(obj) {
-    return Object.prototype.toString.call(obj) === '[object Object]';
-}
-
-function isTextNode(node) {
-    return Object.prototype.toString.call(node) === '[object Text]';
-}
-
 
 /////////////////////////////////////////////////////////////////////
-///
-/// 
-///
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 /// 以下为对象，构造器，及其他
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
 
 /**
  * 创建表格构造器
@@ -202,6 +274,10 @@ TableGenerator.prototype.init = function ( string, lines, flag, lineObj ) {
     this.lines      = lines || 1;
     this.flag       = flag || false;
     this.lineObj    = lineObj || this.lineObj;
+    this.superSeperator     = '>';
+    this.parentSeperator    = '+';
+    this.styleSeperator     = '&';
+    this.sonSeperator       = '$';
 
     return this.createTable();
 };
@@ -221,17 +297,20 @@ TableGenerator.prototype.createTable = function () {
         tbl     = null,
         trs     = null,
         trString  = '',
-        needTable = true;
+        needTable = true,
+
+        // 分隔符
+        superSeperator   = that.superSeperator;
 
     // 表示没有<table>，只需要创建行即可
-    if ( string.indexOf( '>' ) < 0 ) {
+    if ( string.indexOf( superSeperator ) < 0 ) {
 
         needTable = false;
 
         trString = str;
     } else {
 
-        str = string.split( '>' );
+        str = string.split( superSeperator );
 
         // 创建 <table> 标签元素
         tbl = that.createElementByString( str[0] );
@@ -324,7 +403,11 @@ TableGenerator.prototype.createTableTrs = function ( string, lines, flag ) {
 TableGenerator.prototype.createElements = function ( str ) {
 
     var that    = this,
-        eleArr  = str.split( '+' ),
+
+        // 分隔符
+        parentSeperator   = that.parentSeperator;
+
+        eleArr  = str.split( parentSeperator ),
 
         superE = null, ele = null, frag = null,
 
@@ -352,7 +435,12 @@ TableGenerator.prototype.createElements = function ( str ) {
 TableGenerator.prototype.createElementByString = function ( str ) {
 
     var that    = this,
-        eleArr  = str.split( '.' )
+
+        // 分隔符
+        sonSeperator   = that.sonSeperator,
+        styleSeperator = that.styleSeperator,
+
+        eleArr  = str.split( sonSeperator ),
         eleObj  = {}, i = 0,
         len     = eleArr.length,
         tmp     = null,
@@ -364,12 +452,13 @@ TableGenerator.prototype.createElementByString = function ( str ) {
 
         eleObj = eleObj || {};
 
-        if ( eleArr[ i ].indexOf( '&' ) >= 0 ) {
+        if ( eleArr[ i ].indexOf( styleSeperator ) >= 0 ) {
 
-            tmp = eleArr[ i ].split( '&' );
+            tmp = eleArr[ i ].split( styleSeperator );
 
             eleObj.tagName = tmp[ 0 ];
 
+            // eval -> JSON.parse
             eleObj.styles = eval( "(" + tmp[ 1 ] + ")" );
         } else {
 
@@ -471,3 +560,50 @@ TableGenerator.prototype.createLine = function ( element, n ) {
 
     return line;
 }
+
+
+////////////////////////////////// Object end ///////////////////////////////////////////
+
+function $( id ) {
+    return document.getElementById( id );
+}
+
+function $ID( id ) {
+    return document.getElementById( id );
+}
+
+function isArray(arr) {
+    return Object.prototype.toString.call(arr) === '[object Array]';
+}
+
+function isObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+function isTextNode(node) {
+    return Object.prototype.toString.call(node) === '[object Text]';
+}
+
+function debug( str ) {
+    
+    console.log( str );
+}
+
+// 将像素类的字符串 转成数字
+function pcPX2Num( pxString ) {
+    
+    // 空串返回0
+    if ( !pxString ) {
+
+        return 0;
+    }
+
+    // debug( 'pcPX2Num --- pxString = ' + pxString );
+
+    pxString = pxString + '';
+
+    return parseInt( pxString.replace( /px/ ), 10 );
+}
+
+
+////////////////////////////////// myApis.js end ///////////////////////////////////////////
