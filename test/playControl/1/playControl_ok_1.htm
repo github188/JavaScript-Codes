@@ -925,8 +925,14 @@
 		    function pcShowProgress() {
 		        
 		    	debug( '----- progress showProgress pcIsProgressShow = ' + pcIsProgressShow );
-		    	debug( '----- progress showProgress pcIds.progress = ' + pcIds.progress );
+		    	debug( '----- progress showProgress pcIds.progress = ' + pcIds.progress )
+                	/*
+                	if ( !pcIsProgressShow ) {
 
+                		pcShowProgress();
+
+                		pcShow();
+                	} */
 		        // 显示进度条
 		        if ( !pcIsProgressShow ) {
 
