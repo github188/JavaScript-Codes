@@ -1,0 +1,734 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="gb2312">
+	<title>Document</title>
+</head>
+<body>
+	
+
+
+	<body  background="images2/tvod_list_bg.jpg" marginheight="0" marginwidth="0" leftmargin="0" rightmargin="0" onLoad="">
+
+	<!--顶部-->
+	<div style="position:absolute;left:62px;top:36px;width:160px;color:#e4ebf0;font-size:35px;">回看节目</div>
+
+
+	<!-- 回看频道列表 -->
+	<div id="tvod_chan_list" style="position:absolute;left:63px;top:127px; width:216px; height:513px;">
+	    <table id="tcl_table" border="0" cellpadding="0" cellspacing="0" width="216" height="513" style="position:absolute;left:0px;font-size:24px;color:#d6d5d5;">
+	    </table>
+	</div>
+
+	<!-- 回看日期列表 -->
+	<div id="tvod_date_list" style="position:absolute;left:328px;top:127px; width:256px; height:513px; display:block;">
+	    <table id="tdl_table" border="0" cellpadding="0" cellspacing="0" width="256" height="449" style="position:absolute;left:0px;font-size:24px;color:#d6d5d5;">
+	    </table>
+	</div>
+
+	<!-- 回看节目列表 -->
+	<div id="tvod_prog_list" style="position:absolute;left:630px;top:127px; width:578px; height:513px; display:block;">
+		<table id="tpl_table" border="0" cellpadding="0" cellspacing="0" width="578" height="513" style="position:absolute;left:0px;font-size:24px;color:#d6d5d5;">
+		</table>	
+		<div id="tvod_prog_focus" style="position:absolute;left:-36px;top:-9px; width:651px; height:81px; background:url(images2/tvod_prog_focus.png);">
+			<img src="images2/icon_hk_btn.png" alt="" style="position:absolute;right:35px;top:24px;width:57px;height:33px;">
+		</div>
+	</div>
+
+    <script type="text/javascript" src="testData.js"></script>
+	<script>
+
+	var TVODListPage = {
+
+		// 当前表类型
+		type: 'CHANNEL',
+
+		area: 0,
+
+		trHeight: 64,
+
+		// 节目列表焦点元素的 top 值
+		offsetTop: -9,
+
+		/*
+		 	与下面的 focusRow 和 lines 中属性字符串形式一致
+
+		 	主要用来根据 area 值来快速设置和获取列表焦点索引值
+
+		 */
+		areaDesc: [ 'chan', 'date', 'prog' ],
+
+		// 各表格的显示行数
+		lines: {
+
+			total: 8,
+
+			chan: 8,
+			date: 8,
+			prog: 8
+		},
+
+		// 焦点行
+		focusRow: {
+
+			chan: 0,
+			date: 0,
+			prog: 0,
+
+			// 表格行普通状态和获取焦点时字体颜色和大小
+			oColor: '#d6d5d5',
+			oSize: 24,
+			cColor: '#ff8033',
+			cSize: 26
+		},
+
+		strs: {
+
+			chan: 0,
+			date: 1,
+			prog: 2
+		},
+
+		prefix: {
+
+			chan: 'chan_list_',
+			date: 'date_list_',
+			prog: 'prog_list_',
+
+			// 右箭头元素
+			rArrow: 'icon_arrow_'
+		},
+
+		ids: {
+
+			chanList: 'tvod_chan_list',
+			dateList: 'tvod_date_list',
+			progList: 'tvod_prog_list',
+
+			chanTbl: 'tcl_table',
+			dateTbl: 'tdl_table',
+			progTbl: 'tpl_table',
+
+			progFocus: 'tvod_prog_focus',
+
+			// 根据实际情况变化，主要：that.prefix.rArrow + 'chan' / 'prog'，形式
+			rArrow: ''
+		},
+
+		icons: {
+
+			chan: 'images2/chan_icon.png',
+			date: 'images2/date_icon.png',
+			prog: 'images2/prog_icon.png',
+
+			chanBlur: 'images2/chan_icon.png',
+			chanFocus: 'images2/chan_icon_focus.png',
+			dateBlur: 'images2/date_icon.png',
+			dateFocus: 'images2/date_icon_focus.png',
+			progFocus: 'images2/tvod_prog_focus.png',
+
+			arrowR: 'images2/arrow_right2.png'
+		},
+
+        datas: {
+
+            channels: null
+        },
+
+        count: {
+
+            channels: 0
+        },
+
+        // 先获取频道列表
+        dataInit: function () {
+            
+            var that    = this,
+                count   = 0,
+                lines   = 0; 
+
+            that.datas.channels = Authentication.CTCGetConfig( 'PCChannels' );
+
+            debug( 'dataInit --- channels = ' + that.datas.channels.length );
+
+            that.count.channels = that.datas.channels.length;
+
+            // 当总数据数，小于表格显示最大行数时
+            lines           = that.lines.chan;
+            that.lines.chan = count < lines ? count : lines;
+        },
+
+		init: function () {
+			
+			var that = this;
+
+			// 数据初始化，频道列表和第一个频道的时间列表
+			that.dataInit();
+
+			// 创建表格和一些表格初始化的操作
+			that.create();
+
+            // 刷新数据
+            that.refresh();
+		},
+
+		create: function () {
+			
+			var that = this;
+
+			// 创建三个表格
+            that.createChannelTable();
+            that.createDateTable();
+            that.createProgTable();
+		},
+
+		// 清空表格
+		clearTable: function ( type ) {
+			
+			var that = this;
+
+			if ( type === that.strs.chan ) {
+
+				$ID( that.ids.chanTbl ).innerHTML = '';
+			} else if ( type === that.strs.date ) {
+
+				$ID( that.ids.dateTbl ).innerHTML = '';
+			} else if ( type === that.strs.prog ) {
+
+				$ID( that.ids.progTbl ).innerHTML = '';
+			}
+
+			return true;
+		},
+
+        fillChannelData: function () {
+         
+        },
+
+        // 频道表
+        createChannelTable: function () {
+                
+            var that = this;
+
+            // 1. 创建
+            that.createTable( that.strs.chan );
+
+            // 2. 填充数据
+            that.fillChannelData();
+
+            // 3. 焦点设置
+            that.changeFocus( that.focusRow.chan );
+        },
+
+        // 日期表
+        createDateTable: function () {
+            
+            var that = this;
+
+            that.createTable( that.strs.date );
+            that.changeFocus( that.focusRow.date );
+        },
+
+        // 节目表
+        createProgTable: function () {
+            
+            var that = this;
+
+            that.createTable( that.strs.prog );
+            that.changeFocus( that.focusRow.prog );
+        },
+
+		// 使用之前先设置表的行数，即：this.lines 对象里对应的值
+		createTable: function ( type ) {
+
+			var that 	= this,
+				chanTr 	= '', 	dateTr 	= '', 	progTr 	= '',
+				tr 		= '', 	table 	= '', 	lines 	= 0,
+				str 	= '', 	i 		= 0,	len 	= 0, 	
+				section = '', 	trPrefix = '',	tblContainer = null,
+				splitTop = 0, 	splitWidth 	= 0, 	frag = null,
+				paddingTr = '';
+
+			// 只接受这三种类型
+			if ( type !== that.strs.chan && type !== that.strs.date && type !== that.strs.prog ) {
+
+				debug( 'createTable --- argument error.' );
+				return false;
+			}
+
+			// 每次创建之前清空一次表格
+			that.clearTable( type );
+
+			section = '<tr id=';
+
+			/* ---------------------- 频道表 ---------------------- */
+
+			chanTr 	= ' height="' + that.trHeight + '">'
+					+ '<td width="51" align="center">'
+					+ '<img src=' + that.icons.chan + ' width="28" height="24"></td>'
+					+ '<td width="166">宁夏卫视</td>'
+					+ '</tr>';
+
+			/* ---------------------- 日期表 ---------------------- */
+
+			dateTr 	= ' height="' + that.trHeight + '">'
+					+ '<td width="49" align="center">'
+					+ '<img src=' + that.icons.date + ' width="28" height="24"></td>'
+					+ '<td width="207">7月06日 星期三</td>'
+					+ '</tr>';
+
+			/* ---------------------- 节目表 ---------------------- */
+
+			progTr 	= ' height="' + that.trHeight + '">'
+					+ '<td width="111">23:00</td>'
+					+ '<td width="465">北京青年</td>'
+					+ '</tr>';
+
+			debug( 'createTable --- type = ' + type );
+
+			that.limitLines();
+
+			if ( type === that.strs.chan ) {
+
+				tr 				= chanTr;
+				lines 			= that.lines.chan;
+				trPrefix 		= that.prefix.chan;
+				table 			= $ID( that.ids.chanTbl );
+				tblContainer 	= $ID( that.ids.chanList );
+
+			} else if ( type === that.strs.date ) {
+
+				tr 				= dateTr;
+				lines 			= that.lines.date;
+				trPrefix 		= that.prefix.date;
+				table 			= $ID( that.ids.dateTbl );
+				tblContainer 	= $ID( that.ids.dateList );
+
+			} else if ( type === that.strs.prog ) {
+
+				tr 				= progTr;
+				lines 			= that.lines.prog;
+				trPrefix 		= that.prefix.prog;
+				table 			= $ID( that.ids.progTbl );
+				tblContainer 	= $ID( that.ids.progList );
+			}
+
+			// 分割线宽度
+			splitWidth = pcPX2Num( tblContainer.style.width );
+
+			debug( 'createTable --- splitWdith = ' + splitWidth );
+
+			frag = document.createDocumentFragment();
+
+			debug( 'createTable --- lines = ' + lines );
+
+			for ( len = lines; i < len; i++ ) {
+
+				str += section + '"' + trPrefix + i + '"' + tr;
+
+				splitTop = that.trHeight * (i + 1);
+
+				if ( i < len - 1 ) {
+
+					frag.appendChild( that.createSplit( splitWidth, splitTop ) );
+				}
+			}
+
+			// 防止不组 8 行的时候 tr 被自动撑高
+			if ( lines < that.lines.total ) {
+
+				paddingTr = '<tr style="height:auto;"></tr>';
+
+				str += paddingTr;
+			}
+
+			table.innerHTML = str;
+
+			tblContainer.appendChild( frag );
+
+			that.focus();
+		},
+
+        // 创建表格之后，在后续操作中刷新表格操作
+        refreshTable: function () {
+            
+        },
+
+		// 分割线
+		createSplit: function ( width, top ) {
+
+			var sdiv = null;
+
+			debug( 'createSplit --- width = ' + width + ', top = ' + top );
+
+			sdiv = document.createElement( 'div' );
+			sdiv.style.position = 'absolute';
+			sdiv.style.top 		= top + 'px';
+			sdiv.style.width 	= width + 'px';
+			sdiv.style.height 	= '1px';
+			sdiv.style.background 	= '#FFFFFF';
+			sdiv.style.opacity 		= 0.2;
+
+			return sdiv;
+		},
+
+		// 限制表格最大行数
+		limitLines: function () {
+			
+			var that 	= this,
+				total 	= that.lines.total,
+				chan 	= that.lines.chan,
+				date 	= that.lines.date,
+				prog 	= that.lines.prog;
+
+			that.lines.chan = chan > total ? total : chan;
+			that.lines.date = date > total ? total : date;
+			that.lines.prog = prog > total ? total : prog;
+		},
+
+		// 频道和日期列表的焦点行处理
+		channelOrDateFocus: function ( blur ) {
+			
+			var that 	= this,
+				currTr 	= null,
+				imgObj 	= null,
+				wrap 	= null,
+				currIdx = 0, prefix = '', focusIcon = '', blurIcon = '',
+				offsetHeight = 19, top = 0, left = 0, 
+				arrowId = '', arrow = null;
+
+			if ( that.area === that.strs.chan ) {
+
+				currIdx 	= that.focusRow.chan;
+				prefix 		= that.prefix.chan;
+				focusIcon 	= that.icons.chanFocus;
+				blurIcon 	= that.icons.chanBlur;
+				wrap 		= $ID( that.ids.chanList );
+
+				left 		= '200px';
+
+				that.ids.rArrow = that.prefix.rArrow + that.strs.chan;
+
+			} else if ( that.area === that.strs.date ) {
+
+				currIdx 	= that.focusRow.date;
+				prefix 		= that.prefix.date;
+				focusIcon 	= that.icons.dateFocus;
+				blurIcon 	= that.icons.dateBlur;
+				wrap 		= $ID( that.ids.dateList );
+
+				left 		= '240px';
+
+				that.ids.rArrow = that.prefix.rArrow + that.strs.date;
+			} 
+
+			currTr = $ID( prefix + currIdx );
+
+			if ( !currTr ) {
+
+				debug( 'chanFocus --- element null.' );
+				return false;
+			}
+
+			imgObj = currTr.getElementsByTagName( 'img' );
+
+			// 失去焦点
+			if ( typeof blur !== 'undefined' && blur === true ) {
+
+				imgObj[0].src 			= blurIcon;
+
+				currTr.style.color 		= that.focusRow.oColor;
+				currTr.style.fontSize 	= that.focusRow.oSize;
+
+				debug( 'focus --- right arrow id = ' + that.ids.rArrow );
+
+				arrow = $ID( that.ids.rArrow );
+
+				// 移除箭头元素
+				if ( that.ids.rArrow !== '' && arrow ) {
+
+					wrap.removeChild( $ID( that.ids.rArrow ) );
+				}
+
+				return true;
+			}
+
+			// 获取焦点
+			imgObj[0].src 			= focusIcon;
+			currTr.style.color 		= that.focusRow.cColor;
+			currTr.style.fontSize 	= that.focusRow.cSize;
+
+			debug( 'focus --- offsetTop = ' + currTr.offsetTop + ', height = ' + currTr.offsetHeight );
+
+			top = currTr.offsetTop + parseInt( (currTr.offsetHeight - offsetHeight) / 2 ) + 'px';
+
+			debug( 'focus --- top = ' + top );
+
+			// 箭头处理, 节目列表不需要这个，而是用回看
+			that.setArrow( wrap, {
+				id: that.ids.rArrow,
+				position: "absolute",
+				left: left,
+				top: top,
+				width: '18px',
+				height: '19px',
+				background: "url(images2/arrow_right2.png) no-repeat"
+			} );
+		},
+
+		// 节目列表焦点行处理
+		progFocus: function ( blur ) {
+			
+			var that 	= this,
+				currTr 	= null,
+				focusDiv	= null,
+				focusTop	= 0,
+				currTr 		= null,
+				currTrH 	= 0,
+				currIndex 	= that.focusRow.prog,
+				currLines 	= that.lines.prog;
+
+			// 防止超出
+			that.focusRow.prog = currIndex >= currLines ? currLines - 1 : currIndex;
+
+			debug( 'progFocus --- prog index = ' + that.focusRow.prog + ', lines = ' + currLines );
+
+			currTr = $ID( that.prefix.prog + that.focusRow.prog );
+
+			if ( !currTr ) {
+
+				debug( 'progFocus --- current prog focus row error.' );
+				return false;
+			}
+
+			// 当前行
+			currTr 	 = $ID( that.prefix.prog + that.focusRow.prog );
+			currTrH  = pcPX2Num ( currTr.offsetHeight );
+
+			debug( 'progFocus --- prog blur = ' + blur + ', lines = ' + currLines );
+
+			// 失去焦点处理
+			if ( typeof blur !== 'undefined' && blur === true ) {
+
+				currTr.style.fontSize 	= that.focusRow.oSize;
+				currTr.style.color 		= that.focusRow.oColor;
+
+				return true;
+			}
+
+			// 焦点元素
+			focusDiv = $ID( that.ids.progFocus );
+
+			debug( 'progFocus --- prog = ' + that.focusRow.prog + ', currTrH = ' + currTrH );
+
+			focusDiv.style.top = that.offsetTop + that.focusRow.prog * currTrH + 'px';
+
+			currTr.style.fontSize 	= that.focusRow.cSize;
+			currTr.style.color 		= that.focusRow.cColor;
+		},
+
+		focus: function ( blur ) {
+			
+			var that 	= this;
+
+			// 当前焦点区域和区域内行焦点
+			if ( that.area === that.strs.chan || that.area === that.strs.date ) {
+
+				that.channelOrDateFocus( blur );
+
+			} else if ( that.area === that.strs.prog ) {
+
+				that.progFocus( blur );
+			}
+		},
+
+		setArrow: function ( parent, styles ) {
+				
+			var that 	= this,
+				arrow 	= null,
+				prop 	= '';
+
+			// 要保证两个参数都存在
+			if ( !parent || !styles ) {
+
+				return;
+			}
+
+			debug( 'setArrow --- id = ' + styles.id + ', arrow = ' + $ID( styles.id ) );
+
+			// 避免重复创建
+			if ( styles.id && $ID( styles.id ) ) {
+
+				return false;
+			}
+
+			debug( 'setArrow --- parent = ' + parent + ', style = ' + styles );
+
+			arrow = document.createElement( 'div' );
+
+			for ( prop in styles ) {
+
+				if ( styles.hasOwnProperty( prop ) ) {
+
+					debug( 'setArrow --- prop = ' + prop + ', arrow.style[ prop ] = ' + styles[ prop ] );
+
+					arrow.style[ prop ] = styles[ prop ];
+				}
+			}
+
+			arrow.id = styles.id || '';
+
+			parent.appendChild( arrow );
+
+			return arrow;
+		},
+
+		blur: function () {
+			
+			this.focus( true );
+		},
+
+		changeFocus: function ( area, direction ) {
+			
+			var that 	= this,
+				index 	= 0,
+				lines 	= 0,
+				prop 	= '';
+
+			that.area = area;
+
+			// 获取列表描述符
+			prop = that.areaDesc[ that.area ];
+
+			index = that.focusRow[ prop ];
+			lines = that.lines[ prop ];
+
+			debug( 'ChangeFocus --- prop = ' + prop + ', index = ' + index + ', direction = ' + direction );
+
+			// 初始化时调用，不用传 direction
+			index = typeof direction === 'undefined' ? index : index + direction ;
+
+			debug( 'ChangeFocus --- lines = ' + lines + ', index = ' + index + ', direction = ' + direction );
+
+			// 下到底，上到头
+			if ( ( direction > 0 && index >= lines ) || ( direction < 0 && index < 0 ) ) {
+
+				debug( 'changeFocus --- to start or end.' );
+				return false;
+			}
+
+			that.blur();
+
+			that.focusRow[ prop ] = index;
+			that.focus();
+		},
+
+		eventHandler: function ( keycode ) {
+			
+			var that 		= this,
+				areaCount 	= that.areaDesc.length;	
+
+			debug( 'TVODListPage --- eventHandler --- keycode = ' + keycode );
+
+			switch ( keycode ) {
+				case 38: 	// up
+					that.changeFocus( that.area, -1 );
+					return false;
+					break;
+				case 40: 	// down
+					that.changeFocus( that.area, 1 );
+					return false;
+					break;
+				case 37: 	// left
+
+					that.area = that.area - 1 < 0 ? 0 : that.area - 1;
+
+					that.changeFocus( that.area );
+					return false;
+					break;
+				case 39: 	// right
+
+					that.area = that.area + 1 > areaCount ? areaCount : that.area + 1;
+
+					that.changeFocus( that.area );
+					return false;
+					break;
+				default:
+					
+					break;
+			}
+		}
+	};
+
+	TVODListPage.lines.chan = 3;
+	TVODListPage.lines.date = 5;
+	TVODListPage.lines.prog = 15;
+	TVODListPage.init();
+	TVODListPage.area = 0;
+
+
+	window.onkeydown = function ( event ) {
+		
+		var keycode = event.which ? event.which : event.keycode;
+
+		TVODListPage.eventHandler( keycode );
+	}
+
+	function isValueInObject( obj, value ) {
+		
+		if ( !obj ) return false;
+
+		for ( var prop in obj ) {
+
+			if ( obj.hasOwnProperty( prop ) && obj[ prop ] === value ) {
+
+				debug( 'isValueInObject --- got it.' );
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// 将像素类的字符串 转成数字
+	function pcPX2Num( pxString ) {
+		
+		// 空串返回0
+		if ( !pxString ) {
+
+			return 0;
+		}
+
+		debug( 'pcPX2Num --- pxString = ' + pxString );
+
+		pxString = pxString + '';
+
+		return parseInt( pxString.replace( /px/ ), 10 );
+	}
+
+	function $ID( id ) {
+		return document.getElementById( id );
+	}
+
+	function debug( str ) {
+		console.log( '[TVOD] --- ' + str );	
+	}
+
+	function debugObject( obj ) {
+		
+		if ( !obj ) {
+			return;
+		}
+
+		for ( var prop in obj ) {
+
+			if ( obj.hasOwnProperty( prop ) ) {
+
+				debug( 'debugObject ---- ' + prop + ' = ' + obj[prop] );
+			}
+		}
+	}
+	</script>
+
+</body>
+</html>
