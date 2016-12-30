@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>回看</title>
+</head>
+<body topmargin="0" leftmargin="0">
+
+	<div id="chan_tvod_list" style="position:absolute;left:0px;top:0px; width:1050px; height:720px; background:url(images2/cover02.png);">
+		<!--箭头-->
+		<div id="ctl_arrow_left" style="position:absolute;left:28px;top:306px; width:40px; height:40px;"><img src="images2/arrow_left.png" width="36" height="39"></div>
+		<div id="ctl_list_date" style="position:absolute;left:73px;top:46px; width:172px; height:624px;">
+			<table id="ctl_tbl_date" border="0" cellpadding="0" cellspacing="0" width="172" height="624" style="position:absolute;left:0px;font-size:24px;color:#727374; text-align:center;border-collapse:collapse;">
+			</table>
+		</div>
+		
+		<div id="ctl_list_prog" style="position:absolute;left:292px;top:46px; width:308px; height:624px;">
+			<table id="ctl_tbl_prog" border="0" cellpadding="0" cellspacing="0" width="308" height="624" style="position:absolute;left:0px;font-size:24px;color:#a0a2a4;border-collapse:collapse;">
+			</table>
+
+			<div id="ctl_list_prog_focus" style="position:absolute;left:-52px;top:-16px; width:400px; height:113px; background:url(images2/list_focus.png);display:none;">
+				
+				<img src="images2/icon_hk_list.png" alt="" style="position:absolute;right:35px;top:32px;width:50px;height:50px;">
+			</div>
+		</div>
+		
+	</div>
+
+	<script>
+		
+	// test prog data
+	var TVODProgs = {
+
+		'2016-12-30': [ 
+						{ name:'0000000a', time:'12:22' },
+						{ name:'0000000b', time:'12:22' },
+						{ name:'0000000c', time:'12:22' },
+						{ name:'0000000d', time:'12:22' },
+						{ name:'0000000e', time:'12:22' },
+						{ name:'0000000f', time:'12:22' },
+						{ name:'0000000g', time:'12:22' },
+						{ name:'0000000h', time:'12:22' },
+						{ name:'0000000i', time:'12:22' },
+						{ name:'0000000j', time:'12:22' },
+						{ name:'0000000k', time:'12:22' },
+						{ name:'0000000l', time:'12:22' },
+						{ name:'0000000m', time:'12:22' },
+						{ name:'0000000n', time:'12:22' },
+						{ name:'0000000o', time:'12:22' },
+						{ name:'0000000p', time:'12:22' },
+						{ name:'0000000q', time:'12:22' },
+						{ name:'0000000r', time:'12:22' },
+						{ name:'0000000s', time:'12:22' },
+						{ name:'0000000t', time:'12:22' },
+						{ name:'0000000u', time:'12:22' }
+					],
+		'2016-12-29': [
+						{ name:'99999999', time:'12:22' },
+						{ name:'99999999', time:'12:22' },
+						{ name:'99999999', time:'12:22' },
+						{ name:'99999999', time:'12:22' },
+						{ name:'99999999', time:'12:22' },
+						{ name:'99999999', time:'12:22' }
+					],
+		'2016-12-28': [
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' },
+						{ name:'88888888', time:'12:22' }
+					],
+		'2016-12-27': [
+						{ name:'77777777', time:'12:22' },
+						{ name:'77777777', time:'12:22' },
+						{ name:'77777777', time:'12:22' },
+						{ name:'77777777', time:'12:22' },
+						{ name:'77777777', time:'12:22' },
+						{ name:'77777777', time:'12:22' }
+		],
+		'2016-12-26': [
+						{ name:'66666666', time:'12:22' },
+						{ name:'66666666', time:'12:22' },
+						{ name:'66666666', time:'12:22' },
+						{ name:'66666666', time:'12:22' },
+						{ name:'66666666', time:'12:22' },
+						{ name:'66666666', time:'12:22' }
+		],
+		'2016-12-25': [
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' },
+						{ name:'55555555', time:'12:22' }
+		],
+		'2016-12-24': [
+						{ name:'44444444', time:'12:22' },
+						{ name:'44444444', time:'12:22' },
+						{ name:'44444444', time:'12:22' },
+						{ name:'44444444', time:'12:22' },
+						{ name:'44444444', time:'12:22' },
+						{ name:'44444444', time:'12:22' }
+		]
+	};
+
+	function add0ToNum( num ) {
+		
+		var numstr = '';
+
+		if ( num >= 0 && num < 10 ) {
+
+			numstr = '0' + num;
+		} else {
+
+			numstr = '' + num;
+		} 
+
+		return numstr;
+	}
+
+	// 获取当天的前七天的时间，格式：{ desc: '12月2日 星期天', args: '2016-12-02' }
+	function getSevenDates() {
+			
+		var datems 	= 0, 
+			dateObj = null,
+			sevens 	= [],
+			i = 0, len = 7, year, month, date, day, days,
+			str = '', dayms = 0, last, obj = null;
+
+		days = [ '星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六' ];
+
+		// 当前时间的毫秒数
+		datems = new Date().getTime();
+
+		// 一天的毫秒数
+		dayms = 24 * 3600 * 1000;
+
+		for ( ; i < len; i++ ) {
+
+			sevens[i] = sevens[i] || {};
+
+			last = datems - dayms * i;
+
+			dateObj = new Date( last );
+
+			year 	= dateObj.getFullYear();
+			month 	= dateObj.getMonth() + 1;
+			date 	= dateObj.getDate();
+			day 	= days[ dateObj.getDay() ];
+
+			sevens[i].desc = month + '/' + date;
+			sevens[i].args = year + '-' + add0ToNum( month ) + '-' + add0ToNum( date );
+		}
+
+		return sevens;
+	}
+
+	var ChanTVODList = {
+
+
+		prefix: {
+			date: 'ctl_date_tr_',
+			prog: 'ctl_prog_tr_'
+		},
+
+		ids: {
+			tvodList: 'chan_tvod_list',
+			lArrow: 'ctl_arrow_left',
+			dateList: 'ctl_list_date',
+			progList: 'ctl_list_prog',
+
+			dateTbl: 'ctl_tbl_date',
+			progTbl: 'ctl_tbl_prog',
+
+			progFocus: 'ctl_list_prog_focus'
+		},
+
+		icons: {
+
+			dList: 'images2/dlist_bg.png',
+			dListFocus: 'images2/dlist_bg_focus.png'
+		},
+
+		lines: {
+			date: 8,
+			prog: 8,
+			total: 8
+		},
+
+		count: {
+			date: 0,
+			prog: 0
+		},
+
+		data: {
+			date: null,
+			prog: null
+		},
+
+		dataIndex: {
+			date: 0,
+			prog: 0
+		},
+
+		index: {
+			date: 0,
+			prog: 0
+		},
+
+		currArea: 0,
+
+		area: {
+			date: 0,
+			prog: 1
+		},
+
+		trHeight: 78,
+
+		focusTop: -16,
+
+		dataInit: function () {
+			
+			var that 	= this;
+
+			that.data.date = getSevenDates();
+
+			that.count.date = that.data.date.length;
+		},
+
+		init: function () {
+		
+			var that 	= this;
+
+			// data init
+			that.dataInit();
+
+			that.createDateTable();
+
+			that.changeFocus();
+		},
+
+		// 根据日期列表焦点行的日期获取对应的节目单信息
+		getProgsByDate: function () {
+			
+			var that = this, prop, date, index;
+
+			index = that.dataIndex.date + that.index.date;
+
+			date = that.data.date[index].args;
+
+			debug( 'getProgsByDate --- date index = ' + index );
+			debug( 'getProgsByDate --- date = ' + date );
+
+			for ( prop in TVODProgs ) {
+
+				if ( TVODProgs.hasOwnProperty( prop ) ) {
+
+					that.data.prog = TVODProgs[date];
+				}
+			}
+
+			debug( 'getProgsByDate --- prog = ' + that.data.prog );
+
+			that.count.prog = that.data.prog.length;
+
+			// 每次获取节目都要重置下显示行数
+			that.lines.prog = that.lines.total;
+
+			return that.data.prog;
+		},
+
+		createDateTable: function () {
+			
+			var that 	= this,
+				table, tr, td, text, frag, lines,
+				count, i, today, padding;
+
+			today = '今天 ';
+
+			frag = document.createDocumentFragment();
+
+			lines = that.lines.date;
+
+			count = that.count.date;
+
+			lines = count <= lines ? count : lines;
+
+			that.lines.date = lines;
+
+			table = $ID( that.ids.dateTbl );
+
+			for ( i = 0; i < lines; i++ ) {
+
+				today = i === 0 ? today : '';
+
+				tr = document.createElement( 'tr' );
+				tr.style.height = that.trHeight + 'px';
+				tr.id = that.prefix.date + i;
+
+				td = document.createElement( 'td' );
+				td.style.background = 'url(' + that.icons.dList + ') center no-repeat';
+				td.innerText = today + that.data.date[i].desc;
+
+				tr.appendChild( td );
+				frag.appendChild( tr );
+			}
+
+			if ( lines < that.lines.total ) {
+
+				padding = document.createElement( 'tr' );
+				padding.style.height = 'auto';
+				frag.appendChild( padding );
+			}
+
+			table.appendChild( frag );
+		},
+
+		clearProgTable: function () {
+		
+			this.index.prog = 0;
+
+			$ID( this.ids.progTbl ).innerHTML = '';	
+		},
+
+		createProgTable: function () {
+			
+			var that 	= this,
+				table, tr, td1, td2, frag, count, lines, i;
+
+			that.clearProgTable();
+
+			frag = document.createDocumentFragment();
+
+			table = $ID( that.ids.progTbl );
+
+			// 只有在日期表中移动时才需要重新获取节目数据
+			if ( that.currArea === that.area.date ) {
+
+				that.getProgsByDate();
+			}
+
+			lines = that.lines.prog;
+
+			count = that.count.prog;
+
+			lines = count >= lines ? lines : count;
+
+			debug( 'createProgTable --- lines = ' + lines + ', count = ' + count );
+
+			that.lines.prog = lines;
+
+			for ( i = 0; i < lines; i++ ) {
+
+				tr 		= document.createElement( 'tr' );
+				tr.id 	= that.prefix.prog + i;
+				tr.style.height 		= that.trHeight + 'px';
+				tr.style.borderBottom 	= '1px solid rgba(225,225,225,0.1)';
+
+				// time
+				td1 = document.createElement( 'td' );
+				td1.style.width = '85px';
+				td1.style.align = 'center';
+				td1.innerText 	= that.data.prog[i].time;
+
+				// name
+				td2 = document.createElement( 'td' );
+				td2.style.width = '221px';
+				td2.innerText 	= that.data.prog[that.dataIndex.prog + i].name
+
+				tr.appendChild( td1 );
+				tr.appendChild( td2 );
+
+				frag.appendChild( tr );
+			}
+
+			if ( lines < that.lines.total ) {
+
+				// 行补丁，防止不足 total 行时，其他行被撑高
+				padding = document.createElement( 'tr' );
+				padding.style.height = 'auto';
+				frag.appendChild( padding );
+			}
+
+			table.appendChild( frag );
+		},
+
+		refreshProgTable: function () {
+			
+			var that = this;
+
+			that.createProgTable();
+
+			that.index.prog = 0;
+
+			that.changeFocus();
+		},
+
+		changeDateFocus: function ( blur ) {
+			
+			var that = this, currRow, id, td;
+
+			id = that.prefix.date + that.index.date;
+
+			currRow = $ID( id );
+
+			if ( !currRow ) {
+
+				return false;
+			}
+
+			debug( 'changeDateFocus --- currRow = ' + currRow );
+
+			if ( blur === true ) {
+
+				currRow.style.color = '#727374';
+
+				currRow.style.background = 'url(' + that.icons.dList + ') center no-repeat';
+
+				return false;
+			}
+
+			currRow.style.color = '#fff';
+
+			currRow.style.background = 'url(' + that.icons.dListFocus + ') center no-repeat';
+
+			that.createProgTable();
+
+			return true;
+		},
+
+		changeProgFocus: function ( blur ) {
+			
+			var that = this, currRow, id, index, focusDiv;
+
+			id = that.prefix.prog + that.index.prog;
+
+			index = that.index.prog;
+
+			focusDiv = $ID( that.ids.progFocus );
+
+			currRow = $ID( id );
+
+			if ( blur === true ) {
+
+				currRow.style.color 	= '#a0a2a4';
+				currRow.style.fontSize 	= '24px';
+
+				focusDiv.style.display = 'none';
+
+				return false;
+			}
+
+			focusDiv.style.display = 'block';
+
+			focusDiv.style.top 	= that.focusTop + index * that.trHeight + 'px';
+
+			currRow.style.color 	= '#fff';
+			currRow.style.fontSize 	= '28px';
+
+			return true;
+		},
+
+		focus: function ( blur ) {
+			
+			var that = this;
+
+			if ( that.currArea === that.area.date ) {
+
+				that.changeDateFocus( blur );
+
+			} else if ( that.currArea === that.area.prog ) {
+
+				that.changeProgFocus( blur );
+
+			}
+		},
+
+		blur: function () {
+			
+			this.focus( true );	
+		},
+
+		changeFocus: function ( direction ) {
+	
+			var that = this, area, lines, index, 
+				dataIndex, total, maxDataIndex, count, last;
+
+			area = that.currArea;
+
+			total = that.lines.total;
+
+			if ( area === that.area.date ) {
+
+				lines = that.lines.date;
+				index = that.index.date;
+				count = that.count.date;
+				dataIndex = that.dataIndex.date;
+
+			} else if ( area === that.area.prog ) {
+
+				lines = that.lines.prog;
+				index = that.index.prog;
+				count = that.count.prog;
+				dataIndex = that.dataIndex.prog;
+			}
+
+			index = typeof direction === 'undefined' ? index : index + direction;
+
+			if ( (direction > 0 && index >= lines) || (direction < 0 && index < 0) ) {
+
+				if ( area === that.area.date ) {
+					return false;
+				}
+
+				// 日期固定七天不存在刷新，直接考虑节目列表的刷新
+
+				maxDataIndex = count - count % total;
+
+				if ( (direction > 0 && dataIndex === maxDataIndex) || 
+					 (direction < 0 && dataIndex === 0) ) {
+					return false;
+				}
+
+				// 走到这里都是可移动范围
+				dataIndex += direction * total;
+
+				that.lines.prog = count - dataIndex >= total ? total : count - dataIndex;
+
+				that.index.prog = 0; 
+
+				that.dataIndex.prog = dataIndex;
+
+				that.refreshProgTable();
+
+				return false;
+			}
+
+			that.blur();
+
+				redebug( 'that.index.date = ' + index );
+			if ( area === that.area.date ) {
+
+				that.index.date = index;
+			} else if ( area = that.area.prog ) {
+
+				that.index.prog = index;
+			}
+
+			that.focus();
+		},
+
+		eventHandler: function ( keycode ) {
+			
+			var that 	= this;
+
+			debug( 'ChanTVODList --- eventhHandler --- keycode = ' + keycode );
+
+			switch ( keycode ) {
+				case 37:
+					
+					// 焦点在节目列表时，左键才响应
+					if ( that.currArea != that.area.date ) {
+
+						that.blur();
+
+						that.currArea = that.area.date;
+
+						that.changeFocus();
+					} 
+
+					return false
+					break;
+				case 39:
+
+					// 焦点在日期列表时，右键才响应
+					if ( that.currArea != that.area.prog ) {
+
+						that.currArea = that.area.prog;
+
+						that.index.prog = 0;
+
+						that.changeFocus();
+					}
+
+					return false;
+					break;
+				case 38:
+					that.changeFocus( -1 );
+					return false;
+					break;
+				case 40:
+					that.changeFocus( 1 );
+					return false;
+					break;
+				default:
+					// statements_def
+					break;
+			}
+		}
+	};
+
+	ChanTVODList.init();
+
+	window.onkeydown = function ( event ) {
+		
+		var keycode = event.which ? event.which : event.keycode;
+
+		debug( 'onkeydown --- keycode = ' + keycode );
+
+		ChanTVODList.eventHandler( keycode );		
+	}
+
+	function $ID( id ) {
+		
+		return document.getElementById( id );
+	}
+
+	function redebug( str ) {
+		console.log( 'test --- ' + str );
+	}
+
+	function debug( str ) {
+		
+		return;
+		console.log( '[TVOD] --- ' + str );
+	}
+
+	</script>
+</body>
+</html>
