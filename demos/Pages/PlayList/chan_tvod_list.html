@@ -33,26 +33,26 @@
 
 		'2016-12-30': [ 
 						{ name:'0000000a', time:'12:22' },
-						{ name:'0000000b', time:'12:22' },
-						{ name:'0000000c', time:'12:22' },
-						{ name:'0000000d', time:'12:22' },
-						{ name:'0000000e', time:'12:22' },
-						{ name:'0000000f', time:'12:22' },
-						{ name:'0000000g', time:'12:22' },
-						{ name:'0000000h', time:'12:22' },
-						{ name:'0000000i', time:'12:22' },
-						{ name:'0000000j', time:'12:22' },
-						{ name:'0000000k', time:'12:22' },
-						{ name:'0000000l', time:'12:22' },
-						{ name:'0000000m', time:'12:22' },
-						{ name:'0000000n', time:'12:22' },
-						{ name:'0000000o', time:'12:22' },
-						{ name:'0000000p', time:'12:22' },
-						{ name:'0000000q', time:'12:22' },
-						{ name:'0000000r', time:'12:22' },
-						{ name:'0000000s', time:'12:22' },
-						{ name:'0000000t', time:'12:22' },
-						{ name:'0000000u', time:'12:22' }
+						{ name:'0000000b', time:'11:22' },
+						{ name:'0000000c', time:'10:22' },
+						{ name:'0000000d', time:'09:22' },
+						{ name:'0000000e', time:'08:22' },
+						{ name:'0000000f', time:'07:22' },
+						{ name:'0000000g', time:'06:22' },
+						{ name:'0000000h', time:'05:22' },
+						{ name:'0000000i', time:'04:22' },
+						{ name:'0000000j', time:'03:22' },
+						{ name:'0000000k', time:'02:22' },
+						{ name:'0000000l', time:'01:22' },
+						{ name:'0000000m', time:'00:22' },
+						{ name:'0000000n', time:'23:22' },
+						{ name:'0000000o', time:'24:22' },
+						{ name:'0000000p', time:'25:22' },
+						{ name:'0000000q', time:'26:22' },
+						{ name:'0000000r', time:'27:22' },
+						{ name:'0000000s', time:'28:22' },
+						{ name:'0000000t', time:'29:22' },
+						{ name:'0000000u', time:'30:22' }
 					],
 		'2016-12-29': [
 						{ name:'99999999', time:'12:22' },
@@ -373,7 +373,11 @@
 				tr 		= document.createElement( 'tr' );
 				tr.id 	= that.prefix.prog + i;
 				tr.style.height 		= that.trHeight + 'px';
-				tr.style.borderBottom 	= '1px solid rgba(225,225,225,0.1)';
+
+				if ( i < lines - 1 ) {
+					
+					tr.style.borderBottom 	= '1px solid rgba(225,225,225,0.1)';
+				}
 
 				// time
 				td1 = document.createElement( 'td' );
@@ -556,7 +560,6 @@
 
 			that.blur();
 
-				redebug( 'that.index.date = ' + index );
 			if ( area === that.area.date ) {
 
 				that.index.date = index;
