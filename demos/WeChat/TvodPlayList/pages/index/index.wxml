@@ -1,0 +1,23 @@
+<!--index.wxml-->
+<view class="container">
+  <view id="chan-tvod-list" class="ctl">
+    <view class="ctl-arrow-left">
+      <image src="../resources/images/arrow_left.png" class="ctl_arrow_left_img"></image>
+    </view>
+    <view id="ctl-list-date" class="ctl-list-date">
+      <view id="ctl-list-0" class="ctl-list-row">{{ dates[index + 0].desc }}</view>
+      <view id="ctl-list-1" class="ctl-list-row">{{ dates[index + 1].desc }}</view>
+      <view id="ctl-list-2" class="ctl-list-row">{{ dates[index + 2].desc }}</view>
+      <view id="ctl-list-3" class="ctl-list-row">{{ dates[index + 3].desc }}</view>
+      <view id="ctl-list-4" class="ctl-list-row">{{ dates[index + 4].desc }}</view>
+      <view id="ctl-list-5" class="ctl-list-row">{{ dates[index + 5].desc }}</view>
+      <view id="ctl-list-6" class="ctl-list-row">{{ dates[index + 6].desc }}</view>
+    </view>
+  </view>
+
+  <view class="button-container">
+    <button class="button button-up" bindtap="refreshDateUp">up</button>
+    <button class="button button-refresh" bindtap="refreshDateTbl">refresh</button>
+    <button class="button button-down" bindtap="refreshDateDown">down</button>
+  </view>
+</view>

@@ -1,0 +1,93 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+
+.ctl {
+  position:absolute;
+  top:16rpx;
+  width:100%;
+  height:100%;
+  background: url(../resources/images/cover02.png);
+}
+
+.ctl-arrow-left {
+  position: absolute;
+  left: 28rpx;
+  top: 520rpx;
+  width:40rpx;
+  height:40rpx;
+}
+
+.ctl_arrow_left_img {
+  width: 36rpx;
+  height: 39rpx;
+}
+
+.ctl-list-date {
+  width: 100%;
+  height: 1182rpx;
+  color: #727374;
+}
+
+.ctl-list-row {
+  height:148rpx;
+  line-height: 148rpx;
+  text-align: center;
+  background: url(../resources/images/dlist_bg.png) no-repeat center;
+}
+
+.button-container {
+  position:absolute;
+  bottom: 20rpx;
+
+  width:100%;
+  height: 80rpx;
+}
+
+.button {
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 15rpx;
+  text-align: center;
+  position: absolute;
+}
+
+.button-refresh {
+  width: 300rpx;
+  background-color:red;
+
+  left: 200rpx;
+}
+
+.button-up {
+  width:100rpx;
+  background-color: green;
+  
+  left: 80rpx;
+}
+
+.button-down {
+  width:150rpx;
+  background-color: blue;
+
+  left: 520rpx;
+}
