@@ -66,6 +66,7 @@ function getSevenDates() {
     date 	= dateObj.getDate();
     day 	= days[ dateObj.getDay() ];
 
+    sevens[i].unique = 'unique' + i;
     sevens[i].desc = month + '/' + date;
     sevens[i].args = year + '-' + add0ToNum( month ) + '-' + add0ToNum( date );
   }

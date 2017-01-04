@@ -5,13 +5,8 @@
       <image src="../resources/images/arrow_left.png" class="ctl_arrow_left_img"></image>
     </view>
     <view id="ctl-list-date" class="ctl-list-date">
-      <view id="ctl-list-0" class="ctl-list-row">{{ dates[index + 0].desc }}</view>
-      <view id="ctl-list-1" class="ctl-list-row">{{ dates[index + 1].desc }}</view>
-      <view id="ctl-list-2" class="ctl-list-row">{{ dates[index + 2].desc }}</view>
-      <view id="ctl-list-3" class="ctl-list-row">{{ dates[index + 3].desc }}</view>
-      <view id="ctl-list-4" class="ctl-list-row">{{ dates[index + 4].desc }}</view>
-      <view id="ctl-list-5" class="ctl-list-row">{{ dates[index + 5].desc }}</view>
-      <view id="ctl-list-6" class="ctl-list-row">{{ dates[index + 6].desc }}</view>
+
+      <view wx:for="{{dates}}" wx:key="unique" wx:for-index="idx" wx:for-item="date" id="ctl-list-{{idx}}" class="ctl-list-row">{{dates[index + idx].desc}}</view>
     </view>
   </view>
 
@@ -20,4 +15,46 @@
     <button class="button button-refresh" bindtap="refreshDateTbl">refresh</button>
     <button class="button button-down" bindtap="refreshDateDown">down</button>
   </view>
+
+  <!-- ************************************************************************************************************ -->
+
+  <!-- 99乘法表 -->
+  <!--<view wx:for="{{[1, 2, 3, 4, 5, 6, 7, 8, 9]}}" wx:for-item="i">
+    <view wx:for="{{[1, 2, 3, 4, 5, 6, 7, 8, 9]}}" wx:for-item="j">
+      <view wx:if="{{i <= j}}">
+        {{i}} * {{j}} = {{i * j}}
+      </view>
+    </view>
+  </view>-->
+
+  <!-- wx:for + block -->
+  <!--<block wx:for="{{[1, 2, 3]}}">
+    <view>{{index}}: {{item}}</view>
+    <view></view>
+  </block>-->
+
+  <!-- template -->
+  <!--<template name="tplName">
+    <view>
+      <text>{{index}}: {{msg}}</text>
+      <text>, Date: {{date}}</text>
+    </view>
+  </template>-->
+
+
+  <!-- 使用模版 -->
+  <!--<template is="tplName" data="{{...item1}}" wx:for="{{[0, 1, 2, 3]}}" wx:for-index="index" wx:for-item="it" />-->
+
+  <!-- 运行时决定使用哪种模版 -->
+  <!--<template name="tpl1">
+    <view>template first</view>
+  </template>
+
+  <template name="tpl2">  
+    <view>template second</view>
+  </template>
+
+  <block wx:for="{{[1, 2, 3, 4, 5, 6]}}">
+    <template is="{{item % 2 === 0 ? 'tpl2' : 'tpl1'}}" />
+  </block>-->
 </view>

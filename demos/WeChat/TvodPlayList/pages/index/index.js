@@ -10,7 +10,13 @@ Page({
     motto: 'Hello World',
     dates: [],
     userInfo: {},
-    index: 0
+    flag: 0,
+    index: 0,
+    item1: {
+      index: 0,
+      msg: 'hello template',
+      date: '2017-1-4'
+    }
   },
   //事件处理函数
   bindViewTap: function() {
@@ -29,7 +35,7 @@ Page({
     // list.createDateTbl( that.data.dates );
   },
 
-  refreshDateTbl: function () {
+  refreshDateTbl: function ( event ) {
     var that = this,
         index = that.data.index + 1,
         len = that.data.dates.length;
@@ -40,7 +46,7 @@ Page({
 
     that.setData({index: index});
 
-    console.log( that.index );
+    console.log( event );
   },
 
   refreshDateUp: function () {
@@ -66,6 +72,13 @@ Page({
     }
     
     that.setData({index: index});
+  },
+  
+  changeFlag: function ( flag ) {
+    var that = this;
+
+    that.flag = flag;
+    
   }
 })
 
@@ -73,3 +86,11 @@ Page({
 function debug( str ) {
   console.log( str );
 }
+
+function showUserInfo( info ) {
+
+  console.log( info );
+}
+
+
+var info = app.getUserInfo( showUserInfo )
