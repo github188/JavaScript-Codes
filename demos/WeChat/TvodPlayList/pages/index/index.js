@@ -16,6 +16,18 @@ Page({
       index: 0,
       msg: 'hello template',
       date: '2017-1-4'
+    },
+    
+    rowFocusFlagArray: [],
+
+    rowDftStyle: {
+      bgImgUrl: '../resources/images/dlist_bg.png',
+      color: '#727374'
+    },
+
+    rowFocusStyle: {
+      bgImgUrl: '../resources/images/dlist_bg_focus.png',
+      color: '#FFFFFF'
     }
   },
   //事件处理函数
@@ -26,13 +38,18 @@ Page({
   },
   onLoad: function () {
     
-    var that = this
+    var that = this;
     
     var dates = util.getSevenDates();
 
     that.setData({ dates: dates });
 
-    // list.createDateTbl( that.data.dates );
+    var rowFocusFlagArray = [];
+
+    // 默认第一行为焦点行
+    rowFocusFlagArray[0] = 1;
+
+    that.setData({rowFocusFlagArray: rowFocusFlagArray});
   },
 
   refreshDateTbl: function ( event ) {
@@ -45,8 +62,6 @@ Page({
     }
 
     that.setData({index: index});
-
-    console.log( event );
   },
 
   refreshDateUp: function () {
@@ -79,6 +94,29 @@ Page({
 
     that.flag = flag;
     
+  },
+
+  // 点击日期行
+  tapDateRow: function ( event ) {
+    console.log( event );
+    // console.log( event.currentTarget );
+    // console.log( event.currentTarget == event.target );
+
+    var that = this;
+
+    // 更新前先清空焦点标识数组
+    var rowFocusFlagArray = [];
+
+    // 根据 dataset 获取当前的索引
+    var index = event.target.dataset.index;
+
+    console.log( 'index = ' + index );
+
+    // 然后重新设置标识值
+    rowFocusFlagArray[index] = 1;
+
+    // 重新改变样式标识，刷新页面
+    that.setData({rowFocusFlagArray: rowFocusFlagArray});
   }
 })
 

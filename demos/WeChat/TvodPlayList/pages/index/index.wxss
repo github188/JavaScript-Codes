@@ -45,14 +45,12 @@
 .ctl-list-date {
   width: 100%;
   height: 1182rpx;
-  color: #727374;
 }
 
 .ctl-list-row {
   height:148rpx;
   line-height: 148rpx;
   text-align: center;
-  background: url(../resources/images/dlist_bg.png) no-repeat center;
 }
 
 .button-container {

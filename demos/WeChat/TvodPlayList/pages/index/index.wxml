@@ -1,12 +1,13 @@
 <!--index.wxml-->
+
 <view class="container">
   <view id="chan-tvod-list" class="ctl">
     <view class="ctl-arrow-left">
       <image src="../resources/images/arrow_left.png" class="ctl_arrow_left_img"></image>
     </view>
-    <view id="ctl-list-date" class="ctl-list-date">
+    <view   id="ctl-list-date" class="ctl-list-date">
 
-      <view wx:for="{{dates}}" wx:key="unique" wx:for-index="idx" wx:for-item="date" id="ctl-list-{{idx}}" class="ctl-list-row">{{dates[index + idx].desc}}</view>
+      <view bindtap="tapDateRow" wx:for="{{dates}}" wx:key="unique" wx:for-index="idx" wx:for-item="date" id="ctl-list-{{idx}}" class="ctl-list-row" data-index="{{idx}}" style="background:url({{rowFocusFlagArray[idx] == 1 ? rowFocusStyle.bgImgUrl : rowDftStyle.bgImgUrl}}) no-repeat center;color:{{rowFocusFlagArray[idx] == 1 ? rowFocusStyle.color : rowDftStyle.color}};">{{dates[index + idx].desc}}</view>
     </view>
   </view>
 
@@ -58,3 +59,8 @@
     <template is="{{item % 2 === 0 ? 'tpl2' : 'tpl1'}}" />
   </block>-->
 </view>
+
+<!--
+<include src="a.wxml" />
+<view>body</view>
+<include src="b.wxml" />-->

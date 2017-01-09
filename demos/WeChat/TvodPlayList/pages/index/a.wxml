@@ -1,0 +1,7 @@
+<!--a.wxml-->
+
+<template name="tplA">
+    <view>AAAAAAAAAAAAAAAAAAAAAAAA</view>
+</template>
+
+<view>header</view>
