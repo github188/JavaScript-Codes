@@ -1,6 +1,0 @@
-<!--c.wxml-->
-
-<import src="b.wxml" />
-
-<template is="tplA" />
-<template is="tplB" />

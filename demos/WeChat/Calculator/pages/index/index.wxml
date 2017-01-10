@@ -1,0 +1,25 @@
+<!--index.wxml-->
+
+<view class="container">
+    <view id="main-board">
+    	<view id="board-title">CALCULATOR</view>
+    	<view id="board-result">
+    		<view id="result-date"></view>
+    		<view id="result-up"><span>0</span></view>
+			<view id="result-down">0</view>
+    	</view>
+    	<view id="board-keys">
+
+			<!-- 中间区域 -->
+			<view id="keys-middle">
+				<view id="keys-line-{{index}}" class="keys-line" wx:for="{{[0, 1, 2, 3]}}" wx:for-index="index" wx:for-item="i">
+					<button wx:for="{{digits[i]}}" class="keys-cell" wx:for-index="idx" wx:for-item="digit">{{digit}}</button>
+				</view>
+			</view>
+
+			<!-- 右侧 -->
+			<view></view>
+			<!-- 底部 -->
+    	</view>
+    </view>
+</view>

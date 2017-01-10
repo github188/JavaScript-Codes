@@ -1,7 +1,0 @@
-<!--b.wxml-->
-
-<template name="tplB">
-    <view>BBBBBBBBBBBBBBBBBBBBBB</view>
-</template>
-
-<view>footer</view>
