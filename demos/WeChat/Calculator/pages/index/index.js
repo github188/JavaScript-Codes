@@ -1,12 +1,22 @@
 //index.js
+
+var calculator = require('./Calculator.js');
+
 //获取应用实例
 var app = getApp()
 Page({
   data: {
     motto: 'Hello World',
     userInfo: {},
-    digits: [ ['AC', 'CE', '÷'], ['7', '8', '9'], ['4', '5', '6'], ['1', '2', '3'] ]
+    digits: [ ['AC', 'CE', '÷'], ['7', '8', '9'], ['4', '5', '6'], ['1', '2', '3'] ],
+    calculator: null,
+    resultUp: '',
+    resultDown: '',
+    dateContent: ''
   },
+
+  calculator: null,
+
   //事件处理函数
   bindViewTap: function() {
     wx.navigateTo({
@@ -14,14 +24,17 @@ Page({
     })
   },
   onLoad: function () {
-    console.log('onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
-      //更新数据
-      that.setData({
-        userInfo:userInfo
-      })
-    })
+    var that = this;
+
+    that.calculator = calculator.getInstance(that);
+
+    console.log( that.calculator );
+  },
+
+  bindKeyTap: function(event) {
+
+    var that = this;
+    
+    that.calculator.calculatorClickEvent(event)
   }
 })

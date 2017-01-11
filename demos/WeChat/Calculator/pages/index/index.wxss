@@ -10,7 +10,7 @@
 /* 全局 */
 #board-keys table td.bg-red {
 	background-color: #FC0A0A;
-}
+} 
 
 @font-face {
 	font-family: 'DigifaceWide';
@@ -43,7 +43,6 @@
 	/*background-color: #ccccff;*/
 	text-align: center;
 	letter-spacing: 4rpx;
-	/* font-size/line-height font-family*/
 	font: 60rpx/10r0px "Comic Sans MS", "微软雅黑";
 	color: #4723AB;
 }
