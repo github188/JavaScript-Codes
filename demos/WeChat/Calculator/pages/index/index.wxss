@@ -96,6 +96,7 @@
 
 /* 3. 按键区 */
 
+/* 3.1 按键面板 */
 #board-keys {
 	width: 700rpx;
 	height: 900rpx;
@@ -104,6 +105,7 @@
 	color: #FFFFFF;
 }
 
+/* 3.2 按键按钮 */
 button {
 	width: 146rpx;
 	height: 128rpx;
@@ -116,27 +118,33 @@ button {
 	color:white;
 }
 
+/* 3.3 按键区的每一行行，清除浮动 */
 .board-row {
 	overflow: auto;
 }
 
+/* 3.4 数字'0'按键 */
 .btn-0 {
 	width: 320rpx;
 }
 
+/* 3.5 等号'='按键 */
 .btn-equal {
 	height: 281rpx;
 	line-height: 281rpx;
 }
 
+/* 3.6 等号左边按键区，由于等号竖排，站两行，因此分成了左右两个区 */
 .equal-left {
 	float:left;
 }
 
+/* 3.7 等号右边，也就是等号按钮 */
 .equal-right {
 	float:right;
 }
 
+/* 4. 红色背景样式 */
 .bg-red {
 	background-color:red;
 }
