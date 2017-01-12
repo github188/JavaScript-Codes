@@ -1,0 +1,13 @@
+<!--index.wxml-->
+<view class="container">
+    <!-- 标题 -->
+    <view id="custom-title">
+        <image src="../resources/images/si-sprite.svg"></image>
+    </view>
+
+    <!-- 画布 -->
+    <view id="custom-edit"></view>
+
+    <!-- 功能区 -->
+    <view id="custom-func"></view>
+</view>

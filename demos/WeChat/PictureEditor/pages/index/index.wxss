@@ -1,0 +1,31 @@
+/**index.wxss**/
+
+/* 750 * 1334 rpx, navigator height: 42px -> 84rpx */
+
+
+/* 定制页面 */
+
+/* 定制标题 */
+#custom-title {
+    width: 100%;
+    height: 124rpx;
+
+    background-color: #00a6ac;
+}
+
+/* 定制编辑区 */
+#custom-edit {
+    width: 100%;
+    height: 1014rpx;
+
+    background-color: #ffffff;
+}
+
+/* 底部功能区 */
+#custom-func {
+
+    width: 100%;
+    height: 116rpx;
+
+    background-color: #00a6ac;
+}
