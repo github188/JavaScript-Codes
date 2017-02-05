@@ -337,7 +337,7 @@ function dateFormat(dateStr, date) {
         "S":  date.getMilliseconds()        // milli second
     };
 
-    var week = ["一", "二", "三", "四", "五", "六", "日"];
+    var week = ["日", "一", "二", "三", "四", "五", "六"];
 
     // 因为年份一般都是四位数，所以单独处理
     if (/(y+)/.test(dateStr)) {
@@ -351,8 +351,10 @@ function dateFormat(dateStr, date) {
 
     // 星期
     if (/(E+)/.test(dateStr)) {
-        var w       = week[date.getDay() - 1];
+        var w       = week[date.getDay()];
         var len     = RegExp.$1.length; 
+
+		console.log('date.getDay() = ' + date.getDay());
 
         dateStr = dateStr.replace(RegExp.$1, (len > 1 ? (len > 2 ? "星期" : "周") : "") + w);
     }
