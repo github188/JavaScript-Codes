@@ -13,11 +13,8 @@ var spa = (function () {
 
 	initModule = function ( $container ) {
 		
-		$container.html(
-			'<h1 style="display:inline-block; margin:25px;">' 
-			+ 'Hello World!'
-			+ '</h1>'
-		);		
+		// 加载 shell 模块
+		spa.shell.initModule( $container );	
 	};
 
 	return {
