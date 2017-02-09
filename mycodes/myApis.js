@@ -200,6 +200,10 @@ function ccGenerateObj(n, template, flag) {
     return JSON.stringify(obj);
 }
 
+function ccloadXMLDoc() {
+    
+}
+
 
 ////////////////////////////////////////////////////////////////
 
