@@ -5,8 +5,23 @@
  * @version $Id$
  */
 
-function spa_debug( str ) {
-	console.log( str );
+function isObject( arg ) {
+	return Object.prototype.toString.call( arg ) === '[object Object]';
+}
+
+function spa_debug( arg, name ) {
+
+	// 对象输出方式
+	if ( isObject( arg ) && name  ) {
+
+		console.log( name + '------------>' );
+		console.log( arg );
+		console.log( '<------------' + name );
+
+		return;
+	}
+
+	console.log( arg );
 }
 
 

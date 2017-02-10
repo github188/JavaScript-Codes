@@ -98,6 +98,7 @@
     // Converts a map into the anchor component as described
     // in setAnchor
     makeAnchorString = function ( anchor_map_in, option_map_in  ) {
+        spa_debug( anchor_map_in, 'anchor_map_in' );
       var
         anchor_map          = anchor_map_in || {},
         option_map          = option_map_in || {},
@@ -235,6 +236,9 @@
         }
       }
 
+
+        spa_debug( '///////////' + key_val_array.join( delimit_char ) );
+
       return key_val_array.join( delimit_char );
     };
     // End utility /makeAnchorString/
@@ -354,6 +358,7 @@
     //  discarding browser history
     //
     setAnchor = function ( anchor_map, option_map, replace_flag  ) {
+
       var
         anchor_string = makeAnchorString( anchor_map, option_map  ),
         uri_array, uri_string
@@ -373,6 +378,8 @@
         }
         return true;
       }
+
+
       // we replace the full href so that jquery recognizes the uri
       // change
       document.location.href = uri_string;
@@ -472,6 +479,7 @@
           });
         }
       }
+
       return anchor_map;
     };
     // End public method /makeAnchorMap/
