@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test SPA</title>
+
+	<script src="js/jq/jquery-1.9.1.js"></script>
+	<!-- <script src="js/jq/jquery.uriAnchor.test.js"></script> -->
+	<script src="js/jq/jquery.uriAnchor-1.3.3.js"></script>
+</head>
+<body>
+	
+	<script type="text/javascript">
+		
+
+  function puber( msg ) {
+    
+  }
+
+  var puber = {
+
+    subers: [],
+
+    name: 'puber',
+
+    pub: function ( msgs ) {
+      
+      var that = this, len = 0, i = 0;
+
+      that.print( msgs );
+
+      for ( len = that.subers.length; i < len; i++ ) {
+
+        that.subers[i] && that.subers[i].print( msgs );
+      }
+    },
+
+    print: function ( msgs ) {
+      console.log( this.name + ' say: ' + msgs );
+    },
+
+    addSuber: function ( suber ) {
+      var that = this;
+
+      if ( suber && that.subers.indexOf( suber ) === -1 ) {
+        that.subers.push( suber );
+      }
+    },
+
+    delSuber: function ( suber ) {
+      var that = this, idx = -1;
+
+      idx = that.subers.indexOf( suber );
+
+      if ( suber && idx !== -1 ) {
+        that.subers.splice( idx, 1 );
+      } 
+    }
+  };
+
+
+  function Suber( name ) {
+
+    this.name = name;
+
+    this.print = function ( msgs ) {
+      console.log( this.name + ' say: ' + msgs ); 
+    } 
+  };
+
+  // Suber.prototype.print = function ( msgs ) {
+  //     console.log( this.name + ' say: ' + msgs ); 
+  // };
+
+  var tom = new Suber( 'Tom' ),
+      lily = new Suber( 'Lily' ),
+      john = new Suber( 'John' );
+
+  puber.addSuber( tom );
+  puber.addSuber( lily );
+  puber.addSuber( john );
+
+  puber.delSuber( tom );
+  puber.delSuber( john );
+  puber.delSuber( lily );
+
+
+  puber.addSuber( lily );
+  puber.addSuber( john );
+
+$t = $('<div/>');
+$.gevent.subscribe($t, 'spa-login', function(){console.log('hello!', arguments)});
+$.gevent.subscribe($t, 'spa-logout', function(){console.log('goodbye!', arguments)});
+var currUser = spa.model.people.get_user();
+currUser.get_is_anon();
+var pdb = spa.model.people.get_db();
+pdb().each(function(p, idx){console.log(p.name)});
+spa.model.people.login( 'Alfred' );
+
+
+	</script>
+</body>
+</html>

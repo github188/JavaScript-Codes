@@ -5,13 +5,45 @@
 	<title>Test SPA</title>
 
 	<script src="js/jq/jquery-1.9.1.js"></script>
+	<!-- <script src="js/jq/jquery.uriAnchor.test.js"></script> -->
 	<script src="js/jq/jquery.uriAnchor-1.3.3.js"></script>
 </head>
 <body>
 	
 	<script type="text/javascript">
 		
+	var argMap = {
+		input_string 	: 'a=1|b=2|c=3',
+		delimit_char 	: '|',
+		delimit_kv_char : '='
+	};
 
+ 	function parseStringToMap( arg_map  ) {
+      var
+        input_string    = arg_map.input_string    || '',
+        delimit_char    = arg_map.delimit_char    || '&',
+        delimit_kv_char = arg_map.delimit_kv_char || '=',
+        output_map      = {},
+
+        splitter_array, i, key_val_array
+        ;
+
+      splitter_array = input_string.split( delimit_char );
+
+      for ( i = 0; i < splitter_array.length; i++  ) {
+        key_val_array = splitter_array[i].split( delimit_kv_char );
+
+        if ( key_val_array.length === 1  ) {
+          output_map[decodeURIComponent( key_val_array[0] )] = true;
+        }
+        else if ( key_val_array.length === 2  ) {
+          output_map[decodeURIComponent( key_val_array[0] )]
+            = decodeURIComponent( key_val_array[1] )
+            ;
+        }
+      }
+      return output_map;
+    };
 
 
 	</script>

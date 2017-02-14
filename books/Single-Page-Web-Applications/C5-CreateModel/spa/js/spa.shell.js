@@ -135,9 +135,6 @@ spa.shell = (function () {
         _s_chat_previous = anchor_map_previous._s_chat;
         _s_chat_proposed = anchor_map_proposed._s_chat;
 
-        spa_debug('_s_chat_previous = ' + _s_chat_previous);
-        spa_debug('_s_chat_proposed = ' + _s_chat_proposed);
-
         if ( !anchor_map_previous || _s_chat_previous !== _s_chat_proposed ) {
 
             s_chat_proposed = anchor_map_proposed.chat;
@@ -196,8 +193,6 @@ spa.shell = (function () {
         stateMap.$container = $container;
 
         $container.html( configMap.main_html );
-
-        spa_debug($container);
 
         // 缓存数据至 jQuery
         setJqueryMap();
