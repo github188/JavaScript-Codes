@@ -100,41 +100,23 @@ spa.model.people.login( 'Alfred' );
 
 */
 
-/*
-  spa.chat测试
- */
+  var timer = null;
+  function test() {
+    
+    var i = 0;
 
-$t = $('<div/>');
-$.gevent.subscribe( $t, 'spa-login', function () { console.log( 'Hello!', arguments ); })
-$.gevent.subscribe( $t, 'spa-listchange', function () { console.log( '*Listchange', arguments ); })
-var currentUser = spa.model.people.get_user();
-currentUser.get_is_anon()
-spa.model.chat.join();
-spa.model.people.login('Fred')
-var peopleDb = spa.model.people.get_db();
-peopleDb().each(function(person, idx){console.log(person.name)})
-spa.model.chat.join();
-var peopleDb = spa.model.people.get_db();
+    for ( ; i < 6; i++ ) {
 
-/*
-  spa.chat 消息传输功能
- */
+      
+      (function (i) {
+        
+        timer = setTimeout(function () {
 
-
-$t = $('<div/>');
-$.gevent.subscribe( $t, 'spa-login', function () { console.log( 'Hello!', arguments ); })
-$.gevent.subscribe( $t, 'spa-updatechat', function ( event, chat_map ) { console.log( 'Chat message:', chat_map ); })
-$.gevent.subscribe( $t, 'spa-setchatee', function ( event, chatee_map ) { console.log( 'Chatee change:', chatee_map ); })
-$.gevent.subscribe( $t, 'spa-listchange', function ( event, changed_list ) { console.log( '*Listchange:', changed_list ); })
-spa.model.people.login('Fanny');
-
-spa.model.chat.send_msg( 'Hi Pebbles!' );
-
-spa.model.chat.send_msg( 'What is up , tricks ?' );
-
-spa.model.chat.set_chatee( 'id_03' );
-
-spa.model.chat.send_msg( 'Hi Pebbles!' );
+          console.log(i);
+        }, 0);
+      }(i))  
+    } 
+  }
 
 	</script>
 </body>
