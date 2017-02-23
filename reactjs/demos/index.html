@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="scripts/react.min.js"></script>
+	<script src="scripts/react-dom.min.js"></script>
+	<script src="scripts/browser.min.js"></script>
+
+	<style>
+		.c {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<!-- <div id="example"></div> -->
+
+	<script type="text/babel">
+		var FormApp = React.createClass({
+			getInitialState: function () {
+				return {
+					textDefault: 'defualt value',
+					textareaDefault: 'I am text area......',
+					selectDefault: 'B',
+					radioDefault: 'B',
+					checkboxDefault: [],
+				};
+			},
+
+			textChangeHandler: function ( e ) {
+				console.log( e );
+
+				e.preventDefault();
+
+				this.setState({
+					textDefault: e.target.value,
+				});
+			},
+
+			selectChange: function ( event ) {
+				this.setState({
+					selectDefault: event.target.value,
+				});
+			},
+
+			radioChange: function ( event ) {
+				this.setState({
+					radioDefault: event.target.value,
+				});
+			},
+
+			checkboxChange: function ( event ) {
+
+				var checkboxValue = this.state.checkboxDefault.slice();
+				var newValue = event.target.value,
+					index = checkboxValue.indexOf( newValue );
+
+				if ( index === -1 ) {
+					checkboxValue.push( newValue );
+				} else {
+					checkboxValue.splice(index, 1);
+				}
+
+				console.log(newValue);
+
+				this.setState({
+					checkboxDefault: checkboxValue,
+				});
+			},
+
+			submit: function ( event ) {
+
+				event.preventDefault();
+
+				var formData = {
+					text: this.refs.myText.getDOMNode().value,
+					option: this.state.selectDefault,
+					radio: this.state.radioDefault,
+					checkbox: this.state.checkboxDefault,
+					textarea: this.refs.myTextarea.getDOMNode().value,
+				};
+
+				console.log( formData );
+			},
+
+			render: function () {
+				return (
+
+					<form>
+						<p>Text:</p>
+						<input type="text" ref="myText" defaultValue={this.state.textDefault} />
+						<br/>
+
+						<FormOption selectChange={this.selectChange} selectDefault={this.state.selectDefault}  />
+						
+						<FormRadio radioChange={this.radioChange} radioDefault={this.state.radioDefault} />
+						
+						<FormCheckbox checkboxChange={this.checkboxChange} checkboxDefault={this.state.checkboxDefault} />
+						
+						<br/>
+					
+						<p>Textarea:</p>
+						<textarea ref="myTextarea">{this.state.textareaDefault}</textarea>
+						
+						<br/><br/>
+						<input type="submit" name="submit" onClick={this.submit} />
+					</form>
+				);
+			}
+		});
+
+		var FormCheckbox = React.createClass({
+			render: function () {
+				return (
+					<span>
+						<p>CheckBox:</p>
+						A
+						<input onChange={this.props.checkboxChange} type="checkbox" name="myRadio" value="A" />
+						B
+						<input onChange={this.props.checkboxChange} type="checkbox" name="myRadio" value="B" />
+						C
+						<input onChange={this.props.checkboxChange} type="checkbox" name="myRadio" value="C" />
+					</span>
+				);
+			}
+		});
+
+		var FormRadio = React.createClass({
+			render: function () {
+				return (
+					<span>
+						<p>Radios:</p>
+						A
+						<input onChange={this.props.radioChange} type="radio" name="myRadio" defaultValue={this.props.radioDefault} />
+						B
+						<input onChange={this.props.radioChange} type="radio" name="myRadio" defaultValue={this.props.radioDefault} defaultChecked />
+						C
+						<input onChange={this.props.radioChange} type="radio" name="myRadio" defaultValue={this.props.radioDefault} />
+					</span>
+				);
+			}
+		});
+
+		var FormOption = React.createClass({
+			render: function () {
+				return (
+					<div>
+						<p>Options:</p>
+						<select onChange={this.props.selectChange} defaultValue={this.props.selectDefault}>
+							<option value="A">A</option>
+							<option value="B" selected>B</option>
+							<option value="C">C</option>
+							<option value="D">D</option>
+						</select>
+					</div>
+				);
+			}
+		});
+
+
+		ReactDOM.render(
+			<FormApp />,
+			document.body
+		);
+	</script>
+</body>
+</html>

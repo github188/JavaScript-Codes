@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Dual Data Bind</title>
+	
+	<script src="../scripts/react.min.js"></script>
+	<script src="../scripts/react-dom.min.js"></script>
+	<script src="../scripts/browser.min.js"></script>
+	<script src="../scripts/react-with-addons.js"></script>
+
+</head>
+<body>
+	
+	<script type="text/babel">
+		var InputComp = React.createClass({
+			
+			mixins: [ React.addons.LinkedStateMixin ],
+
+			getInitialState: function () {
+				return {
+					hello: 'hello world!',
+					say: 'what say ?',
+				};
+			},
+
+			render: function () {
+				return (
+					<span>
+						你说：<span>{this.state.yousay}</span><span>   {this.state.hello}</span><br/><br/>
+						<input type="text" name="yousay" valueLink={this.linkState('say')} defaultValue={this.state.yousay} /><br/><br/>
+						<SubInputComp say={this.state.say} hello={this.state.hello} />
+					</span>	
+				);
+			}
+		});
+
+		var SubInputComp = React.createClass({
+			render: function () {
+
+				console.log(this.props);
+
+				return (
+					<span>
+						我说：<span>{this.props.say}</span><span>   {this.props.hello}</span><br/><br/>
+						<SsubInputComp {...this.props} />
+					</span>
+				);
+			}
+		});
+
+		var SsubInputComp = React.createClass({
+			render: function () {
+				return (
+					<span>
+						他说：<span>{this.props.say}</span><span>   {this.props.hello}</span>
+					</span>
+				);
+			}
+		});
+
+		ReactDOM.render(
+			<InputComp />,
+			document.body
+		);
+	</script>
+
+
+</body>
+</html>
