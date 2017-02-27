@@ -241,13 +241,20 @@ spa.shell = (function () {
 
         /* START --- 配置并初始化各模块 */
 
-        // Chat 聊天模块
+        // 1. Chat 聊天模块
         spa.chat.configModule({
             set_chat_anchor : setChatAnchor,
             chat_model      : spa.model.chat,
             people_model    : spa.model.people
         });
         spa.chat.initModule( jqueryMap.$container );
+
+        // 2. avatar 头像模块
+        spa.avtr.configModule({
+            chat_model  : spa.model.chat,
+            people_model: spa.model.people
+        });
+        spa.avtr.initModule( jqueryMap.$nav );
 
         /* END --- 配置并初始化各模块 */
 

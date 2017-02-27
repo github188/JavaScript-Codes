@@ -31,9 +31,7 @@ spa.chat = (function () {
                                 + '<form class="spa-chat-msg-form">'
                                     + '<input type="text" />'
                                     + '<input type="submit" style="display:none" />'
-                                    + '<div class="spa-chat-msg-send">'
-                                        + 'send'
-                                    + '</div>'
+                                    + '<div class="spa-chat-msg-send">send</div>'
                                 + '</form>'
                             + '</div>'
                         + '</div>'
@@ -92,7 +90,6 @@ spa.chat = (function () {
         onLogin, onLogout
         ;
 
-
         /* ----------------------- BEGIN UTILITY METHODS ----------------------- */
 
         // 获取元素 em 值
@@ -123,12 +120,12 @@ spa.chat = (function () {
                 $msgs       : $slider.find( '.spa-chat-msgs' ),
                 $box        : $slider.find( '.spa-chat-box' ),
                 $input      : $slider.find( '.spa-chat-box input[type=text]' ),
-                $list_box   : $slider.find( 'spa-chat-list-box' ),
-                $msg_log    : $slider.find( 'spa-chat-msg-log' ),
-                $msg_in     : $slider.find( 'spa-chat-msg-in' ),
-                $input      : $slider.find( 'spa-chat-msg-in input[type=text]' ),
-                $send       : $slider.find( 'spa-chat-msg-send' ),
-                $form       : $slider.find( 'spa-chat-msg-form' ),
+                $list_box   : $slider.find( '.spa-chat-list-box' ),
+                $msg_log    : $slider.find( '.spa-chat-msg-log' ),
+                $msg_in     : $slider.find( '.spa-chat-msg-in' ),
+                $input      : $slider.find( '.spa-chat-msg-in input[type=text]' ),
+                $send       : $slider.find( '.spa-chat-msg-send' ),
+                $form       : $slider.find( '.spa-chat-msg-form' ),
                 $window     : $(window)
             };  
         };
@@ -295,6 +292,8 @@ spa.chat = (function () {
         onSubmitMsg = function ( event ) {
             var msg_text = jqueryMap.$input.val();
 
+            spa_debug( 'msg: ' + msg_text );
+
             if ( msg_text.trim() === '' ) { return false; };
             configMap.chat_model.send_msg( msg_text );
             jqueryMap.$input.focus();
@@ -349,7 +348,7 @@ spa.chat = (function () {
 
         onListchange = function ( event ) {
             var 
-                vlist_html  = '',
+                list_html  = '',
                 people_db   = configMap.people_model.get_db(),
                 chatee      = configMap.chat_model.get_chatee();
 
@@ -469,6 +468,8 @@ spa.chat = (function () {
             
             setJqueryMap();
             setPxSizes();
+
+            spa_debug('test --- >');
 
             // $list_box 发布全局事件
             $list_box = jqueryMap.$list_box;
