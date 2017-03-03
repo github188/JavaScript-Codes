@@ -25,9 +25,6 @@ var
 	setWatch
 	;
 
-
-console.log( socketIO );
-
 setWatch = function ( url_path, file_type ) {
 	console.log( 'setWatch called on ' + url_path );	
 
@@ -93,3 +90,4 @@ io = socketIO( server );
 server.listen( 3000, function () {
 	console.log( 'http server listening on port 3000.' );
 } );
+

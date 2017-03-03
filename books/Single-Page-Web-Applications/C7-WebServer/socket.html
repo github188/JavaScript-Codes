@@ -12,25 +12,25 @@
 			$( 'body' ).html( b );
 		});
 
-		var connect = io.connect( 'http://192.168.179.103:3000' );
+		// var connect = io.connect( 'http://192.168.179.103:3000' );
 
-		connect.on( 'message', function ( data ) {
-			alert( data );
-		} );
-
-		// io.connect('http://192.168.179.103:3000').on( 'script', function ( path ) {
-
-		// 	console.log( 'path = ' + path );
-
-		// 	$( '#script_a' ).remove();
-		// 	$( 'head' ).append(
-		// 		'<script id="script_a" src="'
-		// 		+ path
-		// 		+ '"></scr' + 'ipt>'
-		// 	);
-
-		// 	$( 'body' ).html( b );
+		// connect.on( 'message', function ( data ) {
+		// 	// alert( data );
 		// } );
+
+		io.connect('http://192.168.179.103:3000').on( 'script', function ( path ) {
+
+			console.log( 'path = ' + path );
+
+			$( '#script_a' ).remove();
+			$( 'head' ).append(
+				'<script id="script_a" src="'
+				+ path
+				+ '"></scr' + 'ipt>'
+			);
+
+			$( 'body' ).html( b );
+		} );
 	</script>
 </head>
 <body>
