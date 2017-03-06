@@ -3,235 +3,158 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style type="text/css">
+		#container {
+			/*column-width: 240px;
+			column-gap: 30px;
+			column-count: 3;*/
+		}
+
+		#container div {
+			/*width: 220px;*/
+			/*margin-top: 10px; */
+			/*float: left;*/
+		}
+
+		#container div img {
+			width: 220px;
+			height: 100%;
+		}
+
+	</style>
 </head>
 <body>
-	
-	<div id="list" style="position:absolute;left:0px;top:0px; width:1050px; height:720px; background:url(images2/cover02.png);visibility:visible;overflow:hidden;">
-	
-		<div id="l_container" style="position:absolute;left:23px;top:44px;width:977px;height:720px;">
-			<!-- 右侧表 -->
-			<table id="lc_progs" cellpadding="0" cellspacing="0" width="330" height="640" style="position:absolute;left:70px;top:0;width:330px; height:640px;font-size:24px;color:#a0a2a4;">
-			</table>
-			<!-- 焦点框 -->
-			<div id="lc_focus" style="position:absolute;left:30px;top:-16px; width:400px; height:113px; background:url(images2/list_focus.png);">
-				<!-- 回看图标 + 箭头 -->
-				<div style="width:400px; height:113px; background:url(images2/icon_hk_list.png) no-repeat 315px center;">
-					<i style="position:absolute;right:-35px;top:37px;width:40px;height:40px;background:url(images2/arrow_right.png) no-repeat">	
-					</i>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<script src="scripts/ui_table.js"></script>
-	<script>
 
-		    // 频道列表行
-		    var chan = 'tr&{"prefix":"chanList","height":"80px"}+td&{"width":"85px","fontSize":"30px"}+td&{"width":"245px","needBr":"1"}$span&{"fontSize":"20px"}';
-		    
-			var table = new TableGenerator().init( chan, 8, false );
 
-			$('lc_progs').appendChild( table );
+<div id="container"><!--
+	<div class="img-box"><img src="images/bf-girls/01.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/02.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/03.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/04.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/05.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/06.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/07.jpeg" alt="01.jpeg"></div>
+	<div class="img-box"><img src="images/bf-girls/08.jpeg" alt="01.jpeg"></div> 
+	<div class="img-box"><img src="images/bf-girls/09.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/10.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/11.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/12.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/13.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/14.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/15.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/16.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/17.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/18.jpeg" alt="01.jpeg"></div>
+	<div><img src="images/bf-girls/19.jpeg" alt="01.jpeg"></div> -->
+</div>
 
-			function findPrefix( str ) {
+<script>
+	window.onload = function () {
 
-			    var match = str.match(/\"prefix\"\:\"\w+\"/)[0];
 
-			    return match.split( ':' )[ 1 ].replace( /\"/g, "" );
+		locateFirstLine();
+
+		var container = document.getElementById( 'container' );
+
+		var aboveEles = document.getElementsByClassName( 'img-box' );
+
+		var minHeightELe = getMinHeightELe( aboveEles );
+
+		debug( 'minHeightELe --------> ' );
+		debug( minHeightELe );
+
+	};
+
+	function debug( str ) {
+		console.log( str );
+	}
+
+	function getColumns( box_width, margin ) {
+		return parseInt( 
+			document.documentElement.offsetWidth / box_width, 
+			10 
+		);
+	}
+
+	function locateFirstLine( ) {
+		
+		var columns, boxWidth, count, i, style,
+			hMargin = 10,
+			left, top, box, container;
+
+		boxWidth 	= getBoxWidth();
+		columns 	= getColumns( boxWidth );
+		container 	= document.getElementById( 'container' );
+
+		debug( 'columns = ' + columns );
+
+		for ( i = 0; i < columns; i++ ) {
+
+			hMargin = i > 0 ? 10 : 0;
+
+			left = i * boxWidth;
+
+			style = {
+				position 	: 'absolute',
+				left 		: left,
+				top 		: 0,
+				width 		: boxWidth,
+				imgName 	: '0' + ( i + 1 ) + '.jpeg'
 			};
 
-			function $(id) {
-				return document.getElementById(id);
-			}
+			box = createBox( style );
 
-				window.document.onkeydown = eventHandler;
+			container.appendChild( box );
 
-				function eventHandler( e ) {
-					
-					var keycode = e.which ? e.which : e.keycode;
+			style = null;
+		}
+	}
 
-					switch ( keycode ) {
+	function createBox( boxStyle ) {
 
-						case 38:
-							keyUp();
-							return false;
-							break;
-						case 40:
-							keyDown();
-							return false;
-							break;
-						case 37:
-							// keyLeft();
-							return false;
-							break;
-						case 39:
-							// keyRight();
-							return false;
-							break;
-						default:
-							return true;
-							break;
-					}
-				}
+		var frag, div, img;
 
-				var area 		= 0,
-					chanFocus 	= 0,
-					chanLines 	= 0,
-					lines 		= 8,
-					focusTop 	= -16,
-					chanDatas 	= null,
-					channelListData = [],
-					focusId 	= 'lc_focus';
+		frag = document.createDocumentFragment();
 
-					var channelIds = [0,1,2,3,4,5],
-					channelNames = ['helo','helo','helo','helo','helo','helo'],
-					channelNumsShow = ['000', '001','002','003','004','005'];
+		div = document.createElement( 'div' );
+		div.className = 'img-box';
+		div.style.position 	= boxStyle.position;
+		div.style.left 		= boxStyle.left 	+ 'px';
+		div.style.top 		= boxStyle.top 		+ 'px';
+		div.style.width 	= boxStyle.width 	+ 'px';
 
-				var prefix = findPrefix( chan );
+		img = document.createElement( 'img' );
+		img.src = 'images/bf-girls/' + boxStyle.imgName;
 
-				function keyUp() {
-					
-					changeChanList( -1 );
-				}
+		div.appendChild( img );
+		frag.appendChild( div );
 
-				function keyDown() {
-					
-					changeChanList( 1 );
-				}
+		return frag;
+	}
 
-				function changeChanList( direction ) {
-					
-					var line = lines;
+	function getMinHeightELe( above_eles ) {
 
-					if ( direction !== -1 && direction !== 1 ) {
+		var heights = [],
+			i = 0, len, index;
 
-						return false;
-					} 
+		for ( len = above_eles.length; i < len; i++ ) {
+			heights.push( above_eles[ i ].offsetHeight );
+		}
 
-					if ( chanLines < lines ) {
+		debug( heights );
 
-						line = chanLines;
-					}
+		index = heights.indexOf( Math.min.apply( null, heights ) );
 
-					chanListLoseFocus();
-
-					chanFocus = direction > 0 ? chanFocus + 1 : chanFocus - 1;
-
-					if ( chanFocus < 0 ) {
-
-						chanFocus = 0;
-					} else if ( chanFocus >= line ) {
-
-						chanFocus = line - 1;
-					}
-
-					chanListGetFocus();
-				}
-
-				function chanListGetFocus() {
-
-					var top 	= 0,
-						trH 	= 80;
-
-					$( prefix + chanFocus ).style.color = '#ffffff';
-
-					// $( 'lc_focus' ).style.visibility = 'visible';
-
-					$( focusId ).style.top = ( focusTop + trH * chanFocus ) + 'px';
-				}
-
-				function chanListLoseFocus() {
-					
-					$( prefix + chanFocus ).style.color = '#a0a2a4';
-
-					// $( 'lc_focus' ).style.visibility = 'hidden';
-
-					// no need
-				}
-
-				function dataInit() {
-
-					chanDatas = getData();
-
-					chanLines = chanDatas.length;
-
-				}
-				function getData() {
-					
-					var len = channelIds.length,
-						i = 0,
-						datas = [],
-						data = null;
-
-					for ( ;i < len; i++ ) {
-
-						datas[ i ] = datas[ i ] || {};
-
-						data = datas[ i ];
-
-						data.id 	= channelIds[ i ];
-						data.name 	= channelNames[ i ];
-						data.no 	= channelNumsShow[ i ];
-					}
-
-					return datas;
-				}
-				function init1() {
-
-					chanFocus = 0;
-
-					dataInit();
-
-					showData();
-
-					chanListGetFocus();
-				}
-			
-
-				
-
-				function showData() {
-					
-					var i = 0,
-						chanLen = 0,
-						tds = null,
-						td = null,
-						tr = null,
-						spans = null,
-						textNode = null;
-
-					chanLen = chanDatas.length;
-
-					for ( ; i < lines; i++ ) {
-
-						tr = $( prefix + i );
-
-						// programs time
-						tds = tr.getElementsByTagName( 'td' );
-
-						if ( i < chanLines ) {
-
-							// id
-							tds[0].innerText = '001';
-
-							tds[1].firstChild.nodeValue = '频道名称';
-
-							// prog
-							spans = tds[1].getElementsByTagName( 'span' );
-
-							spans[0].innerText = '黄金档：我是混球';
-
-						}
-					}
-				}
+		return above_eles[ index ];
+	}
 
 
-				function debug(str) {
-					console.log( str )
-				}
+	function getBoxWidth() {
+		return 220;
+	}
+</script>
 
-				window.onload = init1;
 
-	</script>
 </body>
 </html>
