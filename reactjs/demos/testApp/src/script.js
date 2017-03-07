@@ -11,4 +11,3 @@ world( 'world' );
 var print = name => console.log( 'my name is: ' + name );
 
 print( 'lizc' );
-

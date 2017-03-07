@@ -1,0 +1,31 @@
+.di {
+  width: 100px;
+  height: 50px;
+  margin-top: 100px;
+  margin-right: 100px;
+  background-color: #eeeedd;
+  border: 3px solid green;
+  border-left-radius: 10px; }
+
+/*
+#test {
+	span {
+		font-size: 20px;
+	}
+}
+
+#test {
+	border: {
+		color: black;
+	}
+}
+
+.di { 
+	color: gray;
+}
+
+.sp {
+	@extend .di;
+} */
+
+/*# sourceMappingURL=test.css.map */

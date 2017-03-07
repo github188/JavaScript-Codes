@@ -6,18 +6,58 @@
 	<script src="main.js" type="text/javascript"></script>
 </head>
 <body>
+	<div id="test" class="tab" style="width:100px;height:100px;">你好</div>
+	<div class="tab">我好</div>
+	<div class="tab">不好</div>
+
+	<table id="tbl"></table>
 	<script type="text/javascript">
 
+	var test = '<tr id="id0" style="height: 80px; color: #a0a2a4;">'
+				 + '<td style="width: 85px; font-size: 30px;">001</td>'
+				 + '<td style="width: 245px; font-size: 30px;">CCCTV1</td>'
+			 + '</tr>';
 
-	function getObjectString( obj ) {
-		var desc = "[ ",
-			prop;
+    $( 'tbl' ).innerHTML = test;
 
-		for ( prop in obj ) {
-			desc += prop + " = " + obj[ prop ] + " | ";
-		}
 
-		return desc.replace( /\|\s$/, "]" );;
+    function pcParseUtcTime( utcTime )
+    {
+        var year 	= parseInt( utcTime.substr(0, 4) ),
+        	month 	= parseInt( utcTime.substr(4, 2) ),
+        	day 	= parseInt( utcTime.substr(6, 2) ),
+        	hour 	= parseInt( utcTime.substr(9, 2) ),
+        	min 	= parseInt( utcTime.substr(11, 2) ),
+        	sec 	= parseInt( utcTime.substr(13, 2) ),
+
+        	d = 0, stbType = '', stbTypeArray = null;
+
+        // 处理parseInt("0X")等于零的问题
+        if ( month == 0 ) month = parseInt(utcTime.substr(5,1));
+        if ( day == 0 ) day = parseInt(utcTime.substr(7,1));
+        if ( hour == 0 ) hour = parseInt(utcTime.substr(10,1));
+        if ( min == 0 ) min = parseInt(utcTime.substr(12,1))
+        if ( sec == 0 ) sec = parseInt(utcTime.substr(14,1));
+
+        d =  new Date(year, month -1, day, hour , min, sec);
+
+        // stbType = Authentication.CTCGetConfig( 'STBType' );
+
+        // debug( 'pcParseUtcTime --- stbType = ' + stbType );
+
+        // stbTypeArray = [ 'EC2108V3H', 'EC1308V2H', 'EC2106V1', 'EC2106V2', 'EC2108V3H_pub' ];
+
+        // // 时区问题
+        // if ( stbTypeArray.indexOf( stbType ) >= 0 ) {
+
+        //     d =  new Date(year, month - 1, day, hour + 8 , min, sec);
+        // }
+
+        return d;
+    }
+
+	function $(id) {
+		return document.getElementById(id);
 	}
 	</script>
 </body>

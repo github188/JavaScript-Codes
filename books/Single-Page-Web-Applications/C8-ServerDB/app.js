@@ -34,7 +34,7 @@ app.use( bodyParser.urlencoded({ extended: true }) );
 app.use( methodOverride() );
 
 // 定义静态文件根路径
-app.use( serveStatic( __dirname + '/public/spa' ) );
+app.use( serveStatic( __dirname + '/public' ) );
 
 // 开发环境中间件
 if ( env === 'development' ) {

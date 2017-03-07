@@ -2,15 +2,26 @@
 
 /* 750 * 1334 rpx, navigator height: 42px -> 84rpx */
 
-
 /* 定制页面 */
 
 /* 定制标题 */
 #custom-title {
     width: 100%;
     height: 124rpx;
-
+    line-height: 124rpx;
     background-color: #00a6ac;
+}
+
+#ct-arrow-left {
+    float:left;
+    margin-left: 32rpx;
+    margin-top: 12rpx;
+}
+
+#ct-title-word {
+    float:left;
+    text-indent: 96rpx;
+    font-size: 48rpx;
 }
 
 /* 定制编辑区 */
@@ -20,6 +31,21 @@
 
     background-color: #ffffff;
 }
+
+#ce-canvas {
+    float: left;
+    width: 700rpx;
+    height: 100%;
+    background-color: red;
+}
+
+#ce-tools {
+    float: left;
+    width: 50rpx;
+    height: 100%;
+    background-color: blue;
+}
+
 
 /* 底部功能区 */
 #custom-func {

@@ -126,6 +126,7 @@ var f2 = function (data) {
     console.log('Randall: ' + data + ', 找他加点工资去！');
 };
 
+/*
 o.subscribe(f1);
 o.subscribe(f2);
 
@@ -135,3 +136,134 @@ o.update("Tom回来了！")
 o.unsubscribe(f1);
 //再来验证
 o.update("Tom回来了！");   
+*/
+
+/**
+ * 杂志订阅
+ * 	subscribers: 保存被观察者处理函数
+ * 	subscribe()：订阅
+ * 	unsubscribe()：退订
+ * 	publish()：发布，对被观察者行为做出响应
+ */
+
+var publisher = {
+	subscribers: {
+		any: [] // 订阅者
+	},
+
+	// 订阅
+	subscribe: function ( fn, type ) {
+
+		type = type || 'any';
+		if ( typeof this.subscribers[ type ] === "undefined" ) {
+			this.subscribers[ type ] = [];
+		}
+
+		// 注册
+		this.subscribers[ type ].push( fn );
+	},
+
+	// 退订
+	unsubscribe: function ( fn, type ) {
+		this.visitSubscribers( 'unsubscribe', fn, type );
+	},
+
+	// 发布
+	publish: function ( publication, type ) {
+		this.visitSubscribers( 'publish', publication, type );
+	},
+
+	visitSubscribers: function ( action, arg, type ) {
+		var pubtype = type || 'any',
+			subscribers = this.subscribers[ pubtype ],
+			i,
+			max = subscribers.length;
+
+		for ( i = 0; i < max; i++ ) {
+			if ( action === 'publish' ) {
+				subscribers[ i ]( arg );
+			} else {
+				if ( subscribers[ i ] === arg ) {
+					subscribers.splice( i , 1 );
+				}
+			}
+		}
+	}
+};
+
+function makePublisher( o ) {
+	var i;
+	for ( i in publisher ) {
+		if ( publisher.hasOwnProperty( i ) && typeof publisher[ i ] === 'function' ) {
+			o[ i ] = publisher[ i ];
+		}
+	}
+
+	o.subscribers = { any: [] };
+}
+
+var me = {
+	say: function () {
+		this.publish( " who love me ? " );
+	},
+	run: function () {
+		this.publish( " who will run with me ? ", "run" );
+	}
+};
+
+makePublisher( me );
+
+var loveMe = {
+	toSay: function ( me ) {
+		console.log( me + " Lily love you ! " );
+	},
+	toSayAgain: function ( me ) {
+		console.log( me + " I am Lily, I love you !" );
+	},
+	toRun: function ( run ) {
+		console.log( run + " Lily wish ! " );
+	}
+};
+
+me.subscribe( loveMe.toSay );
+me.subscribe( loveMe.toSayAgain );
+me.subscribe( loveMe.toRun, "run" );
+
+
+me.say();
+// me.say();
+// me.say();
+me.run();
+
+
+var paper = {
+	daily: function () {
+		this.publish( "big news today" );
+	},
+
+	monthly: function () {
+		this.publish( "interesting analysis", "monthly" );
+	}
+};
+
+// 将 paper 注册成发布者
+makePublisher( paper );
+
+// 订阅者
+var joe = {
+	drinkCoffee: function ( paper ) {
+		console.log( 'Just read ' + paper );
+	},
+	sundayPreMap: function ( monthly ) {
+		console.log( 'About to fall asleep reading this ' + monthly );
+	}
+};
+
+paper.subscribe( joe.drinkCoffee );
+paper.subscribe( joe.sundayPreMap, 'monthly' );
+
+
+// paper.daily();
+// paper.daily();
+// paper.daily();
+// paper.monthly();

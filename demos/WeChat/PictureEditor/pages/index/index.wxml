@@ -2,11 +2,20 @@
 <view class="container">
     <!-- 标题 -->
     <view id="custom-title">
-        <image src="../resources/images/si-sprite.svg"></image>
+        <view id="ct-arrow-left" style="color:{{titleArrowColor}}" bindtouchstart="changeTitileArrowColor" bindtouchend="changeTitileArrowColor" bindtap="titleArrowAction">
+        <i class="fa fa-angle-left fa-2x" aria-hidden="true"></i>
+        </view>
+        <view id="ct-title-word">
+        <text>私人定制</text>
+        </view>
     </view>
 
     <!-- 画布 -->
-    <view id="custom-edit"></view>
+    <view id="custom-edit">
+        <view id="ce-canvas"></view>
+        <view id="ce-tools"></view>
+
+    </view>
 
     <!-- 功能区 -->
     <view id="custom-func"></view>
