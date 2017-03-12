@@ -1,0 +1,37 @@
+/**index.wxss**/
+
+
+.touch-panel {
+  width: 100%;
+  height: 100%;
+
+  background-color: black;
+
+  position: relative;
+}
+
+.title {
+  color: cyan;
+  font-size: 30rpx;
+
+  position:absolute;
+  top: 10rpx;
+}
+
+button {
+  width: 268rpx;
+  height: 146rpx;
+
+  background-color:red;
+}
+
+.btn-touch-me {
+
+}
+
+.btn-leave-me {
+
+  position: absolute;
+  bottom: 30rpx;
+}
+

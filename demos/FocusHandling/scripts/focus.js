@@ -142,7 +142,7 @@ var styleHandler = (function () {
 
         console.log( ele + " --- " + currCls );
         // 当前样式没有时才添加
-        if ( currCls.indexOf( clsName ) === -1 ) {
+        if ( !currCls || currCls.indexOf( clsName ) === -1 ) {
             console.log( ele + " --- " + currCls + " " + clsName );
             ele.setAttribute("class", currCls + " " + clsName);
         }

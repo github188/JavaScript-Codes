@@ -1,4 +1,7 @@
 /**app.wxss**/
+
+@import 'awesome.wxss';
+
 .container {
   height: 1254rpx;
   display: flex;

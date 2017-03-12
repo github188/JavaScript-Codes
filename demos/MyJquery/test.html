@@ -9,12 +9,47 @@
 	<script src="./rel/jquery.js"></script>
 </head>
 <body>
-<div><div><span>hi</span></div></div>
+<div style="margin:0 auto;width:100px;"><div><span>hi</span></div></div>
 	<script>
 
-		var $span = $("div").find('span');
 
-		console.log( $span );
+    function timeToDateStr( time ) {
+    	
+		var currTime = new Date();  
+        var beginTime = new Date(currTime.getTime() - 12200 * 1000);
+
+        var year = beginTime.getFullYear(),
+        	month = beginTime.getMonth() + 1,
+        	date = beginTime.getDate(),
+        	hour = beginTime.getHours(),
+        	minute = beginTime.getMinutes(),
+        	second = beginTime.getSeconds();
+
+        return 	getTenStr( year ) + getTenStr( month ) +
+        	  	getTenStr( date ) + getTenStr( hour ) +
+        	  	getTenStr( minute ) + getTenStr( second );
+
+
+    }
+
+    function getTenStr( num ) {
+    	return num < 10 ? "0" + num : num + "";
+    }
+
+	function convertTime2Str( second ) {
+    	
+    	if ( second <= 60 ) {
+    		return "00:00";
+    	}
+
+    	var minute = Math.floor( second / 60 )  % 60,
+    		hour = Math.floor( second / 60 / 60 );
+
+    	minute = minute < 10 ? "0" + minute : minute + "";
+    	hour = hour < 10 ? "0" + hour : hour + "";
+
+    	return hour + ":" + minute;
+    }	
 
 	</script>
 </body>

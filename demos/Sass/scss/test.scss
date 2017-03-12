@@ -1,0 +1,48 @@
+
+
+$blue: #0C07EB;
+$red: #ffffff;
+$direction: left;
+$divW: 100px;
+$divH: 50px;
+$bgColor: red;
+
+@mixin layout( $value: 100px ) {
+	width: $divW;
+	height: $divH;
+	// color: $red;
+
+	margin-top: ( $divW - $divH ) * 2;
+	margin-right: $value;
+
+	background-color: complement(#dde);
+
+	border: 3px solid green;
+	border-#{$direction}-radius: 10px;
+}
+
+.di {
+	@include layout;
+}
+
+
+/*
+#test {
+	span {
+		font-size: 20px;
+	}
+}
+
+#test {
+	border: {
+		color: black;
+	}
+}
+
+.di { 
+	color: gray;
+}
+
+.sp {
+	@extend .di;
+} */
