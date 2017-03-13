@@ -14,7 +14,7 @@ var
 	errorHandler 	= require( 'errorhandler' ),
 	serveStatic 	= require( 'serve-static' ),
 	path 			= require( 'path' ),
-	routes 			= require( './routes' ),
+	routes 			= require( './lib/routes' ),
 	app 			= express(),
 
 	server, port, env;

@@ -4,52 +4,57 @@
 	<meta charset="UTF-8">
 	<title>test</title>
 	<style type="text/css">
-		
+		#first {
+
+        }
+
+        div {
+            cursor: pointer;
+        }
+
 	</style>
 	<script src="./rel/jquery.js"></script>
 </head>
 <body>
-<div style="margin:0 auto;width:100px;"><div><span>hi</span></div></div>
+
+
+    <div id="first">click me ========================================>>>
+        <p  id="p1">lakjdf大楼附近阿斯科利的积分拉德斯基反垃圾数量扩<br />大解放螺丝钉家乐福鸡丝豆腐教练机啊京东方垃圾堆</p>
+    </div>
+    <div id="second">click me ========================================>>>
+        
+        <p  id="p2">lakjdf大楼附近阿斯科利的积分拉德斯基反垃圾数量扩<br />大解放螺丝钉家乐福鸡丝豆腐教练机啊京东方垃圾堆</p>
+    </div>
+    <div id="third">click me ========================================>>>
+        
+        <p id="p3">lakjdf大楼附近阿斯科利的积分拉德斯基反垃圾数量扩<br />大解放螺丝钉家乐福鸡丝豆腐教练机啊京东方垃圾堆</p>
+    </div>
+
 	<script>
 
-
-    function timeToDateStr( time ) {
-    	
-		var currTime = new Date();  
-        var beginTime = new Date(currTime.getTime() - 12200 * 1000);
-
-        var year = beginTime.getFullYear(),
-        	month = beginTime.getMonth() + 1,
-        	date = beginTime.getDate(),
-        	hour = beginTime.getHours(),
-        	minute = beginTime.getMinutes(),
-        	second = beginTime.getSeconds();
-
-        return 	getTenStr( year ) + getTenStr( month ) +
-        	  	getTenStr( date ) + getTenStr( hour ) +
-        	  	getTenStr( minute ) + getTenStr( second );
-
-
+    $( 'first' ).onclick = function ( e ) {
+        var v = $( 'p1' ).style.display,
+            vis = v === 'block' ? 'none' : 'block';
+        $('p1').style.display = vis;
     }
 
-    function getTenStr( num ) {
-    	return num < 10 ? "0" + num : num + "";
+    $( 'second' ).onclick = function ( e ) {
+
+        var v = $( 'p2' ).style.display,
+            vis = v === 'block' ? 'none' : 'block';
+        $('p2').style.display = vis;
     }
 
-	function convertTime2Str( second ) {
-    	
-    	if ( second <= 60 ) {
-    		return "00:00";
-    	}
+     $( 'third' ).onclick = function ( e ) {
 
-    	var minute = Math.floor( second / 60 )  % 60,
-    		hour = Math.floor( second / 60 / 60 );
+        var v = $( 'p3' ).style.display,
+            vis = v === 'block' ? 'none' : 'block';
+        $('p3').style.display = vis;
+    }
 
-    	minute = minute < 10 ? "0" + minute : minute + "";
-    	hour = hour < 10 ? "0" + hour : hour + "";
-
-    	return hour + ":" + minute;
-    }	
+    function $(id) {
+        return document.getElementById(id);
+    }
 
 	</script>
 </body>

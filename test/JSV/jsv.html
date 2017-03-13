@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JSV 测试</title>
+</head>
+<body>
+	
+	<script src="scripts/jsv.js">
+		
+		function typeof( o ) {
+			return ( o === undefined 
+				? 'undefined' 
+				: ( o === null 
+					? null 
+					: Object.prototype.toString.call( o )
+							.split( ' ' )
+							.pop()
+							.split( ']' )
+							.shift()
+							.toLowerCase()
+				)
+			);
+		}
+
+
+		function toArray(o) {
+				return o !== undefined && o !== null ? (o instanceof Array && !o.callee ? o : (typeof o.length !== "number" || o.split || o.setInterval || o.call ? [ o ] : Array.prototype.slice.call(o))) : [];
+			}
+	</script>
+</body>
+</html>

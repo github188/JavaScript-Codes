@@ -29,3 +29,14 @@ db.user.insert({
 		'background-color': 'rgb(136, 255, 136)'
 	}
 });
+
+
+//////////////  wget
+
+
+wget http://localhost:3000/horse/create \
+ --header='content-type: application/json' \
+ --post-data='{"css_map":{"color":"#2e0"},"name":"Winney"}' \
+ -O -
+
+ wget http://localhost:3000/horse/list -O -
