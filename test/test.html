@@ -111,11 +111,24 @@
 		}
 	}
 
+	function createRowBoxes() {
+		// body...
+	}
+
 	function createBox( boxStyle ) {
 
 		var frag, div, img;
 
 		frag = document.createDocumentFragment();
+
+
+		img = document.createElement( 'img' );
+		img.src = 'images/bf-girls/' + boxStyle.imgName;
+
+		var image = new Image();
+		image.src = img.src;
+
+		debug( 'img height: ' + image.offsetHeight );
 
 		div = document.createElement( 'div' );
 		div.className = 'img-box';
@@ -124,8 +137,6 @@
 		div.style.top 		= boxStyle.top 		+ 'px';
 		div.style.width 	= boxStyle.width 	+ 'px';
 
-		img = document.createElement( 'img' );
-		img.src = 'images/bf-girls/' + boxStyle.imgName;
 
 		div.appendChild( img );
 		frag.appendChild( div );
@@ -139,6 +150,7 @@
 			i = 0, len, index;
 
 		for ( len = above_eles.length; i < len; i++ ) {
+			debug( above_eles[ i ].offsetHeight );
 			heights.push( above_eles[ i ].offsetHeight );
 		}
 
