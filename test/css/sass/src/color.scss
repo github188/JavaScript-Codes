@@ -1,0 +1,143 @@
+// 颜色函数测试文件
+
+
+// 默认值
+$bg-color   : rgb( 120, 220, 180 ) !default;
+$width      : 100px !default;
+$height     : 100px !default;
+$gap        : 10px !default;
+$float      : left !default;
+$font-size  : 26px;
+
+$box-model: (margin);
+
+@mixin set_bg_color( $color:red ) {
+    background-color: $color;
+}
+
+@mixin set_size( $width:200px, $height:200px ) {
+    width: $width;
+    height: $height;
+}
+
+@mixin set_gap( $box-model, $side, $value ) {
+    @each $g in $box-model {
+        #{$g}-#{$side}: $value;
+    }
+}
+
+// ----------START 颜色函数 ---------------------------
+
+// 1. RGB
+$bg-color: rgb(100, 100, 100);
+$bg-color: rgba(100, 100, 100, 0.4);
+$bg-color: mix( red, blue, 30% );
+
+// 2. HSL
+$bg-color: hsl( 180, 30%, 50% );
+$bg-color: hsla( 180, 30%, 50%, 0.3 );
+$bg-color: adjust-hue($bg-color, 260);
+$bg-color: lighten($bg-color, 30%);
+$bg-color: darken($bg-color, 60%);
+$bg-color: grayscale($bg-color);
+$bg-color: complement($bg-color);
+$bg-color: invert($bg-color);
+$bg-color: opacify($bg-color, 0.5);
+$bg-color: fade-in($bg-color, 0.8);
+$bg-color: transparentize($bg-color, 0.2);
+$bg-color: fade-out($bg-color, 0.1);
+
+$bg-color: adjust-color(
+    $bg-color, 
+    $red:-10, $green:20, $blue:-20, 
+    // $hue:180, $saturation:30%, $lightness:20%, 
+    $alpha:0.3
+);
+
+$bg-color: rgba( random(255), random(255), random(255), random(100) / 100 );
+
+$list: 120, 120, 120;
+$list: 120 120 120;
+$list: 1, 2, 3, 4, 5, 6;
+
+$list: set-nth($list, 5, 9);
+
+$bg-color: rgba( 120, 120, 120, nth($list, 5) / 10 );
+
+@mixin context($old-context, $new-context) { 
+    @at-root #{selector-replace(&, $old-context, $new-context)} { @content; } 
+} 
+
+.tabs { 
+    .tab { 
+        background: red; 
+        &:hover { background: white; } 
+        .tab-link { 
+            color: white; 
+            @include context('.tab', '.tab:hover') { color: red; } 
+        } 
+    } 
+}
+
+
+// ----------END 颜色函数 ---------------------------
+
+
+// ----------START 数字函数 ---------------------------
+
+// $width: percentage( 0.8 ); // 12000%
+
+// ----------END 数字函数 ---------------------------
+
+%bgColor {
+    background-color: $bg-color;
+}
+
+.bg {
+    background-color: $bg-color;
+}
+
+.size {
+    width: $width;
+    height: $height;
+}
+
+.layout {
+    float: left;
+    text-align: center;
+    line-height: $height;
+    font-size: $font-size;
+}
+
+.red {
+    @extend .bg;
+    @extend .layout;
+
+    @include set_size( $width, $height );
+
+    @include set_gap( $box-model, left, $gap );
+}
+
+.green {
+    @extend .bg;
+    @extend .layout;
+
+    @include set_size( $width, $height );
+    @include set_gap( $box-model, left, $gap );
+}
+
+.blue {
+    @extend .bg;
+    @extend .layout;
+
+    @include set_size( $width, $height );
+    @include set_gap( $box-model, left, $gap );
+}
+
+.black {
+    @extend .bg;
+    @extend .layout;
+
+    @include set_size( $width, $height );
+    @include set_gap( $box-model, left, $gap );
+}

@@ -1,0 +1,40 @@
+div {
+  background-repeat: no-repeat; }
+
+* html div {
+  font-size: 32px; }
+
+div {
+  background-color: #4000bf;
+  background-image: url("../../images/1.jpg");
+  background-size: 60px 60px; }
+
+.red {
+  width: 70px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 100px;
+  padding-left: 100px; }
+
+.black {
+  width: 70px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 100px;
+  padding-left: 100px; }
+
+.blue {
+  width: 70px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 100px;
+  padding-left: 100px; }
+
+.green {
+  width: 70px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 100px;
+  padding-left: 100px; }
+
+/*# sourceMappingURL=test.css.map */

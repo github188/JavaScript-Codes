@@ -1,0 +1,43 @@
+.tabs .tab {
+  background: red; }
+  .tabs .tab:hover {
+    background: white; }
+  .tabs .tab .tab-link {
+    color: white; }
+    .tabs .tab:hover .tab-link {
+      color: red; }
+
+.bg, .red, .green, .blue, .black {
+  background-color: rgba(120, 120, 120, 0.9); }
+
+.size {
+  width: 100px;
+  height: 100px; }
+
+.layout, .red, .green, .blue, .black {
+  float: left;
+  text-align: center;
+  line-height: 100px;
+  font-size: 26px; }
+
+.red {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px; }
+
+.green {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px; }
+
+.blue {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px; }
+
+.black {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px; }
+
+/*# sourceMappingURL=color.css.map */

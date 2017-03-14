@@ -1,0 +1,81 @@
+
+$width: 100px;
+$height: 100px;
+$bgColor: mix(red, blue, 25%);
+$mtop: 10px;
+
+%placeholder {
+    background-repeat: no-repeat;
+}
+
+@mixin set_global {
+    * html {
+        @content;
+    }
+}
+
+@include set_global {
+    div {
+        font-size: 32px;
+    }
+}
+
+
+@mixin set_bg( $color, $img, $w:60px, $h:60px ) {
+
+    background-color: $color;
+    background-image: url($img);
+    background-size: $w $h;
+
+    @extend %placeholder;
+}
+
+// 引用
+div {
+    @include set_bg( $bgColor, '../../images/1.jpg' );
+}
+
+$stepW: 5px;
+
+@function set_width( $w ) {
+    @return $width - $w * $stepW + $width / $stepW;
+}
+
+
+$props: (margin, padding);
+
+@mixin set_top( $direction, $value ) {
+    @each $prop in $props {
+        #{$prop}-#{$direction}: $value;
+    }
+}
+
+.red {
+    width: set_width( 10 );
+    height: $height;
+    margin-top: $mtop;
+    @include set_top( left, 100px );
+}
+
+.black {
+    width: set_width( 10 );
+    height: $height;
+    margin-top: $mtop;
+    @include set_top( left, 100px );
+}
+
+.blue {
+
+    width: set_width( 10 );
+    height: $height;
+    margin-top: $mtop;
+    @include set_top( left, 100px );
+}
+
+.green {
+
+    width: set_width( 10 );
+    height: $height;
+    margin-top: $mtop;
+    @include set_top( left, 100px );
+}
