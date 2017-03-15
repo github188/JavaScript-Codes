@@ -3,170 +3,27 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<style type="text/css">
-		#container {
-			/*column-width: 240px;
-			column-gap: 30px;
-			column-count: 3;*/
-		}
 
-		#container div {
-			/*width: 220px;*/
-			/*margin-top: 10px; */
-			/*float: left;*/
-		}
-
-		#container div img {
-			width: 220px;
-			height: 100%;
-		}
-
+	<script type="text/javascript" src="mycodes/mycode.js"></script>
+	<script type="text/javascript" src="mycodes/jQuery.js"></script>
+	<style>
+		/*div { border: 1px solid #fae; }*/
 	</style>
 </head>
 <body>
 
 
-
-<div id="container"><!--
-	<div class="img-box"><img src="images/bf-girls/01.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/02.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/03.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/04.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/05.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/06.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/07.jpeg" alt="01.jpeg"></div>
-	<div class="img-box"><img src="images/bf-girls/08.jpeg" alt="01.jpeg"></div> 
-	<div class="img-box"><img src="images/bf-girls/09.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/10.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/11.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/12.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/13.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/14.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/15.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/16.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/17.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/18.jpeg" alt="01.jpeg"></div>
-	<div><img src="images/bf-girls/19.jpeg" alt="01.jpeg"></div> -->
-</div>
-
-<script>
-	window.onload = function () {
-
-
-		locateFirstLine();
-
-		var container = document.getElementById( 'container' );
-
-		var aboveEles = document.getElementsByClassName( 'img-box' );
-
-		var minHeightELe = getMinHeightELe( aboveEles );
-
-		debug( 'minHeightELe --------> ' );
-		debug( minHeightELe );
-
-	};
-
-	function debug( str ) {
-		console.log( str );
-	}
-
-	function getColumns( box_width, margin ) {
-		return parseInt( 
-			document.documentElement.offsetWidth / box_width, 
-			10 
-		);
-	}
-
-	function locateFirstLine( ) {
+	<script type="text/javascript">
 		
-		var columns, boxWidth, count, i, style,
-			hMargin = 10,
-			left, top, box, container;
-
-		boxWidth 	= getBoxWidth();
-		columns 	= getColumns( boxWidth );
-		container 	= document.getElementById( 'container' );
-
-		debug( 'columns = ' + columns );
-
-		for ( i = 0; i < columns; i++ ) {
-
-			hMargin = i > 0 ? 10 : 0;
-
-			left = i * boxWidth;
-
-			style = {
-				position 	: 'absolute',
-				left 		: left,
-				top 		: 0,
-				width 		: boxWidth,
-				imgName 	: '0' + ( i + 1 ) + '.jpeg'
-			};
-
-			box = createBox( style );
-
-			container.appendChild( box );
-
-			style = null;
-		}
+	function Server() {
+		
 	}
 
-	function createRowBoxes() {
-		// body...
-	}
+	Server.listen = Server;
 
-	function createBox( boxStyle ) {
+	console.log( new Server() );
 
-		var frag, div, img;
-
-		frag = document.createDocumentFragment();
-
-
-		img = document.createElement( 'img' );
-		img.src = 'images/bf-girls/' + boxStyle.imgName;
-
-		var image = new Image();
-		image.src = img.src;
-
-		debug( 'img height: ' + image.offsetHeight );
-
-		div = document.createElement( 'div' );
-		div.className = 'img-box';
-		div.style.position 	= boxStyle.position;
-		div.style.left 		= boxStyle.left 	+ 'px';
-		div.style.top 		= boxStyle.top 		+ 'px';
-		div.style.width 	= boxStyle.width 	+ 'px';
-
-
-		div.appendChild( img );
-		frag.appendChild( div );
-
-		return frag;
-	}
-
-	function getMinHeightELe( above_eles ) {
-
-		var heights = [],
-			i = 0, len, index;
-
-		for ( len = above_eles.length; i < len; i++ ) {
-			debug( above_eles[ i ].offsetHeight );
-			heights.push( above_eles[ i ].offsetHeight );
-		}
-
-		debug( heights );
-
-		index = heights.indexOf( Math.min.apply( null, heights ) );
-
-		return above_eles[ index ];
-	}
-
-
-	function getBoxWidth() {
-		return 220;
-	}
-</script>
-
+	</script>
 
 </body>
 </html>
