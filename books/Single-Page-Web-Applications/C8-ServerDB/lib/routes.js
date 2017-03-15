@@ -11,6 +11,7 @@ var
     fsHandler       = require( 'fs' ),
     JSV             = require( 'JSV' ).JSV,
     crud            = require( './crud' ),
+    chat            = require( './chat' ),
     configRoutes
     ;
 
@@ -24,7 +25,8 @@ configRoutes = function ( app, server ) {
     // } );
 
     app.get( '/', function ( req, res ) {
-        res.send( 'hello mongodb' );
+        // res.send( 'hello mongodb' );
+        res.redirect( '/spa.html' );
     });
 
     // 通用路由（*: 所有路径，?: 表示可选）
@@ -95,7 +97,9 @@ configRoutes = function ( app, server ) {
                 response.send( result ); 
             }
         );
-    });  
+    });
+
+    chat.connect( server ); 
 };
 
 function debug( str ) {

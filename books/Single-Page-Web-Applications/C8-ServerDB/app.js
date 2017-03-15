@@ -17,7 +17,7 @@ var
 	routes 			= require( './lib/routes' ),
 	app 			= express(),
 
-	server, port, env;
+	server, port, env, io;
 
 /* START -------------- 环境配置 -------------- */
 app.set( 'port', process.env.PORT || 3000 );
@@ -49,12 +49,13 @@ if ( env === 'development' ) {
 
 /* END -------------- 中间件 -------------- */
 
-// 路由配置
-routes.configRoutes( app, server );
-
 port = app.get( 'port' );
 
 server = http.createServer( app );
+
+// 路由配置
+routes.configRoutes( app, server );
+
 server.listen( port, function () {
 	console.log( 'Express server listening on port ' + port );
 });

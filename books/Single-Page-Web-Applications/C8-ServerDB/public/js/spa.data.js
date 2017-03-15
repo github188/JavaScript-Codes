@@ -5,7 +5,6 @@
  * @version $Id$
  */
 
-
 spa.data = (function () {
 
 	'use strict';
@@ -35,7 +34,7 @@ spa.data = (function () {
 	};
 
 	getSio = function () {
-		if ( !stateMap.sio ) { stateMap.sio = getSio(); }
+		if ( !stateMap.sio ) { stateMap.sio = makeSio(); }
 
 		return stateMap.sio;	
 	};
