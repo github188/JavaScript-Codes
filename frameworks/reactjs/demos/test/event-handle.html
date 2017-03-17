@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="../scripts/react.min.js"></script>
+	<script src="../scripts/react-dom.min.js"></script>
+	<script src="../scripts/browser.min.js"></script>
+
+	<style>
+		.c {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+
+	<script type="text/babel">
+
+	var rootElement = document.getElementById( 'root' );
+
+	class ButtonToggle extends React.Component {
+		constructor(props) {
+			super(props);
+			
+			this.state = {
+				isToggleOn: true
+			};
+
+			this.handleClick = (e) => {
+
+				console.log( this );
+
+				this.setState(
+					prevState => ({ isToggleOn: !prevState.isToggleOn })
+				);
+			}
+			
+			// this.handleClick = (e) => console.log( this )
+			// this.handleClick = this.handleClick.bind( this );
+		}
+
+		componentDidUpdate(prevProps, prevState) {
+			console.log( 'father update' );
+		}
+
+
+		render() {
+			return (
+				<Button clickHandler={ this.handleClick } isToggleOn={this.state.isToggleOn} />
+			);
+		}
+	}
+
+	class Button extends React.Component {
+		constructor(props) {
+			super(props);
+		}
+
+		componentDidUpdate(prevProps, prevState) {
+			console.log( 'son update' );
+		}
+
+		render() {
+			return (
+				<button onClick={ this.props.clickHandler  }>{this.props.isToggleOn ? 'ON' : 'OFF'}</button>
+		
+			);
+		}
+	}
+
+	ReactDOM.render(
+		<ButtonToggle />,
+		rootElement
+	);
+
+	</script>
+</body>
+</html>

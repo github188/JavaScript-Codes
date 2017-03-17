@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="../scripts/react.min.js"></script>
+	<script src="../scripts/react-dom.min.js"></script>
+	<script src="../scripts/browser.min.js"></script>
+
+	<style>
+		.c {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+
+	<script type="text/babel">
+
+	var rootElement = document.getElementById( 'root' );
+
+	// function WarningComp( props ) {
+	
+	// 	// 根据属性值来决定是否渲染该组件	
+	// 	if ( !props.warn ) { return null; }
+
+	// 	return (
+	// 		<div className="warning">Warning!</div>
+	// 	);
+	// }
+
+	class WarningComp extends React.Component {
+		constructor(props) {
+			super(props);
+			
+		}
+
+		componentWillMount() {
+			console.log( 'Warning component will mount' );
+		}
+
+		componentDidMount() {
+			console.log( 'Warning component did mount' );
+		}
+
+		componentWillUpdate(nextProps, nextState) {
+			console.log( 'Warning component will update' );
+		}
+
+		componentDidUpdate(prevProps, prevState) {
+			console.log( 'Warning component did update' );
+		}
+
+		componentWillUnmount() {
+			console.log( 'Warning component will unmount' );
+		}
+
+		render() {
+			if ( !this.props.warn ) { return null; }
+
+			return (
+				<div className="warning">Warning!</div>	
+			);
+		}
+	}
+
+
+	class Page extends React.Component {
+		constructor(props) {
+			super(props);
+			
+			this.state = {
+				isShowWarning: false
+			};
+
+			this.clickHandle = this.clickHandle.bind( this );
+		}
+
+		clickHandle( e ) {
+
+			this.setState(
+				prevState => ({ isShowWarning: !prevState.isShowWarning })
+			);
+		}
+
+		render() {
+			return (
+				<div>
+					<WarningComp warn={this.state.isShowWarning} />
+					<button onClick={ this.clickHandle }>
+						{this.state.isShowWarning ? 'Hide' : 'Show'}	
+					</button>
+				</div>
+			);
+		} 
+	}
+
+	ReactDOM.render(
+		<Page />,
+		rootElement
+	);
+
+	</script>
+</body>
+</html>

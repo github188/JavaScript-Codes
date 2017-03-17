@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="../scripts/react.min.js"></script>
+	<script src="../scripts/react-dom.min.js"></script>
+	<script src="../scripts/browser.min.js"></script>
+
+	<style>
+		.c {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+
+	<script type="text/babel">
+
+		var rootElement = document.getElementById( 'root' );
+
+		
+		function debug( str, obj ) {
+			if ( !obj ) { 
+				console.log( str );
+				return;
+			}
+
+			console.log( str + '------------------>' );
+			console.log( obj );
+			console.log( '<------------------' + str );
+		}
+
+		class Tick extends React.Component {
+
+			constructor(props) {
+				super(props);
+				this.state = {
+					date: new Date()
+				};
+
+				console.log( 'constructor got' );
+			}
+
+			// 组件将要被加载
+			componentWillMount() {
+				debug( 'comp will mount' );	
+			}
+
+			componentWillUpdate(nextProps, nextState) {
+				debug( 'nextState', nextState );
+			}
+
+			componentDidUpdate(prevProps, prevState) {
+				debug( 'prevState', prevState );	
+			}
+
+			// 组件渲染到DOM结束后触发
+			componentDidMount() {
+				this.timerID = setInterval(
+					() => this.tick(),
+					1000
+				);
+			}
+
+			// 组件被卸载时触发
+			componentWillUnmount() {
+				clearInterval( this.timerID );	
+			}
+
+			// 时钟 
+			tick() {
+				this.setState({
+					date: new Date()
+				});
+			}
+
+
+			render() {
+				return (
+					<div>
+						<h1>Hello world!</h1>
+						<h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+					</div>
+				);
+			}
+		}
+
+		var TickComp = React.createClass({
+			getInitialState() {
+				return {
+					date: new Date()
+				};
+			},
+
+			// 组件渲染到DOM结束后触发
+			componentDidMount: function () {
+				this.timerID = setInterval(
+					() => this.tick(),
+					1000
+				);
+
+				debug( 'timerID is ' + this.timerID );
+			},
+
+			// 组件被卸载时触发
+			componentWillUnmount: function () {
+				clearInterval( this.timerID );	
+			},
+
+			// 时钟 
+			tick: function () {
+				this.setState({
+					date: new Date()
+				});
+			},
+
+			render: function () {
+				return (
+					<div>
+						<h1>Hello world!</h1>
+						<DisplayDateComp date={this.state.date} />
+					</div>
+				);
+			}
+		});
+
+		class DisplayDateComp extends React.Component {
+			constructor(props) {
+				super(props);
+				this.state = {
+
+				};
+			}
+
+			render() {
+				return (<h2>It is {this.props.date.toLocaleTimeString()}.</h2>);
+			}
+		}
+
+		class App extends React.Component {
+			constructor( props ) {
+				super( props );
+			}
+
+			render() {
+				return (
+					<div>
+						<TickComp />
+						<TickComp />
+						<TickComp />
+					</div>
+				);
+			}
+		}
+
+		ReactDOM.render( <App />, rootElement );
+
+	</script>
+</body>
+</html>

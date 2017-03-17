@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="../scripts/react.min.js"></script>
+	<script src="../scripts/react-dom.min.js"></script>
+	<script src="../scripts/browser.min.js"></script>
+
+	<style>
+		.c {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+
+	<script type="text/babel">
+
+	var rootElement = document.getElementById( 'root' );
+
+	const numbers = [1, 2, 3, 4, 5, 6];
+
+
+	function NumberListComp( props ) {
+		
+		const numbers 	= props.numbers;
+		const listItems = numbers.map(
+			(number) => <li>{number}</li>
+		); 	
+
+		return (
+			<ul>{listItems}</ul>
+		);
+	}
+
+	function ListItem( props ) {
+		return (<li>{props.value}</li>);
+	}
+
+	function List( props ) {
+
+		const numbers = props.numbers;
+
+		const listItems = numbers.map( 
+			(number) => 
+			<ListItem key={number.toString()} 
+					  value={number} /> 
+		);
+
+		return (
+			<ul>{listItems}</ul>	
+		);
+	}
+
+	ReactDOM.render(
+		<NumberListComp numbers={numbers} />,
+		rootElement
+	);
+
+
+	</script>
+</body>
+</html>

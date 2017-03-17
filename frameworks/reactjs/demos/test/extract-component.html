@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>React.js</title>
+	<script src="scripts/react.min.js"></script>
+	<script src="scripts/react-dom.min.js"></script>
+	<script src="scripts/browser.min.js"></script>
+
+	<style>
+		.avatar {
+			width 	: 100px;
+			height 	: 100px;
+		}	
+
+	</style>
+
+</head>
+<body>
+	<div id="root"></div>
+
+	<script type="text/babel">
+
+		const rootEle = document.getElementById( 'root' );
+
+		var Comment = React.createClass({
+
+			render: function () {
+				return (
+					<div className="comment">
+						<AvatarComp author={this.props.author} />
+						<AuthorComp name={this.props.author.name} />
+						<WelcomeComp text={this.props.text} />
+						<DateComp date={new Date().toString()} />
+					</div>
+				);
+			}
+		});
+		
+		var AvatarComp = React.createClass({
+			render: function () {
+				return (
+					<div className="user-info">
+						<img className="avatar" 
+							src={this.props.author.avatarUrl} 
+							alt={this.props.author.name}
+						/>
+					</div>
+				);	
+			}
+		});
+
+		var AuthorComp = React.createClass({
+			render: function () {
+				return (
+					<div className="user-info-name">
+						作者：{this.props.name}
+					</div>
+				);
+			}
+		});
+
+		var WelcomeComp = React.createClass({
+			render: function () {
+				return (
+					<div className="comment-text">
+						问候语：{this.props.text}
+					</div>
+				);
+			}
+		});
+
+		var DateComp = React.createClass({
+			render: function () {
+				return (
+					<div className="comment-date">
+						日期：{this.props.date}
+					</div>
+				);
+			}
+		});
+
+		var element = <Comment 
+				author={{ avatarUrl:'./images/ygr-01.jpg', name: 'lizc' }} 
+				text='hello react.js' 
+				date={new Date().toString()}
+			/>
+
+		ReactDOM.render( element, rootEle );
+	</script>
+</body>
+</html>

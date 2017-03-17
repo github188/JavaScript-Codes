@@ -1,24 +1,9 @@
 
 
+var dosth = new Promise( (resolve, reject) => {
+    resolve( x + 2 );
+} );
 
-function test( msg, callback ) {
-
-    callback( msg );
-}
-
-var res = {
-
-    req: 'i am req'
-};
-
-res.send = function (  result ) {
-    console.log( result + this.req );
-
-    console.log( this );
-};
-
-// test( 'hello, ', res.send );
-
-test( 'hello, ', function ( result ) { res.send( result ); } );
-
-// function ( result ) { res.send( result ); }
+dosth
+    .then( result => console.log( result ), error => console.log( error ) )
+    // .catch( error => console.log( error ) )

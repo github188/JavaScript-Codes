@@ -11,6 +11,84 @@
 <body>
 	<div id="root"></div>
 
-	<script type="text/babel" src="./src/entry.js"></script>
+
+    <script type="text/babel">
+        
+        var InputComp = React.createClass({
+
+            getInitialState: function () {
+                return {
+                    accountValue: '',
+                    value: 'click me'
+                };
+            },
+
+            showAccount: function( e ) {
+                console.log( e.target.value )
+
+                this.setState({
+                    accountValue: e.target.value
+                });
+            },
+
+            render: function () {
+                return (
+                    <div>
+                        <input type="text" onChange={this.showAccount} defaultValue="please enter your account"/>
+                        <br />
+                        <span>帐号：{this.state.accountValue}</span><br/>
+                        <button className="square" onClick={() => this.setState({value: 'X'})}>
+                        {this.state.value}
+                        </button>
+                    </div>
+                );
+            }
+        }); 
+
+        ReactDOM.render(
+            <InputComp name="account" />,
+            document.getElementById( 'root' )
+        );
+
+        // 1. 函数式组件定义
+        
+        // function Welcome( props ) {
+            // return <h1>Hello React.js, {props.name}<br /></h1>
+        // }
+        
+        // 2. 类继承方式
+        // class welcome extends React.Component{
+        //     render () {
+        //         return <h1>Hello React.js, {this.props.name}<br /></h1>
+        //     }
+        // }
+
+        // 3. React.createClass 方式
+        
+        var Welcome = React.createClass({
+            render: function () {
+                return (<h1>Hello React.js, {this.props.name}<br /></h1>);
+            }
+        });
+
+        var Wrap = React.createClass({
+            render: function () {
+                return (
+                    <div>
+                        <Welcome name="Lizc" />
+                        <Welcome name="Fll" />
+                        <Welcome name="Liwy" />
+                    </div>
+                );
+            }
+        });
+
+        const element   = <Wrap />;
+        const id        = document.getElementById( 'root' );
+
+        ReactDOM.render( element, id );
+
+    </script>
+
 </body>
 </html>
