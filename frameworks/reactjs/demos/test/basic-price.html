@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="../scripts/react.min.js"></script>
+    <script src="../scripts/react-dom.min.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+    <link rel="stylesheet" href="price.css">
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const products = [
+        {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+        {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+        {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+        {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+        {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+        {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+    ];
+
+    function getCategoryList( category_name, product_name ) {
+        if ( !category_name ) { return null; }
+
+        const productsFilterByCategory = products.filter(function (product) {
+            return product.category === category_name;
+        });
+
+        if ( !product_name ) { return productsFilterByCategory; }
+
+        return productsFilterByCategory.filter(function  (product) {
+             return product.name.indexOf( product_name ) >= 0; 
+        });
+    }
+
+    const rootDiv = document.getElementById( 'root' );
+    
+    class ProductRow extends React.Component {
+        render() {
+            return (
+                <tr><td>{this.props.name}</td><td>{this.props.price}</td></tr>
+            );
+        }
+    }
+
+
+    class ProductRowTitle extends React.Component {
+
+        constructor(props) {
+            super(props);
+            
+        }
+
+        render() {
+            return(
+                <tr><td colspan="2" className="pd-title">{this.props.title}</td></tr>
+            );
+        }
+    }
+
+    class ProductLists extends React.Component {
+
+        constructor(props) {
+            super(props);
+            this.state = {
+                filterName: ''
+            };
+        }
+
+        render() {
+            
+            const filterName = this.state.filterName;
+
+            const sportGoods = getCategoryList( this.props.category, filterName );
+
+            if ( sportGoods.length <= 0 ) { return null; }
+
+            const list = sportGoods.map(function (product, index) {
+                return (
+                    <ProductRow key={index} name={product.name} price={product.price} />
+                );
+            });
+
+            return (
+                <div>
+                    <ProductRowTitle title={this.props.title} />
+                    {list}
+                </div>
+            );
+        }
+    }
+
+
+    class ProductPriceTable extends React.Component {
+        constructor(props) {
+            super(props);
+        }
+
+        render() {
+            return (
+                <div className="pd-price-tbl">
+                    <table>
+                    <th>Name</th>
+                    <th>Price</th>
+                        
+                    <ProductLists 
+                        category="Sporting Goods"
+                        title="Sporting Goods"
+                        searchText={this.props.searchText}
+                    />
+                    <ProductLists 
+                        category="Electronics"
+                        title="Electronics"
+                        searchText={this.props.searchText}
+                    />
+                    </table>
+                </div>
+            );
+        }
+    }
+
+
+    class SearchInput extends React.Component {
+
+        constructor(props) {
+            super(props);
+
+            this.searchInputChange = this.searchInputChange.bind(this);
+        }
+
+        searchInputChange( e ) {
+            this.props.onSearchTextChange( e.target.value );
+        }
+
+
+        render() {
+            return (
+                <input 
+                    className="pd-search-input" 
+                    type="search" 
+                    value={this.props.searchText} 
+                    onChange={this.searchInputChange}
+                />
+            );
+        }
+    }
+
+
+    class StockCheckBox extends React.Component {
+        render() {
+            return (
+                <div className="pd-checkbox">
+                    <input type="checkbox" />
+                    <label>Only show products in stock.</label>
+                </div>
+            );
+        }
+    }
+
+    class ProductSearchBar extends React.Component {
+        constructor(props) {
+            super(props);
+            
+        }
+
+        render() {
+            return (
+                <div className="pd-search">
+                    <SearchInput 
+                        onSearchTextChange={this.props.onSearchTextChange} 
+                        searchText={this.props.searchText} 
+                    />
+                    <StockCheckBox />
+                </div>
+            );
+        }
+    }
+
+    class ProductFilterTable extends React.Component {
+        constructor(props) {
+            super(props);
+            
+            this.state = {
+                searchText: ''
+            };
+
+            this.searchTextChange = this.searchTextChange.bind(this);
+        }
+
+        searchTextChange( searchText ) {
+            this.setState({
+                searchText: searchText
+            })
+        }
+
+        render() {
+            return (
+                <div className="pd-container">
+                    <ProductSearchBar 
+                        onSearchTextChange={this.searchTextChange} 
+                        searchText={this.state.searchText} 
+                    />
+                    <ProductPriceTable 
+                        onSearchTextChange={this.searchTextChange} 
+                        searchText={this.state.searchText} 
+                    />
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <ProductFilterTable products={products} />,
+        rootDiv
+    );
+
+</script>
+</body>
+</html>

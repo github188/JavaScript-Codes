@@ -1,0 +1,68 @@
+
+$width-cell:50px !default;
+$height-cell:50px !default;
+
+@mixin basic-layout ( $w, $h, $margin, $padding:0px ) {
+    width: $w;
+    height: $h;
+    margin: $margin;
+
+    @if ($padding != 0px) {
+        padding: $padding;
+    }
+}
+
+@mixin set-line-height ( $h ) {
+    height: $h;
+    line-height: $h;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+
+
+#root {
+    width: 100%;
+    height: 100%;
+    background-color: #E3DDDD;
+    padding: 10px;
+}
+
+
+.pd-container {
+
+    @include basic-layout( 250px, 300px, 0 auto, 5px );
+}
+
+.pd-search {
+
+    @include basic-layout( 225px, 70px, 5px auto );
+
+    text-align: center;
+}
+
+.pd-price-tbl {
+
+    @include basic-layout( 225px, 200px, 5px auto );
+    // background-color: green;
+}
+
+.pd-search-input {
+    width: 95%;
+    height: 30px;
+    margin-top: 10px;
+    text-indent: 5px;
+}
+
+.pd-checkbox {
+    font-size: 14px;
+    vertical-align: middle;
+    @include set-line-height( 20px );
+}
+
+.pd-title {
+    font-weight: 800;
+}

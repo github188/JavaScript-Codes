@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="../scripts/react.min.js"></script>
+    <script src="../scripts/react-dom.min.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      
+        const root = document.getElementById( 'root' );
+
+        const alphaCases = {
+            'u': 'upper',
+            'l': 'lower'
+        }
+
+        class AlphaInput extends React.Component {
+            constructor(props) {
+                super(props);
+                this.inputChange = this.inputChange.bind(this);
+            }
+
+            inputChange( event ) {
+                this.props.onInputChange( event.target.value );
+            }
+
+            render() {
+                return (
+                    <label>
+                        {alphaCases[this.props.alphaCase]}case: 
+                        <input type="text" value={this.props.value} onChange={this.inputChange} />
+                    </label>
+                );
+            }
+        }
+
+
+        class Input extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    word: '',
+                    alphaCase: 'l'
+                };
+
+                this.lowerCaseChange = this.lowerCaseChange.bind(this);
+                this.upperCaseChange = this.upperCaseChange.bind(this);
+            }
+
+            lowerCaseChange( lower ) {
+                this.setState({
+                    word: lower.toLowerCase(),
+                    alphaCase: 'l'
+                });
+            }
+
+            upperCaseChange( upper ) {
+                this.setState({
+                    word: upper.toUpperCase(),
+                    alphaCase: 'u'
+                });
+            }
+
+            render() {
+
+                const word = this.state.word;
+                const alphaCase = this.state.alphaCase;
+
+                console.log( alphaCase )
+
+                const lower = alphaCase === 'u' ? word.toLowerCase() : word;
+                const upper = alphaCase === 'l' ? word.toUpperCase() : word;
+
+                console.log( lower )
+                console.log( upper )
+
+                return (
+                    <div>
+                    <AlphaInput alphaCase='l' value={lower} onInputChange={this.lowerCaseChange} />
+                    <br />
+                    <AlphaInput alphaCase='u' value={upper} onInputChange={this.upperCaseChange} />
+                    </div>
+                );
+            }
+        
+        }
+
+        ReactDOM.render( <Input />, root );
+
+    </script>
+</body>
+</html>

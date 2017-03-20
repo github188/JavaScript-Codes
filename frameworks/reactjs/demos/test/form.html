@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <script src="../scripts/react.min.js"></script>
+    <script src="../scripts/react-dom.min.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+
+    <style>
+        form {
+            margin-left: 260px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+
+
+    <script type="text/babel" >
+        
+        const rootEle = document.getElementById( 'root' );
+
+        class NameForm extends React.Component {
+            constructor(props) {
+                super(props);
+                
+                this.state = {
+                    nameValue: 'lizc',
+                    selectedColor: 'blue'
+                };
+
+                this.handleSubmit   = this.handleSubmit.bind( this );
+                this.handleName     = this.handleName.bind( this );
+                this.handleSelect   = this.handleSelect.bind( this );
+            }
+
+            handleSubmit( event ) {
+
+                let datas = {
+                    name: this.state.nameValue,
+                    color: this.state.selectedColor
+                };
+
+                alert( JSON.stringify( datas ) );
+                event.preventDefault();
+            }
+
+            handleName( event ) {
+                this.setState({
+                    nameValue: event.target.value
+                });
+            }
+
+            handleSelect( event ) {
+                this.setState({
+                    selectedColor: event.target.value
+                });
+            }
+
+            render() {
+                return (
+                   <form onSubmit={this.handleSubmit}>
+                       <label>
+                           Name:
+                           <input type="text" value={this.state.nameValue} onChange={this.handleName} />
+                           <input type="text" value={this.state.nameValue} onChange={this.handleName} />
+                       </label>
+                       <br />
+                       <label>
+                           Select Your Color: 
+                           <select value={this.state.selectedColor} onChange={this.handleSelect}>
+                               <option value="red">red</option>
+                               <option value="orange">orange</option>
+                               <option value="yellow">yellow</option>
+                               <option value="green">green</option>
+                               <option value="blue">blue</option>
+                           </select>
+                       </label>
+                       <br />
+                       <input type="submit" value="Submit" />
+                   </form>
+ 
+                );
+            }
+        }
+
+        ReactDOM.render(
+            <NameForm />,
+            rootEle
+        );
+
+    </script>
+
+</body>
+</html>

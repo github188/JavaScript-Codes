@@ -27,7 +27,7 @@
 		
 		const numbers 	= props.numbers;
 		const listItems = numbers.map(
-			(number) => <li>{number}</li>
+			(number) => <li key={number}>{number}</li>
 		); 	
 
 		return (
@@ -55,7 +55,7 @@
 	}
 
 	ReactDOM.render(
-		<NumberListComp numbers={numbers} />,
+		<List numbers={numbers} />,
 		rootElement
 	);
 

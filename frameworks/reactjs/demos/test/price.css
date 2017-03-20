@@ -1,0 +1,43 @@
+* {
+  padding: 0;
+  margin: 0; }
+
+#root {
+  width: 100%;
+  height: 100%;
+  background-color: #E3DDDD;
+  padding: 10px; }
+
+.pd-container {
+  width: 250px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 5px; }
+
+.pd-search {
+  width: 225px;
+  height: 70px;
+  margin: 5px auto;
+  text-align: center; }
+
+.pd-price-tbl {
+  width: 225px;
+  height: 200px;
+  margin: 5px auto; }
+
+.pd-search-input {
+  width: 95%;
+  height: 30px;
+  margin-top: 10px;
+  text-indent: 5px; }
+
+.pd-checkbox {
+  font-size: 14px;
+  vertical-align: middle;
+  height: 20px;
+  line-height: 20px; }
+
+.pd-title {
+  font-weight: 800; }
+
+/*# sourceMappingURL=price.css.map */
