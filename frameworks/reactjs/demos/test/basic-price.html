@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="../scripts/react.min.js"></script>
-    <script src="../scripts/react-dom.min.js"></script>
+    <script src="../scripts/react.js"></script>
+    <script src="../scripts/react-dom.js"></script>
     <script src="../scripts/browser.min.js"></script>
     <link rel="stylesheet" href="price.css">
 </head>
@@ -20,18 +20,44 @@
         {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
     ];
 
-    function getCategoryList( category_name, product_name ) {
+    function getCategoryList( category_name, product_name, stocked ) {
         if ( !category_name ) { return null; }
 
-        const productsFilterByCategory = products.filter(function (product) {
+        const isPrice = /^\$/.test(product_name);
+
+        let filterProducts = products;
+
+        // 过滤掉无库存的产品
+        if ( typeof stocked !== "undefined" && stocked ) {
+            filterProducts = filterProducts.filter(function (product) {
+                return product.stocked === true;
+            })
+        }
+
+        // 过滤出要查找的分类产品
+        const productsFilterByCategory = filterProducts.filter(function (product) {
             return product.category === category_name;
         });
 
         if ( !product_name ) { return productsFilterByCategory; }
+        else { 
+            return productsFilterByCategory.filter(function  (product) {
 
-        return productsFilterByCategory.filter(function  (product) {
-             return product.name.indexOf( product_name ) >= 0; 
-        });
+                /* 
+                    如果是以 '$' 开头，表示按价格查找
+
+                    将库存中产品名和要查找的产品关键词都转成小写再进行比较
+                    以忽略大小写查找
+                */
+
+                if ( isPrice ) { return product.price.indexOf( product_name ) >= 0; }
+
+                let productNameLower = product.name.toLowerCase();
+                let findNameLower = product_name.toLowerCase();
+
+                return productNameLower.indexOf( findNameLower ) >= 0; 
+            });
+        }
     }
 
     const rootDiv = document.getElementById( 'root' );
@@ -47,73 +73,83 @@
 
     class ProductRowTitle extends React.Component {
 
-        constructor(props) {
-            super(props);
-            
-        }
-
         render() {
             return(
-                <tr><td colspan="2" className="pd-title">{this.props.title}</td></tr>
+                <tr><td colSpan="2" className="pd-title">{this.props.title}</td></tr>
             );
         }
     }
 
     class ProductLists extends React.Component {
 
-        constructor(props) {
-            super(props);
-            this.state = {
-                filterName: ''
-            };
-        }
-
         render() {
-            
-            const filterName = this.state.filterName;
 
-            const sportGoods = getCategoryList( this.props.category, filterName );
+            const searchText = this.props.searchText;
 
-            if ( sportGoods.length <= 0 ) { return null; }
+            const sportGoods = getCategoryList( this.props.category, searchText, this.props.stockChecked );
+
+            const prefix = this.props.category;
+
+            if ( sportGoods.length <= 0 ) { 
+                return (
+                    <tbody>
+                        <ProductRowTitle title={this.props.category} />
+                        <tr><td colSpan="2">no results</td></tr>
+                    </tbody>
+                ); 
+            }
 
             const list = sportGoods.map(function (product, index) {
                 return (
-                    <ProductRow key={index} name={product.name} price={product.price} />
+                    <ProductRow key={prefix + index} name={product.name} price={product.price} />
                 );
             });
 
             return (
-                <div>
-                    <ProductRowTitle title={this.props.title} />
+                <tbody>
+                    <ProductRowTitle title={this.props.category} />
                     {list}
-                </div>
+                </tbody>
             );
         }
     }
 
 
     class ProductPriceTable extends React.Component {
-        constructor(props) {
-            super(props);
-        }
-
         render() {
+
+            const searchText    = this.props.searchText;
+            const stockChecked  = this.props.stockChecked;
+
+            const categories    = [];
+
+            for ( let i = 0, len = products.length; i < len; i++ ) {
+
+                let category = products[i].category;
+
+                if ( categories.indexOf( category ) === -1 ) {
+                    categories.push( category );
+                }
+            }
+
+            let productListComps = categories.map(function (category, index) {
+                return (
+                    <ProductLists 
+                        key={category + index}
+                        category={category}
+                        searchText={searchText}
+                        stockChecked={stockChecked}
+                    />
+                );
+            });
+
             return (
                 <div className="pd-price-tbl">
                     <table>
-                    <th>Name</th>
-                    <th>Price</th>
-                        
-                    <ProductLists 
-                        category="Sporting Goods"
-                        title="Sporting Goods"
-                        searchText={this.props.searchText}
-                    />
-                    <ProductLists 
-                        category="Electronics"
-                        title="Electronics"
-                        searchText={this.props.searchText}
-                    />
+                    <thead>
+                        <tr><th>Name</th><th>Price</th></tr>
+                    </thead>
+                        {productListComps}
                     </table>
                 </div>
             );
@@ -148,22 +184,35 @@
 
 
     class StockCheckBox extends React.Component {
+
+        constructor(props) {
+            super(props);
+
+            this.stockChange = this.stockChange.bind(this);
+        }
+
+        stockChange( e ) {
+            this.props.onStockCheckboxChange( e.target.checked );
+        }
+
         render() {
+
+
             return (
-                <div className="pd-checkbox">
-                    <input type="checkbox" />
-                    <label>Only show products in stock.</label>
-                </div>
+                <form className="pd-checkbox">
+                    <input 
+                        type="checkbox" 
+                        style={{verticalAlign: "middle"}} 
+                        checked={this.props.stockChecked}
+                        onChange={this.stockChange}
+                    />
+                    <label style={{verticalAlign: "middle"}}>Only show products in stock.</label>
+                </form>
             );
         }
     }
 
     class ProductSearchBar extends React.Component {
-        constructor(props) {
-            super(props);
-            
-        }
-
         render() {
             return (
                 <div className="pd-search">
@@ -171,7 +220,10 @@
                         onSearchTextChange={this.props.onSearchTextChange} 
                         searchText={this.props.searchText} 
                     />
-                    <StockCheckBox />
+                    <StockCheckBox 
+                        stockChecked={this.props.stockChecked} 
+                        onStockCheckboxChange={this.props.onStockCheckboxChange}
+                    />
                 </div>
             );
         }
@@ -182,27 +234,40 @@
             super(props);
             
             this.state = {
-                searchText: ''
+                searchText: '',
+                stockChecked: false
             };
 
             this.searchTextChange = this.searchTextChange.bind(this);
+            this.stockCheckboxChange = this.stockCheckboxChange.bind(this);
         }
 
         searchTextChange( searchText ) {
+
             this.setState({
                 searchText: searchText
             })
         }
 
+        stockCheckboxChange( checked ) {
+
+            this.setState({
+                stockChecked: checked
+            });
+        }
+
+
         render() {
             return (
                 <div className="pd-container">
                     <ProductSearchBar 
-                        onSearchTextChange={this.searchTextChange} 
+                        onSearchTextChange={this.searchTextChange}
+                        onStockCheckboxChange={this.stockCheckboxChange}
+                        stockChecked={this.state.stockChecked} 
                         searchText={this.state.searchText} 
                     />
                     <ProductPriceTable 
-                        onSearchTextChange={this.searchTextChange} 
+                        stockChecked={this.state.stockChecked} 
                         searchText={this.state.searchText} 
                     />
                 </div>

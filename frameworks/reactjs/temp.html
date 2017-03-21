@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <input type="checkbox" name="" value="ddd" checked>Hello
+    <script type="text/javascript">
+           const products = [
+                {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+                {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+                {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+                {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+                {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+                {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+            ];
+     
+            const list = products.filter(function ( product ) {
+                return product.category === 'Sporting Goods';
+            })
+
+    </script>
+</body>
+</html>
