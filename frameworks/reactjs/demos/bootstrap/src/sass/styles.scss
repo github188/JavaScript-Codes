@@ -1,0 +1,26 @@
+
+$cellpx: 10px !default;
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.left {
+    width: 30 * $cellpx;
+    height: 1000px;;
+}
+
+.right {
+    width: 60 * $cellpx;
+    height: 1000px;
+
+}
+
+.split-line {
+    position: absolute;
+    left: 250px;
+    width: $cellpx / 10;
+    height: 1000px;
+    background-color: #48EF4B;
+}

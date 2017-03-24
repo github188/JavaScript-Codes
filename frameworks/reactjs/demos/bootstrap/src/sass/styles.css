@@ -1,0 +1,16 @@
+.left {
+  width: 300px;
+  height: 100%; }
+
+.right {
+  width: 600px;
+  height: 100%; }
+
+.split-line {
+  position: absolute;
+  left: 300px;
+  width: 1px;
+  height: 1000px;
+  background-color: #48EF4B; }
+
+/*# sourceMappingURL=styles.css.map */
