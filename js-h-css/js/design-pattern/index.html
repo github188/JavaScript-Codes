@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Javascript Design Model</title>
+</head>
+<body>
+
+	<script>
+		/*
+			观察者模式
+
+			1. 存放观察者对象的数组
+			2. 被观察者对象（订阅 subscribe，取消订阅 unsubscribe，发布 publish）
+			3. 观察者对象
+		 */
+		
+		function Subject() {
+			
+		}
+
+		function ObserverList() {
+			this.observers = [];
+		}
+
+		ObserverList.prototype.add = function ( observer ) {
+			
+			if ( ! observer ) { return null; }
+
+			if ( Array.isArray(observer) ) {
+				this.observers = this.observers.concat(observer);
+				return true;
+			}
+
+			this.observers.push( observer );
+		}
+
+		ObserverList.prototype.get = function (index) {
+			
+			if ( index >= 0 && index < this.observers.length ) {
+				return this.observers[index];
+			}
+		}
+
+		ObserverList.prototype.removeAtIndex = function ( index ) {
+			
+			var len = this.observers.length;
+
+			if ( index < 0 || index >= len ) { return null; }
+
+			return this.observer.splice( index, 1 );
+		}
+
+		ObserverList.prototype.remove = function (observer) {
+			
+			if ( ! observer ) { return null; }
+
+			var len = this.observers.length,
+				i = 0;
+
+			for ( ; i < len; i++ ) {
+				if ( this.observers[i] === observer ) {
+					return this.observers.splice(i, 1);
+				}
+			}
+
+			return null;
+		}
+
+		ObserverList.prototype.count = function () {
+			return this.observers.length;
+		}
+
+		function Subject() {
+			this.observers = new ObserverList();
+		}
+
+		Subject.prototype.addObserver = function (observer) {
+			this.observers.add( observer );
+		}
+
+		Subject.prototype.removeObserver = function (observer) {
+			
+			this.observers.remove( observer );	
+		}
+
+		Subject.prototype.notify = function (data) {
+			
+			var observerCount = this.observers.count(),
+				i;
+
+			for (i = 0; i < observerCount; i++ ) {
+				this.observers.get(i).update(data);
+			}
+		}
+
+		function Observer( name ) {
+		
+			this.name = name;	
+
+			this.update = function ( data ) {
+				console.log( this.name + ' say ' + data );
+			}
+		}
+
+		var ob1 = new Observer( 'lizc' ),
+			ob2 = new Observer( 'fll' ),
+			ob3 = new Observer( 'lify' );
+
+		var subject = new Subject();
+
+		subject.addObserver( [ob1, ob2, ob3] );
+
+		
+	</script>
+	
+</body>
+</html>

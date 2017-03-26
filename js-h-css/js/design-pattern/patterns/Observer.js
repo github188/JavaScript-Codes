@@ -1,3 +1,213 @@
+/*
+	观察者模式
+
+	1. 存放观察者对象的数组
+	2. 被观察者对象（订阅 subscribe，取消订阅 unsubscribe，发布 publish）
+	3. 观察者对象
+ */
+
+/*
+function ObserverList() {
+	this.observers = [];
+}
+
+ObserverList.prototype.add = function ( observer ) {
+	
+	if ( ! observer ) { return null; }
+
+	if ( Array.isArray(observer) ) {
+		this.observers = this.observers.concat(observer);
+		return true;
+	}
+
+	this.observers.push( observer );
+}
+
+ObserverList.prototype.get = function (index) {
+	
+	if ( index >= 0 && index < this.observers.length ) {
+		return this.observers[index];
+	}
+}
+
+ObserverList.prototype.removeAtIndex = function ( index ) {
+	
+	var len = this.observers.length;
+
+	if ( index < 0 || index >= len ) { return null; }
+
+	return this.observer.splice( index, 1 );
+}
+
+ObserverList.prototype.remove = function (observer) {
+	
+	if ( ! observer ) { return null; }
+
+	var len = this.observers.length,
+		i = 0;
+
+	for ( ; i < len; i++ ) {
+		if ( this.observers[i] === observer ) {
+			return this.observers.splice(i, 1);
+		}
+	}
+
+	return null;
+}
+
+ObserverList.prototype.count = function () {
+	return this.observers.length;
+}
+
+function Subject() {
+	this.observers = new ObserverList();
+}
+
+Subject.prototype.addObserver = function (observer) {
+	this.observers.add( observer );
+}
+
+Subject.prototype.removeObserver = function (observer) {
+	
+	this.observers.remove( observer );	
+}
+
+Subject.prototype.notify = function (data) {
+	
+	var observerCount = this.observers.count(),
+		i;
+
+	for (i = 0; i < observerCount; i++ ) {
+		this.observers.get(i).update(data);
+	}
+}
+
+function Observer( name ) {
+
+	this.name = name;	
+
+	this.update = function ( data ) {
+		console.log( this.name + ' say ' + data );
+	}
+}
+
+var ob1 = new Observer( 'lizc' ),
+	ob2 = new Observer( 'fll' ),
+	ob3 = new Observer( 'lify' );
+
+var subject = new Subject();
+
+subject.addObserver( [ob1, ob2, ob3] );
+
+// subject.notify('hello');
+*/
+
+function Publisher() {
+	
+	this.subscribers = {};
+}
+
+Publisher.prototype._isSubscribed = function (subscriber, subject) {
+	
+	if ( ! subscriber || ! subject 
+		|| ! this.subscribers.hasOwnProperty(subject) ) {
+		return false;
+	}
+
+	var i = 0,
+		len = this.subscribers[subject].length;
+
+	for ( ; i < len; i++ ) {
+		var obj = this.subscribers[subject][i];
+
+		if ( obj.name === subscriber.name ) {
+			console.log(subscriber.name + ' has subscribed ' + subject);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Publisher.prototype.subscribe = function ( subscriber, subject ) {
+
+	if ( ! this.subscribers[subject] )	{
+		this.subscribers[subject] = [];
+	}
+
+	if ( this._isSubscribed(subscriber, subject) ) {
+		return false;
+	}
+
+	this.subscribers[subject].push(subscriber);
+
+	console.log(this.subscribers);
+}
+
+Publisher.prototype.unsubscribe = function ( subscriber, subject ) {
+	
+	if ( !subscriber 
+		|| ! this.subscribers.hasOwnProperty(subject) ) { 
+		return false; 
+	}
+
+	var subscribeSubject = this.subscribers[subject],
+		i = 0,
+		len = subscribeSubject.length;
+
+	for (; i < len; i++ ) {
+		if (subscribeSubject[ i ] === subscriber ) {
+			subscribeSubject.splice(i, 1);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Publisher.prototype.publish = function ( data, subject ) {
+
+	var isPubAll = false;
+
+	if ( !subject 
+		|| ! this.subscribers.hasOwnProperty(subject) ) { 
+		isPubAll = true; 
+	}
+
+	var me = this;
+	if ( isPubAll ) {
+		publishAll(publishOne);
+	} else {
+		publishOne(subject);
+	}
+
+
+	function publishOne( subject ) {
+
+		console.log(me.subscribers)
+		var subscribers = me.subscribers[subject],
+			i = 0, len = subscribers.length;
+
+		for ( ; i < len; i++ ) {
+			console.log(i)
+			subscribers[i].update( data );
+		}
+	}
+
+	function publishAll( publishOne ) {
+		
+		for ( var subjecter in me.subscribers ) {
+			if ( me.subscribers.hasOwnProperty(subjecter) ) {
+				publishOne( subjecter );
+			}
+		}	
+	}
+}
+
+
+
+
+
 /**
  * 观察者模式，通过回调实现
  */
@@ -83,7 +293,7 @@ pubsub.publish('example1', 'hello again! (this will fail)');
 // 当被观察者对象发生变化时，调用其自身的变化函数，然后在该函数里面，处理观察者回调
 // 函数数组，并且执行他们，从而达到被观察者发生变化时，观察者可以做出相应的变化
 
-
+/*
 function Observer() {
     this.fns = [];
 }
@@ -124,7 +334,7 @@ var f1 = function (data) {
 
 var f2 = function (data) {
     console.log('Randall: ' + data + ', 找他加点工资去！');
-};
+}; */
 
 /*
 o.subscribe(f1);
@@ -146,6 +356,7 @@ o.update("Tom回来了！");
  * 	publish()：发布，对被观察者行为做出响应
  */
 
+/*
 var publisher = {
 	subscribers: {
 		any: [] // 订阅者
@@ -261,7 +472,7 @@ var joe = {
 
 paper.subscribe( joe.drinkCoffee );
 paper.subscribe( joe.sundayPreMap, 'monthly' );
-
+*/
 
 // paper.daily();
 // paper.daily();
