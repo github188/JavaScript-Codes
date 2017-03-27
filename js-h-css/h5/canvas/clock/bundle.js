@@ -125,7 +125,6 @@ Clock.prototype.drawDigits = function () {
 		rad 	= 0,
 		x, y;
 
-
 	this.digits.forEach(function (digit, index) {
 
 		rad = me.cellRad * index;
@@ -148,15 +147,14 @@ Clock.prototype.drawDigits = function () {
  */
 Clock.prototype.drawDot = function () {
 
-	var me 		= this,
-		ctx 	= this._context(),
+	var	ctx 	= this._context(),
 		delta 	= 18,
 		r 		= this.r - delta * this.rem,
 		rad 	= 0,
 		dotRad 	= 2 * Math.PI / this.dotCount,
 		x, y, i;
 
-	for ( i = 0; i < me.dotCount; i++ ) {
+	for ( i = 0; i < this.dotCount; i++ ) {
 
 		rad = dotRad * i;
 		x 	= r * Math.cos(rad);
@@ -269,6 +267,7 @@ Clock.prototype.drawCenterDot = function () {
  * @return {[type]} [description]
  */
 Clock.prototype.draw = function () {
+
 	this.start();
 }
 

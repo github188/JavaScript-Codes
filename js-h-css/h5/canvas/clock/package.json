@@ -1,7 +1,6 @@
 {
   "name": "clock",
   "version": "1.0.0",
-  "description": "",
   "main": "clock.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,5 +9,6 @@
   "license": "ISC",
   "devDependencies": {
     "webpack": "^2.3.2"
-  }
+  },
+  "description": ""
 }
