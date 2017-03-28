@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Props type checking</title>
+    <script src="../scripts/react.js"></script>
+    <script src="../scripts/react-dom.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+
+    class ControlledForm extends React.Component {
+        constructor(props) {
+            super(props);
+           
+            this.submitHandle = this.submitHandle.bind(this); 
+        }
+
+        submitHandle( e ) {
+            this.nameTextInput.value = 'submit form';
+            e.preventDefault(); 
+        }
+
+        render() {
+            return (
+                <form onSubmit={this.submitHandle}>
+                    <label>
+                        <input 
+                            type="text" 
+                            defaultValue="lizc"
+                            ref={(input) => {this.nameTextInput = input;}}
+                        />
+                        <input type="submit" value="submit" />
+                    </label>
+                </form>
+            );
+        }
+    }
+
+
+    ReactDOM.render(
+        <ControlledForm />,
+        document.getElementById('root')
+    );
+
+    </script>
+</body>
+</html>

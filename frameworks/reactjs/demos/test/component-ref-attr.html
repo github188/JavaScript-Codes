@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Props type checking</title>
+    <script src="../scripts/react.js"></script>
+    <script src="../scripts/react-dom.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    class ButtonInput extends React.Component {
+        constructor(props) {
+            super(props);
+            
+            this.btnClick = this.btnClick.bind(this);
+        }
+
+        btnClick(e) {
+            this.props.btnClick(e);
+            this.btnInput.focus();
+            this.btnInput.value='I am focused by parent.';
+        }
+
+        render() {
+            return (
+                <div>
+                    <input 
+                        type="text"
+                        ref={(btnInput) => {this.btnInput = btnInput;}}
+                    />
+                    <input 
+                        type="button" 
+                        value="click me"
+                        onClick={this.btnClick}
+                    />
+                </div>
+            );
+        }
+    }
+
+    class CustomInput extends React.Component {
+        constructor(props) {
+            super(props);
+            
+            this.focus = this.focus.bind(this);
+        }
+
+        focus() {
+            // this.textInput.focus();
+            // this.textInput.value = 'I am focused.';
+
+            console.log( this.btnInput );
+        }
+
+        render() {
+            return (
+                <ButtonInput 
+                    ref={(btnInput) => {this.btnInput = btnInput;}} 
+                    btnClick={this.focus}
+                />
+            );
+        }
+    }
+
+    function CustomFunctionalInput() {
+        
+        let textInput = null;
+
+        function focus() {
+
+            console.log( textInput )
+
+            textInput.focus();
+            textInput.value = 'I am focused.';
+        }
+
+        return (
+            <div>
+                <input 
+                    type="text"
+                    ref={(input) =>{textInput = input;}}
+                />
+                <input 
+                    type="button" value="click me"
+                    onClick={focus}
+                />
+            </div>
+        );
+    }
+
+    ReactDOM.render(
+        <CustomInput />,
+        document.getElementById('root')
+    );
+
+    </script>
+</body>
+</html>

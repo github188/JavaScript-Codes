@@ -1,0 +1,15 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  box-sizing: border-box;
+
+	background-color: #E0E0E0;
+	font-size: 50rpx;
+	font-family: "DigifaceWide", "Comic Sans MS", "微软雅黑";
+
+} 

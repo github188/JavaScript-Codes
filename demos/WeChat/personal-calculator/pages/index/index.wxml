@@ -1,0 +1,48 @@
+<!--index.wxml-->
+
+<view class="container">
+ <view id="main-board">
+    	<view id="board-title">CALCULATOR</view>
+    	<view id="board-result">
+    		<view id="result-date">{{dateContent}}</view>
+    		<view id="result-up"><span>{{resultUp}}</span></view>
+			<view id="result-down">{{resultDown}}</view>
+    	</view>
+    	<view id="board-keys" bindtap="bindKeyTap">
+			<view id="board-line-0" class="board-row">
+				<button data-text="AC" class="bg-red">AC</button>
+				<button data-text="CE" class="bg-red">CE</button>
+				<button data-text="÷" id="divide">÷</button>
+				<button data-text="×">×</button>
+			</view>
+			<view class="board-row">
+				<button data-text="7">7</button>
+				<button data-text="8">8</button>
+				<button data-text="9">9</button>
+				<button data-text="-">-</button>
+			</view>
+			<view class="board-row">
+				<button data-text="4">4</button>
+				<button data-text="5">5</button>
+				<button data-text="6">6</button>
+				<button data-text="+">+</button>
+			</view>
+			<view class="board-row">
+				<view class="equal-left">
+					<view>
+						<button data-text="1">1</button>
+						<button data-text="2">2</button>
+						<button data-text="3">3</button>
+					</view>
+					<view id="btn-0">
+						<button data-text="0" class="btn-0">0</button>
+						<button data-text=".">.</button>
+					</view>
+				</view>
+				<view class="equal-right">
+					<button data-text="=" class="btn-equal">=</button>
+				</view>
+			</view>
+    	</view>
+    </view>
+</view>

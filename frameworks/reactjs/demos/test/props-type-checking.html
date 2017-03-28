@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Props type checking</title>
+    <script src="../scripts/react.js"></script>
+    <script src="../scripts/react-dom.js"></script>
+    <script src="../scripts/browser.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        
+        class TypeCheck extends React.Component {
+            constructor(props) {
+                super(props);
+                
+            }
+
+            render() {
+                return (
+                    <div>incoming prop: {this.props.sayHello}</div>
+                );
+            }
+        }
+
+        TypeCheck.propTypes = {
+            sayHello: function (props, propName, componentName) {
+                console.log(props + ', ' + props[propName] )
+                if ( !/Hello/.test(props[propName]) ) {
+                    return new Error(
+                        'Invalid prop `' + propName + '` supplied to' +
+                        ' `' + componentName + '`. Validation failed.'
+                    );
+                }
+            }
+        };
+
+        ReactDOM.render(
+            <TypeCheck sayHello='Hello world!' />,
+            document.getElementById('root')
+        );
+    </script>
+</body>
+</html>
