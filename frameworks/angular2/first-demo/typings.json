@@ -1,0 +1,13 @@
+{
+    "globalDependencies": {
+        "core-js": "registry:dt/core-js#0.0.0+20160602141332",
+        "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
+        "node": "registry:dt/node#6.0.0+20160621231320"
+    }
+}
+
+/*
+    core-js :它为我们的ES5浏览器带来ES2015 / ES6功能。
+    jasmine :这是Jasmine测试框架的类型。
+    node :它用于引用nodejs环境中的对象的代码。
+ */
