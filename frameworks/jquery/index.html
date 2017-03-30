@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax</title>
+    <script src="jq-1.12.4.js"></script>
+</head>
+<body>
+    <script>
+
+    $.ajax({
+        url: 'http://192.168.179.103:80/test.json',
+
+        type: 'get',
+
+        dataType: 'json'
+    }).done(function (json) {
+        alert(json);
+    }).fail(function (xhr, status, error) {
+        alert(error);
+    });
+    </script>
+</body>
+</html>
