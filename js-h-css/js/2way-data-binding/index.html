@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>双向绑定</title>
+</head>
+<body>
+    <div id="myapp">
+        <br />
+        <label for="#">Name: </label>
+        <input id="name" type="text" v-model="name" />
+        Name: 
+        <span v-bind="name"></span><br />
+        <br />
+        <label for="#">Age: </label>
+        <input id="age" type="text" v-model="age" />
+        Age: 
+        <span v-bind="age"></span><br />
+    </div>
+
+    <script type="text/javascript">
+       
+
+    var data = {
+        name: 'lizc',
+        age: 30
+    };
+
+    $('name').onkeyup = function (e) {
+        data.name = e.target.value;
+    }
+
+    $('age').onkeyup = function (e) {
+        data.age = e.target.value;
+    }
+
+    for (var prop in data) {
+
+        (function (prop) {
+
+            Object.defineProperty(data, prop, {
+                configurable: true,
+                get: function () {  
+                    return this.value;
+                },
+                set: function (newValue) {
+                    
+                    document
+                        .querySelectorAll("[v-model=" + prop + "]")
+                        .forEach(function (el, index) {
+                            el.innerHTML = newValue;
+                        });
+
+                    document
+                        .querySelectorAll("[v-bind=" + prop + "]")
+                        .forEach(function (el, index) {
+                            el.innerHTML = newValue;
+                        });
+
+                    console.log( newValue );
+
+                    this.value = newValue;
+                }
+            });
+        } (prop) );
+    }
+
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    </script>
+
+    
+</body>
+</html>
