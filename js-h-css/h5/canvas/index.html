@@ -15,199 +15,47 @@
     <canvas id="cvs" width="300" height="300"></canvas>
 
     <script src="functions/gradient.js"></script>
+    <script src="functions/tree.js"></script>
     <script>
         var canvas = document.getElementById('cvs');
 
         var ctx = canvas.getContext('2d');
 
-        var scale = 1.0;
-
-        function drawRect(x, y, w, h) {
-            
-            ctx.strokeStyle = 'red';
-            ctx.strokeRect(x, y, w, h);
-
-            var gradient = _gradient(
-                ctx,
-                {
-                    start: { x: x, y:y },
-                    end: { x: x + w, y: y + h }
-                },
-
-                [
-                    { percent: 0, color: 'red' },
-                    { percent: 0.3, color: 'green' },
-                    { percent: 1, color: 'blue' }
-                ]
-            );
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(x, y, w, h);
-        }
-
-        function init0() {
-            
-            ctx.save();
-            ctx.translate(150, 150);
-            drawRect(-50, -50, 100, 100);
-
-            ctx.restore();
-        }
-
-        // init0();
-
-        //////////////////////////////////////////////
-
-
-        function drawLine() {
-            ctx.moveTo(0,0);
-            ctx.lineTo(70,-70);
-        }
-
-        function createTreePath() {
-            
-            ctx.strokeStyle = 'red';
-            ctx.lineJoin    = 'round';
-            ctx.lineWidth   = 4;
-            ctx.fillStyle = '#339900';
-            ctx.beginPath();
-
-            ctx.moveTo(-25, 80);
-            ctx.lineTo(25, 80);
-            ctx.lineTo(10, 40);
-            ctx.lineTo(20, 40);
-            ctx.lineTo(5, 0);
-            ctx.lineTo(10, 0);
-
-            // 顶点
-            ctx.lineTo(0, -50);
-
-            ctx.lineTo(-10, 0);
-            ctx.lineTo(-5, 0);
-            ctx.lineTo(-20, 40);
-            ctx.lineTo(-10, 40);
-
-            ctx.closePath();
-
-            ctx.stroke();
-            ctx.fill();
-
-        }
-
-        function drawCurve( roadBgImg ) {
-            
-            ctx.beginPath();
-
-            ctx.moveTo(0, 0);
-
-            ctx.quadraticCurveTo(170, -50, 260, -190);
-
-            ctx.quadraticCurveTo(310, -250, 410, -250);
-
-            ctx.strokeStyle = ctx.createPattern(roadBgImg, 'repeat');
-            ctx.lineWidth = 20;
-            ctx.stroke();
-        }
-
-        function drawTreeMain(x, y) {
-
-            var trunkGradient = ctx.createLinearGradient(-5, -50, 5, -50);
-
-            // 水平渐变
-            trunkGradient.addColorStop(0, '#663300');
-            trunkGradient.addColorStop(0.4, '#996600');
-            trunkGradient.addColorStop(1, '#552200');
-
-            ctx.fillStyle = trunkGradient;
-            ctx.fillRect(-5, 82, 10, 50);
-
-            // 垂直渐变
-            var canopyShadow = ctx.createLinearGradient(0, -50, 0, 0);
-            canopyShadow.addColorStop(0, 'rgba(0,0,0,0.5)');
-            canopyShadow.addColorStop(0.2, 'rgba(0,0,0,0.0)');
-
-            ctx.fillStyle = canopyShadow;
-            ctx.fillRect(-5, 82, 10, 50);
-        }
-
         function init() {
             
             var n = 5, x, y;
 
-            var img = new Image();
-
-            img.src = "./imgs/tree-main.jpg";
-            
-            // img.onload = function () {
-                
-                //////////////// 树木
-                while (n-- > 0) {
-                    x = 150 + n * 30;
-                    y = 100 - n * 30;
-                    ctx.save();
-                    ctx.translate(x, y);
-                    createTreePath();
-                    drawTreeMain();
-                    // ctx.drawImage(img, -5, 82, 10, 50);
-                    ctx.restore();
-                }
-            // }
+            // 画树
+            draw( false, { x: 121, y: 131 }, drawShadow, drawTree );
+            draw( false, { x: 80, y: 80 }, drawTree );
 
             var roadImg = new Image();
             roadImg.src = './imgs/stone.jpg';
 
             roadImg.onload = function () {
                 
-                //////////////// 道路
-                ctx.save();
-                ctx.translate(-10, 350);
-                // 道路
-                drawCurve( roadImg );
-                ctx.restore();
+                draw(
+                    false,
+                    { x: -100, y: 350 },
+                    drawRoad,
+                    roadImg
+                );
+
+                // 第二颗树
+                draw( false, { x: 282, y: 196 }, drawShadow, drawTree );
+                draw( true, { x: 240, y: 120 }, drawTree );
+                // draw( 2, { x: 240, y: 120 }, drawTree );
             };
 
+            draw( false, { x: 194, y: 192 }, drawShadow, drawPerson );
+            draw( false, { x: 176, y: 170 }, drawPerson );
 
-            /////////////// 人
-            ctx.save();
-            ctx.translate(196, 170);
-            // 人
-            drawPerson();
-            ctx.restore();
+            // 房子
+            draw( false, { x: 140, y: 30 }, drawHouse );
         }
+
 
         init();
-
-        function drawPerson() {
-
-            ctx.strokeStyle = 'yellow';
-            ctx.beginPath();
-
-            // 头
-            ctx.arc(0, 0, 10, 0, 2 * Math.PI);
-
-            // 身躯
-            ctx.moveTo(0, 10);
-            ctx.lineTo(0, 40);
-
-            // 左脚
-            ctx.moveTo(0, 40);
-            ctx.lineTo(-8, 60);
-
-            // 右脚
-            ctx.moveTo(0, 40);
-            ctx.lineTo(8, 60);
-
-            // 左手
-            ctx.moveTo(0, 20);
-            ctx.lineTo(-10, 25);
-
-            // 右手
-            ctx.moveTo(0, 20);
-            ctx.lineTo(10, 25);
-
-            ctx.closePath();
-            ctx.stroke();
-        }
 
     </script>
 
