@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geo-Location</title>
+</head>
+<body onload="startLocating()">
+
+    <header>
+        <h1>定位监测</h1>
+        <h4>步行测距</h4>
+    </header>
+   
+    <div id="container">
+        <section>
+            <article>
+                <header>
+                    <h1>我的位置</h1>
+                </header>
+
+                <p class="info" id="status">浏览器不支持定位服务</p>
+
+                <div class="geostatus">
+                    <p id="latitude">纬度：</p>
+                    <p id="longitude">经度：</p>
+                    <p id="accuracy">精度：</p>
+                    <p id="timestamp">时间：</p>
+                    <p id="currDist">已走路程：</p>
+                    <p id="totalDist">总路程：</p>
+                </div>
+            </article>
+        </section>
+    </div> 
+
+    <footer>
+        <h2>Powered by HTML5, and you feet!</h2>
+    </footer>
+
+    <script>
+
+        var watchId,
+            totalDistance   = 0.0,
+            lastLatitude,
+            lastLongitude;
+
+        function updateErrorStatus( message ) {
+            $('status').style.background = 'papayaWhip';
+            $('status').innerHTML = '<strong>Error</strong>' + message;
+        }
+
+        function updateStatus(message) {
+            $('status').style.background = 'paleGreen';
+            $('status').innerHTML = message;
+        }
+
+        function isSupportGeolocation() {
+            return !!navigator.geolocation;
+        }
+        
+        function updateLocation( geoPosition ) {
+            
+            console.log( '----------------- update' );
+
+            var 
+                latitude    = geoPosition.coords.latitude,
+                longitude   = geoPosition.coords.longitude,
+                accuracy    = geoPosition.coords.accuracy,
+                timestamp   = geoPosition.timestamp,
+                currDistance;
+
+            $('latitude').innerHTML     = '纬度：' + latitude;
+            $('longitude').innerHTML    = '经度：' + longitude;
+            $('accuracy').innerHTML     = '准度：' + accuracy;
+            $('timestamp').innerHTML    = '当前时间：' + new Date(timestamp);
+
+            if ( accuracy >= 30000 ) {
+                updateStatus('精确度不够，很抱歉，无法为您提供精确服务！');
+                return;
+            }
+
+            if ( !!lastLatitude && !!lastLongitude ) {
+
+                currDistance = distance(latitude, longitude, lastLatitude, lastLongitude);
+
+                $('currDist').innerHTML = '当前已走路程：' + currentDistance.toFixed(2) + ' km';
+
+                totalDistance += currentDistance;
+
+                $('totalDist').innerHTML = '总共已走路程：' + totalDistance.toFixed(2) + ' km';
+
+                updateStatus('位置更新成功');
+            }
+
+            lastLatitude    = latitude;
+            lastLongitude   = longitude;
+        }
+
+        function startLocating() {
+            
+            if ( !isSupportGeolocation() ) {
+                $('status').innerHTML = '您的浏览器不支持，不支持定位服务！';
+                return;
+            }
+
+            // 单次获取
+            // navigator.geolocation.getCurrentPosition(updateLocation, handleLocationError);
+
+            // 监视，重复获取
+            watchId = navigator.geolocation.watchPosition(
+                updateLocation, 
+                handleLocationError,
+                { 
+                    timeout: 20000,
+                    maximumAge: 20000
+                }
+            );
+
+            // 停止监视
+            // navigator.geolocation.clearWatch(watchId);
+        }
+
+        Number.prototype.toRadians = function () {
+            return this.Math.PI / 180;
+        }
+
+        function distance(lat1, longt1, lat2, longt2) {
+            
+            var R = 6371,
+                deltaLat    = (lat2 - lat1).toRadians(),
+                deltaLongt  = (longt2 - longt1).toRadians(),
+                lat1 = lat1.toRadians(),
+                lat2 = lat2.toRadians(),
+                a, c, d;
+
+            a = Math.sin(deltaLat / 2) *
+                Math.sin(deltaLat / 2) +
+                Math.cos(lat1) *
+                Math.cos(lat2) *
+                Math.sin(deltaLongt / 2) *
+                Math.sin(deltaLongt / 2);
+
+            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            d = R * c;
+
+            return d;
+        }
+
+        function handleLocationError( error ) {
+            switch (error.code) {
+                case 0:
+                    updateErrorStatus('ERROR: retrieving location error, more info: ' + error.message);
+                break;
+                case 1:     // PERMISSION_DENIED
+                    updateErrorStatus('ERROR: user prevent to retrieving location data');
+                break;
+                case 2:     // POISTION_UNAVAILABLE
+                    updateErrorStatus('ERROR: browser unable to determine location: ' + error.message);
+                break;
+                case 3:     // TIMEOUT
+                    updateErrorStatus('ERROR: retrieving location timeout');
+                break;
+                default:
+                    break;
+            }
+        }
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Happy Road !</title>
+    <style>
+        svg {
+            border: 1px solid black;
+        }
+
+        g[id=tree]:hover {
+            opacity: 0.9;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div>
+<button id="addTreeButton">Add Tree</button>
+</div>
+<svg width="400" height="600">
+    <defs>
+        <!-- 填充 -->
+        <pattern id="gravelPattern" patternUnits="userSpaceOnUse"
+            x="0" y="0" width="100" height="67" viewBox="0 0 100 67">
+            <image x=0 y=0 width=100 height=67 xlink:href="../canvas/imgs/stone.jpg"/>
+        </pattern>
+
+        <!-- 渐变 -->
+        <linearGradient id="trunkGradient">
+            <stop offset="0%" stop-color="#663300" />
+            <stop offset="40%" stop-color="#996600"/>
+            <stop offset="100%" stop-color="#552200"/>
+        </linearGradient>
+
+        <rect x="-5" y="-50" width="10" height="50" id="trunk" />
+        <path d="
+            M-25, -50
+            L-10, -80
+            L-20, -80
+            L-5, -110
+            L-15, -110
+            L0, -140
+            L15, -110
+            L5, -110
+            L20, -80
+            L10, -80
+            L25, -50
+            Z
+        " id="canopy" />
+
+        <linearGradient id="canoyShadow" x=0 y=0 x2=0 y2=100%>
+            <stop offset="0%" stop-color="#000" stop-opacity=".5" />
+            <stop offset="20%" stop-color="#000" stop-opacity="0" />
+        </linearGradient>
+
+        <g id="tree">
+            <use xlink:href="#trunk" fill="url(#trunkGradient)" />
+            <use xlink:href="#trunk" fill="url(#canopyShadow)" />
+            <use xlink:href="#canopy" fill="none" stroke="#663300"
+            stroke-linejoin="round" stroke-width="4px" />
+            <use xlink:href="#canopy" fill="#339900" stroke="none" />
+        </g>
+
+        <g id="treeShadow">
+            <use xlink:href="#trunk" fill="#000"/>
+            <use xlink:href="#canopy" fill="#000" stroke="none"/>
+        </g>
+    </defs>
+
+    <g transform="translate(-10, 350)"
+    stroke-width="20"
+    stroke="url(#gravelPattern)"
+    stroke-linejoin="round">
+        <path d="M0,0 Q170,-50 260,-190 Q310,-250 410,-250" fill="none" />
+    </g>
+
+    <text 
+        y=60 x=200
+        font-family="impact"
+        font-size="60px"
+        fill="#996600"
+        text-anchor="middle">
+            happy trails
+    </text>
+
+    <text
+        y=90 x=200
+        font-family="impact"
+        font-size="20px"
+        fill="#996600"
+        text-anchor="middle"
+        id="treeCounter"
+    ></text>
+
+    <text 
+        y=420 x=20
+        font-family="impact"
+        font-size="20px"
+        fill="#996600"
+        text-anchor="left"
+    >
+    <tspan>You can remove a</tspan>
+    <tspan y=440 x=20>tree by clicking on it.</tspan>
+    </text>
+
+    <use xlink:href="#tree" transform="translate(130, 250)"/>
+    <use xlink:href="#tree" transform="translate(260, 500) scale(2)"/>
+
+</svg> 
+
+<script type="text/javascript">
+    function removeTree( e ) {
+        var ele = e.target;
+
+        if ( ele.correspondingUseElement ) {
+            ele = ele.correspondingUseElement;
+        }
+
+        ele.parentNode.removeChild( ele );
+
+        updateTrees();
+    }
+
+    document.getElementById('addTreeButton').onclick = function () {
+        
+        var x = Math.floor(Math.random() * 400),
+            y = Math.floor(Math.random() * 600),
+            scale = Math.random() + .5,
+            translate = "translate(" + x + "," + y + ")",
+
+            tree = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+
+        tree.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#tree');
+        tree.setAttribute('transform', translate + "scale(" + scale + ")");
+        document.querySelector("svg").appendChild(tree);
+
+        updateTrees();
+    }
+
+    function updateTrees() {
+        
+        var list    = document.querySelectorAll('use'),
+            treeCount = 0,
+            i = 0, len = list.length;
+
+        for ( ; i < len; i++ ) {
+            if ( list[i].getAttribute("xlink:href") === '#tree' ) {
+                treeCount++;
+                list[i].onclick = removeTree;
+            }
+        }
+
+        var counter = document.getElementById('treeCounter');
+        counter.textContent = treeCount + ' trees in the forest';
+    }
+
+    updateTrees();
+</script>
+</body>
+</html>

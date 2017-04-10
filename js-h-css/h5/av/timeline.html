@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抓取时序帧</title>
+</head>
+<body>
+    <video id="movies" autoplay
+        onmouseover="this.play()"
+        onmouseout="this.pause()"
+        oncanplay="startVideo()" 
+        onended="stopTimeline()" 
+        autobuffer="true"
+        width="400px" height="300px">
+        
+        <source src="medias/1.mp4" type="video/mp4">
+
+    </video> 
+    
+    <blink>闪烁我</blink>
+
+    <canvas id="timeline" width="400px" height="300px"></canvas>
+
+    <script>
+        var 
+            // 每隔 5s 取一次时间帧
+            updateInterval  = 5000,
+
+            // 每帧的大小
+            frameWidth      = 100,
+            frameHeight     = 75,
+
+            // 时间线帧网格中格子数量
+            frameRows       = 4,
+            frameColumns    = 4,
+            frameGrid       = frameRows * frameColumns,
+
+            // 当前帧索引
+            frameCount      = 0,
+
+            // 取帧计时器
+            intervalId,
+
+            videoStarted = false;
+
+        function startVideo() {
+            
+
+            if ( videoStarted ) {
+                return;
+            }
+
+            updateFrame();
+
+            var timeline = document.getElementById('timeline');
+            timeline.onclick = function (e) {
+                var offX = e.layerX - timeline.offsetLeft,
+                    offY = e.layerY - timeline.offsetTop,
+
+                    // Math.floor(offY / frameHeight) 计算出当前点在行的弟几个帧中
+                    // * frameRows 占有的行数
+                    clickedFrame = Math.floor(offY / frameHeight) * frameRows;
+
+                // 然后计算出点在当前行中的第几个 frame 中，加上之前计算出的
+                // 点所在行前面的行数
+                clickedFrame += Math.floor(offX / frameWidth);
+
+
+                var seekedFrame = (Math.floor(frameCount / frameGrid) * frameGrid ) + clickedFrame;
+
+                if ( clickedFrame > (frameCount % 16) ) {
+                    seekedFrame -= frameGrid;
+                }
+
+                if ( seekedFrame < 0 ) { return; }
+
+                var video = document.getElementById('movies');
+                video.currentTime = seekedFrame * updateInterval / 1000;
+
+                frameCount = seekedFrame;
+            }
+        }
+
+        function updateFrame() {
+            
+            var video = document.getElementById('movies'),
+                timeline = document.getElementById('timeline'),
+                ctx = timeline.getContext('2d'),
+
+                framePosition = frameCount % frameGrid,
+                frameX = (framePosition % frameColumns) * frameWidth,
+                frameY = (Math.floor(framePosition / frameRows)) * frameHeight;
+
+                ctx.drawImage(video, 0, 0, 400, 300, frameX, frameY, frameWidth, frameHeight);
+
+                frameCount++;
+
+            console.log(frameCount);
+
+            clearTimeout(intervalId);
+            intervalId = setTimeout(updateFrame, updateInterval);
+        }
+
+        function stopTimeline() {
+            clearTimeout(intervalId);
+        }
+
+    </script>
+</body>
+</html>

@@ -7,6 +7,8 @@
         #cvs {
             margin: 0 auto;
             border: 1px solid red;
+
+            background-color: #777070;
         }
     </style>
 </head>
@@ -17,6 +19,8 @@
     <script src="functions/gradient.js"></script>
     <script src="functions/tree.js"></script>
     <script>
+
+
         var canvas = document.getElementById('cvs');
 
         var ctx = canvas.getContext('2d');
@@ -24,6 +28,18 @@
         function init() {
             
             var n = 5, x, y;
+
+            // 画布标题
+            drawText(
+                '快乐栈道！',
+                {
+                    font: '25px impact',
+                    fillStyle: '#09EF2A',
+                    textAlign: 'center',
+                    point: { x: 150, y: 22 },
+                    maxWidth: 400
+                }
+            );
 
             // 画树
             draw( false, { x: 121, y: 131 }, drawShadow, drawTree );
@@ -47,15 +63,18 @@
                 // draw( 2, { x: 240, y: 120 }, drawTree );
             };
 
+            // 人物
             draw( false, { x: 194, y: 192 }, drawShadow, drawPerson );
             draw( false, { x: 176, y: 170 }, drawPerson );
 
             // 房子
+            draw( false, { x: 160, y: 54 }, drawShadow, drawHouse );
             draw( false, { x: 140, y: 30 }, drawHouse );
         }
 
 
         init();
+
 
     </script>
 

@@ -1,2 +1,6 @@
 # node modules
 node_modules/
+*.mp4
+*.ogg
+*.mp3
+

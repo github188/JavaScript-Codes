@@ -160,8 +160,6 @@ function draw(scale, point, fn, args) {
     ctx.save();
     ctx.translate(point.x, point.y);
 
-    console.log( typeof scale );
-
     if ( typeof scale === 'boolean' && scale ) {
         ctx.scale(1.2, 1.2); // 默认放大 1.2 倍
     } else if ( isObject(scale) && scale.w && scale.h ) {
@@ -175,14 +173,14 @@ function draw(scale, point, fn, args) {
 }
 
 
-function drawHouse() {
-    
-    // ctx.beginPath();
+function drawHouse( styles ) {
 
-    ctx.fillStyle = '#BEB1B1';
+    // setShadow();
+
+    ctx.fillStyle = styles && styles.fill || '#BEB1B1';
     ctx.fillRect(0, 0, 80, 60);
 
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = styles && styles.fill || 'white';
     ctx.fillRect(10, 10, 10, 10);
     ctx.fillRect(22, 10, 10, 10);
     ctx.fillRect(10, 22, 10, 10);
@@ -190,11 +188,53 @@ function drawHouse() {
 
     ctx.fillRect(60, 40, 10, 20);
 
-    ctx.fillStyle = '#007685';
+    ctx.fillStyle = styles && styles.fill || '#007685';
     ctx.beginPath();
     ctx.arc(67, 50, 2, 0, 2 * Math.PI);
     ctx.closePath();
     ctx.fill();
+}
+
+function drawText( text, styles ) {
+    
+    var _styles = {
+        font: '60px impact',
+        fillStyle: '#996600',
+        textAlign: 'center',
+        point: { x: 200, y: 60 },
+        maxWidth: 400
+    };
+
+    if ( typeof styles === 'undefined' ) { return this; }
+
+    if ( !isObject(styles) ) { styles = _styles; }
+
+    ctx.save();
+
+    ctx.font = styles.font;
+
+    ctx.fillStyle = styles.fillStyle;
+
+    ctx.textAlign = styles.textAlign;
+
+    setShadow({
+        color: styles.shadowColor,
+        offsetX: styles.shadowOffsetX,
+        offsetY: styles.shadowOffsetY,
+        blur: styles.shadowBlur
+    });
+
+    ctx.fillText(text, styles.point.x, styles.point.y, styles.maxWidth);
+
+    ctx.restore();
+}
+
+function setShadow( shadowStyle ) {
+   
+    ctx.shadowColor = shadowStyle && shadowStyle.color || 'rgba(0,0,0,0.2)';
+    ctx.shadowOffsetX   = shadowStyle && shadowStyle.offsetX || 15;
+    ctx.shadowOffsetY   = shadowStyle && shadowStyle.offsetY || -4;
+    ctx.shadowBlur      = shadowStyle && shadowStyle.blur  || 2;
 }
 
 function isObject( obj ) {

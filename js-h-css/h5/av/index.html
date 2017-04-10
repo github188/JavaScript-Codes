@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media Audio & Video</title>
+</head>
+<body>
+    <audio id="myaudio" >
+        <source src="medias/1.mp8">
+        <source src="medias/1.mp3" type="audio/mp3">
+        An audio to listening.
+    </audio>
+
+    <button id="toggle">Play</button>
+
+    <script>
+
+        var myAudio = $('myaudio');
+
+        $('toggle').onclick = function () {
+            toggleSound();   
+        };
+
+        function toggleSound() {
+            
+            var music = $('myaudio'),
+                toggle = $('toggle');
+
+            if ( music.paused ) {
+                music.play();
+                toggle.innerHTML = 'Pause';
+            } else {
+                music.pause();
+                toggle.innerHTML = 'Play';
+            }
+        }
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+    </script>
+</body>
+</html>
