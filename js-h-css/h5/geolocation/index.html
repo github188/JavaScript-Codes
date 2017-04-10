@@ -18,7 +18,7 @@
                     <h1>我的位置</h1>
                 </header>
 
-                <p class="info" id="status">浏览器不支持定位服务</p>
+                <p class="info" id="status">定位服务</p>
 
                 <div class="geostatus">
                     <p id="latitude">纬度：</p>
@@ -45,7 +45,7 @@
 
         function updateErrorStatus( message ) {
             $('status').style.background = 'papayaWhip';
-            $('status').innerHTML = '<strong>Error</strong>' + message;
+            $('status').innerHTML = '<strong>Error: </strong>' + message;
         }
 
         function updateStatus(message) {
@@ -149,16 +149,16 @@
         function handleLocationError( error ) {
             switch (error.code) {
                 case 0:
-                    updateErrorStatus('ERROR: retrieving location error, more info: ' + error.message);
+                    updateErrorStatus('retrieving location error, more info: ' + error.message);
                 break;
                 case 1:     // PERMISSION_DENIED
-                    updateErrorStatus('ERROR: user prevent to retrieving location data');
+                    updateErrorStatus('user prevent to retrieving location data');
                 break;
                 case 2:     // POISTION_UNAVAILABLE
-                    updateErrorStatus('ERROR: browser unable to determine location: ' + error.message);
+                    updateErrorStatus('browser unable to determine location: ' + error.message);
                 break;
                 case 3:     // TIMEOUT
-                    updateErrorStatus('ERROR: retrieving location timeout');
+                    updateErrorStatus('retrieving location timeout');
                 break;
                 default:
                     break;
