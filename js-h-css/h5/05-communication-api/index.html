@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跨域访问</title>
+</head>
+<body>
+    <h1>Hello, I am parent page !</h1>
+    <iframe id="widget" name="widget" src="http://192.168.179.103:3000/iframe-index.html" frameborder="0"></iframe>
+    <script>
+        
+        window.addEventListener('message', messageHandler, true);
+
+        function messageHandler(e) {
+
+            console.log(e)
+
+            switch (e.origin) {
+                case 'http://192.168.179.103:3000':
+                    alert(e.data); 
+                break;
+                default:
+                    alert('nothing');
+                    break;
+            }
+        }
+
+        setTimeout(function () {
+            window.postMessage(
+                'hello iframe, i am parent frame.', 
+                'http://192.168.179.103:3000/'
+            );
+        }, 3000);
+    </script>
+</body>
+</html>

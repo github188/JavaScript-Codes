@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>iframe 子页面</title>
+</head>
+<body>
+    <h1>hello iframe page.</h1>
+    <script>
+        window.top.postMessage('hello parent frame', 'http://192.168.179.103/jscode/js-h-css/h5/communication-api/index.html');
+
+        function messageHandler(e) {
+            
+            alert(e.origin);
+        }
+    </script>
+</body>
+</html>

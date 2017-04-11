@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Message Widget</title>
+</head>
+<body>
+    <h1>Widget Iframe</h1>
+    <p><b>Origin</b>: http://192.168.179.103:80</p>
+    <p>Status set to : <strong id="status"></strong> by containing portal</p>
+
+    <div>
+        <input type="text" id="messageText" value="Widget notification" />
+        <button id="actionButton">Send Notification</button>
+    </div>
+
+    <p>
+        闪烁标题显示正在通信
+    </p>
+    <script>
+        var trustedOrigin = 'http://192.168.179.103';
+
+        function messageHandler(e) {
+
+            console.log(e.origin)
+
+            if ( e.origin === trustedOrigin ) {
+                $('status').textContent = e.data;
+            } else {
+                // none
+            }
+        }
+
+        function sendString(str) {
+            window.top.postMessage(str, trustedOrigin);
+        }
+
+        function loadDemo() {
+            $('actionButton').addEventListener('click', 
+                function () {
+                    var messageText = $('messageText').value;
+                    sendString(messageText);
+                },
+                true
+            );
+        }
+
+        window.addEventListener('load', loadDemo, true);
+        window.addEventListener('message', messageHandler, true);
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+    </script>
+</body>
+</html>

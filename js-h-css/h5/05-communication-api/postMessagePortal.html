@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Message Portal</title>
+    <style>
+        #widget {
+            width: 800px;
+            height: 400px;
+
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cross-origin Portal</h1>
+    <p><b>Origin</b>: http://192.168.179.103:80</p>
+    Status <input type="text" id="statusText" value="Online" />
+    <button id="sendButton">Change Status</button>
+    <p>
+        本页面利用 postMessage 向 widget 页面发送一个状态码去更新 widget 窗口。
+    </p>
+    <iframe id="widget" src="http://192.168.179.103:3000/postMessageWidget.html" frameborder="0"></iframe>
+    <p>
+        <button id="stopButton">Stop Blinking Title</button>
+    </p>
+    <script>
+        var trustedOrigin = "http://192.168.179.103:3000";
+        var defaultTitle = "Portal [http://192.168.179.103:80]";
+        var notificationTimer = null;
+
+        function messageHandler(e) {
+            if ( e.origin === trustedOrigin ) {
+                notify(e.data);
+            } else {
+                // none
+            }
+        }
+
+        function sendString(str) {
+            $('widget').contentWindow.postMessage(str, trustedOrigin);
+        }
+
+        function notify(message) {
+            stopBlinking();
+            blinkTitle(message, defaultTitle);
+        }
+
+        function stopBlinking() {
+            if ( notificationTimer !== null ) {
+                clearTimeout(notificationTimer);
+            }
+
+            document.title = defaultTitle;
+        }
+
+        function blinkTitle(m1, m2) {
+            document.title = m1;
+
+            notificationTimer = setTimeout(blinkTitle, 1000, m2, m1);
+        }
+
+        function sendStatus() {
+            var statusText = document.getElementById('statusText').value;
+
+            sendString(statusText);
+        }
+
+        function loadDemo() {
+            $('sendButton').addEventListener('click', sendStatus, true);
+            $('stopButton').addEventListener('click', stopBlinking, true);
+            sendStatus();
+        }
+
+        window.addEventListener('load', loadDemo, true);
+        window.addEventListener('message', messageHandler, true);
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+    </script>
+</body>
+</html>
