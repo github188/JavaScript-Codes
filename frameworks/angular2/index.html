@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Angular2</title>
+	<link rel="stylesheet" type="text/css" href="../../fw-libs/bootstrap.min.css">
+</head>
+<body ng-app="test">
+
+
+<div ng-controller="first"></div>
+	<label>姓名：</label>
+	<input type="text" name="lizc" ng-model="name"/><br />
+	<label>重名：</label>
+	<span ng-bind="name"></span>
+</body>
+
+<script type="text/javascript" src="../../fw-libs/angular2.min.js"></script>
+<script>
+	angular.module('test', [])
+		.controller('first', function ($scope) {
+			$scope.name = 'lizc';	
+		})
+</script>
+</html>

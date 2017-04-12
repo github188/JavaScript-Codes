@@ -4,16 +4,86 @@
     <meta charset="utf-8">
    <title>Bootstrap 实例 - 强调</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-
+	<link rel="stylesheet" type="text/css" href="../../fw-libs/bootstrap.min.css">
     <style> 
-    </style>
+    	.container {
+    		/*background-color: red;*/
+    		margin-top: 20px;
+    	}
 
-   <link href="./bootstrap.css" rel="stylesheet">
+    	.row {
+    		background-color: lightgray;
+    		border: 1px solid white;
+    	}
+
+    	.row div {
+    		border: 1px solid white;
+    	}
+    </style>
+	
 </head>
 <body>
 
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+		<div class="col-md-1">col-md-1</div>
+	</div>
 
-   <script src="./jquery.min.js"></script>
-   <script src="./bootstrap.js"></script>
+	<div class="row">
+		<div class="col-md-8">col-md-8</div>
+		<div class="col-md-4">col-md-4</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">col-md-4</div>
+		<div class="col-md-4">col-md-4</div>
+		<div class="col-md-4">col-md-4</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">col-md-6</div>
+		<div class="col-md-6">col-md-6</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-md-8">col-xs-12 col-md-8</div>
+		<div class="col-xs-6 col-md-4">col-xs-6 col-md-4</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-6 col-md-4">col-xs-6 col-md-4</div>
+		<div class="col-xs-6 col-md-4">col-xs-6 col-md-4</div>
+		<div class="col-xs-6 col-md-4">col-xs-6 col-md-4</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-6 col-md-6">col-xs-6 col-md-6</div>
+		<div class="col-xs-6 col-md-6">col-xs-6 col-md-6</div>
+	</div>
+	<div class="row">
+	  <div class="col-xs-12 col-sm-6 col-md-8">.col-xs-12 .col-sm-6 .col-md-8</div>
+	  <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+	</div>
+	<div class="row">
+	  	<div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+	  	<div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+	  	<!-- Optional: clear the XS cols if their content doesn't match in height -->
+	  	<div class="clearfix visible-xs-block"></div>
+	  	<div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+	</div>
+
+</div>
+
 </body>
 </html>
