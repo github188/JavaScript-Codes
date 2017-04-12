@@ -4,3 +4,5 @@ node_modules/
 *.ogg
 *.mp3
 
+*.min.js
+
