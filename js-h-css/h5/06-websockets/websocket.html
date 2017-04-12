@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket</title>
+</head>
+<body>
+    <input type="text" id="inputMessage" value="Hello, Websocket!">
+    <button id="sendButton">Send</button>
+    <pre id="output"></pre>
+
+    <script>
+        var log = function (s) {
+            if ( document.readyState !== 'complete') {
+                log.buffer.push(s);
+            } else {
+                $('output').textContent += (s + '\n')
+            }
+        }
+
+        log.buffer = [];
+
+        if ( this.MozWebSocket ) { WebSocket = MozWebSocket; }
+
+        url = 'ws://echo.websocket.org';
+        w = new WebSocket(url);
+        w.onopen = function () {
+            log("open");
+
+            w.binaryType = 'arraybuffer';
+
+            w.send('thank you for accepting this WebSocket request');
+
+            var a = new Uint8Array([8, 7, 6, 5, 3, 0, 9]);
+            w.send(a.buffer);
+        };
+
+        w.onmessage = function (e) {
+            log(e.data.toString()); 
+        };
+
+        w.onclose = function (e) {
+            log("closed");
+        };
+
+        w.onerror = function (e) {
+            log('error');
+        };
+
+        window.onload = function () {
+            log(log.buffer.join('\n'));
+            $('sendButton').onclick = function () {
+                w.send($('inputMessage').value);
+            }  
+        };
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+    </script>
+</body>
+</html>

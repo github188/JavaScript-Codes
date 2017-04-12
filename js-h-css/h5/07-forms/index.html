@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 Form</title>
+    <style type="text/css">
+        input:invalid {
+            border-color: red;
+        }
+
+        input:valid {
+            /*border-color: green;*/
+        }
+
+        input {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <form action="#">
+        <label for="#">电话：</label>
+        <input type="tel" required autofocus autocomplete placeholder="input telephone" list="telephoneList" /><br />
+        <label for="#" required>邮箱：</label>
+        <input type="email" /><br />
+        <label for="#">网址：</label>
+        <input type="url" /><br />
+        <label for="#">搜索：</label>
+        <input type="search" /><br />
+        <label for="#">范围：</label>
+        <input type="range" min="0" max="100" value="0" step="3" />
+        <output id="range">0</output>
+        <br />
+        <label for="#">数字：</label>
+        <input id="number" type="number" step="5" /><br />
+
+        <label for="#">进度条：</label>
+        <progress id="progress" value="30" max="100"></progress><br />
+
+        <label for="#">说明：</label><br />
+        <input type="textarea" spellcheck="true" /><br />
+
+
+        <datalist id="telephoneList">
+            <option value="1111111" label="1"/>
+            <option value="12222221" label="2" />
+            <option value="3333333" label="3"/>
+        </datalist>
+    
+        <!-- 还未纳入标准，变化可能会很大 -->
+        <label for="#">日期：</label>
+        <input type="datetime" /><br />
+
+        <label for="#">日期：</label>
+        <input type="datetime-local" /><br />
+
+        <label for="#">时间：</label>
+        <input type="time" /><br />
+
+        <label for="#">日期：</label>
+        <input type="date" /><br />
+
+        <label for="#">星期：</label>
+        <input type="week" /><br />
+
+        <label for="#">月：</label>
+        <input type="month" /><br />
+
+        <input type="submit" value="提交"/>
+
+    </form>
+
+
+    <script>
+        
+
+        var rangeInput = document.querySelector('input[type=range]');
+        var rangeValueEle = document.querySelector('#range');
+        var progressEle = document.querySelector('#progress');
+        var number = document.querySelector('#number');
+
+        rangeValueEle.innerHTML = rangeInput.value;
+
+        // rangeInput.oninput = function (e) {
+
+        //     rangeValueEle.innerHTML = e.target.value;
+
+        //     progressEle.value = e.target.value / e.target.max * progressEle.max;
+        // }
+
+        rangeInput.addEventListener('input', function  (e) {
+            
+            rangeValueEle.innerHTML = e.target.value;
+
+            progressEle.value = e.target.value / e.target.max * progressEle.max;
+        });
+
+
+        var direction = -1;
+        setInterval(function () {
+            var value = parseInt(rangeInput.value, 10);
+
+            if ( direction < 0 ) { value++; }
+            else { value--; }
+
+            if ( value >= rangeInput.max ) { direction = 1; } 
+            else if ( value <= 0 ) { direction = -1; }
+
+            rangeInput.value = value;
+
+
+        }, 1);
+    </script>
+</body>
+</html>

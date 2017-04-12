@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Worker</title>
+</head>
+<body>
+    <button id="stopButton">Stop</button>
+    <button id="helloButton">Post a message</button>
+
+
+<script>
+
+function stopWorker() {
+    worker.terminate();
+}
+
+function messageHandler(e) {
+    console.log(e.data);
+}
+
+function errorHandler(e) {
+    console.log(e.message, e);
+}
+
+function loadDemo() {
+    
+    if (typeof(Worker) !== 'undefined') {
+
+        worker = new Worker('echoWorker.js');
+        worker.addEventListener('message', messageHandler, true);
+        worker.addEventListener('error', errorHandler, true);
+
+        $('helloButton').onclick = function () {
+            worker.postMessage('这里有个消息要给你！');
+        };
+
+        $('stopButton').onclick = stopWorker;
+    }
+}
+
+window.addEventListener('load', loadDemo, true);
+
+    function $(id) {
+        return document.getElementById(id);
+    }
+</script>
+</body>
+</html>

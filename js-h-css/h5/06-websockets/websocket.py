@@ -208,7 +208,7 @@ class EchoHandler(object):
         except:
             pass
 
-class WebSocketServer(asyncore.dispatch):
+class WebSocketServer(asyncore.dispatcher):
     def __init__(self, port=80, handlers=None):
         asyncore.dispatcher.__init__(self)
         self.handlers = handlers
@@ -216,7 +216,7 @@ class WebSocketServer(asyncore.dispatch):
         self.port = port
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.bind(("", port))
-        self.listen(s)
+        self.listen(5)
 
     def handle_accept(self):
         conn, addr = self.accept()

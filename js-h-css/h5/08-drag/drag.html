@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖动</title>
+    <style>
+        #members li {
+            cursor: move;
+        }
+
+        .highlighted {
+            background-color: yellow;
+        }
+
+        .validtarget {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <p>Drag members to either the racers or volunteers list.</p>
+
+    <ul id="members">
+        <li draggable="true" data-age="33">a</li>
+        <li draggable="true" data-age="22">b</li>
+        <li draggable="true" data-age="12">c</li>
+        <li draggable="true" data-age="32">d</li>
+        <li draggable="true" data-age="34">e</li>
+        <li draggable="true" data-age="38">f</li>
+        <li draggable="true" data-age="20">g</li>
+        <li draggable="true" data-age="18">h</li>
+        <li draggable="true" data-age="29">i</li>
+        <li draggable="true" data-age="39">j</li>
+    </ul>
+
+    <div class="dropList">
+        <fieldset id="racersField">
+            <legend>Racers (by Age):</legend>
+            <ul id="racers"></ul>
+        </fieldset>
+    </div>
+
+    <div class="dropList">
+        <fieldset id="volunteersField">
+            <legend>Volunteers (by Name):</legend>
+            <ul id="volunteers"></ul>
+        </fieldset>
+    </div>
+    <script type="text/javascript">
+        var racers = [];
+        var volunteers = [];
+
+        var racersList;
+        var volunteersList;
+
+        function loadDemo() {
+            
+            racersList = $('racers');
+            volunteersList = $('volunteers');
+
+            var lists = [racersList, volunteersList];
+
+            [].forEach.call(lists, function (list) {
+
+                list.addEventListener('dragenter', handleDragEnter, false);
+                list.addEventListener('dragleave', handleDragLeave, false);
+                list.addEventListener('drop', handleDrop, false);
+            });
+
+            racersList.addEventListener('dragover', handleDragOverRacers, false);
+            volunteersList.addEventListener('dragover', handleDragOverVolunteers, false);
+
+            var fieldsets = document.querySelectorAll('#racersField, #volunteersField');
+            [].forEach.call(fieldsets, function (fieldset) {
+                fieldset.addEventListener('dragover', handleDragOverOuter, false);  
+            });
+
+            var members = document.querySelectorAll('#members li');
+            [].forEach.call(members, function (member) {
+                member.addEventListener('dragstart', handleDragStart, false);
+                member.addEventListener('dragend', handleDragEnd, false);  
+            });
+        }
+
+        window.addEventListener('load', loadDemo, false);
+
+
+        function handleDragStart(e) {
+            e.effectAllowed = 'copy';
+
+            console.log(e)
+
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+            e.dataTransfer.setData('text/html', e.target.dataset.age);
+
+            racersList.className = "validtarget";
+            volunteersList.className = "validtarget";
+
+            return true;
+        }
+
+        function handleDragEnter(e) {
+            console.log(e)
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            console.log(e)
+            return false;
+        }
+
+        function handleDragOverOuter(e) {
+            console.log(e)
+            
+            if (e.target.id === 'racersField') {
+                racersList.className = 'validtarget';
+            } else if ( e.target.id === 'volunteersField' ) {
+                volunteersList.className = 'validtarget';
+            }
+
+            e.stopPropagation();
+            return false;
+        }
+
+        function handleDragOverRacers(e) {
+            console.log(e)
+            e.dataTransfer.dropEffect = 'copy';
+            e.stopPropagation();
+            e.preventDefault();
+
+            racersList.className = 'highlighted';
+            return false;
+        }
+
+        function handleDragOverVolunteers(e) {
+            console.log(e)
+            
+            e.dataTransfer.dropEffect = 'copy';
+            e.stopPropagation();
+            e.preventDefault();
+
+            volunteersList.className = 'highlighted';
+            return false; 
+        }
+
+        function handleDrop(e) {
+            console.log(e)
+            e.preventDefault();
+            e.stopPropagation();
+
+            var dropTarget = e.target;
+
+            var text = e.dataTransfer.getData('text/plain');
+
+            var group = volunteers;
+            var list = volunteersList;
+
+            if ((dropTarget.id != "volunteers") &&
+                (dropTarget.parentNode.id !== 'volunteers')) {
+                text = e.dataTransfer.getData('text/html') + ': ' + text;
+                group = racers;
+                list = racersList;
+            }
+
+            if (group.indexOf(text) === -1) {
+                group.push(text);
+                group.sort();
+
+                while(list.hasChildNodes()) {
+                    list.removeChild(list.lastChild);
+                }
+
+                [].forEach.call(group, function (person) {
+                    var newChild = document.createElement('li');
+                    newChild.textContent = person;
+                    list.appendChild(newChild);
+                });
+            }
+
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            console.log(e)
+            racersList.className = null;
+            volunteersList.className = null;
+            return false;
+        }
+
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+    </script>
+</body>
+</html>
