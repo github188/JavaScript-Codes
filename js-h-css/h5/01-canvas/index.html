@@ -8,7 +8,7 @@
             margin: 0 auto;
             border: 1px solid red;
 
-            background-color: #777070;
+            /*background-color: #777070;*/
         }
     </style>
 </head>
@@ -25,56 +25,40 @@
 
         var ctx = canvas.getContext('2d');
 
-        function init() {
+        // 快乐栈道
+        // happyRoadInit(ctx);
+
+        loadImg(
+            '../../../ungit-temp/images/yblh-01.jpg',
             
-            var n = 5, x, y;
-
-            // 画布标题
-            drawText(
-                '快乐栈道！',
-                {
-                    font: '25px impact',
-                    fillStyle: '#09EF2A',
-                    textAlign: 'center',
-                    point: { x: 150, y: 22 },
-                    maxWidth: 400
-                }
-            );
-
-            // 画树
-            draw( false, { x: 121, y: 131 }, drawShadow, drawTree );
-            draw( false, { x: 80, y: 80 }, drawTree );
-
-            var roadImg = new Image();
-            roadImg.src = './imgs/stone.jpg';
-
-            roadImg.onload = function () {
+            function (img) {
                 
-                draw(
-                    false,
-                    { x: -100, y: 350 },
-                    drawRoad,
-                    roadImg
-                );
+                // 把图片画到画布上
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            }
+        );
 
-                // 第二颗树
-                draw( false, { x: 282, y: 196 }, drawShadow, drawTree );
-                draw( true, { x: 240, y: 120 }, drawTree );
-                // draw( 2, { x: 240, y: 120 }, drawTree );
-            };
 
-            // 人物
-            draw( false, { x: 194, y: 192 }, drawShadow, drawPerson );
-            draw( false, { x: 176, y: 170 }, drawPerson );
 
-            // 房子
-            draw( false, { x: 160, y: 54 }, drawShadow, drawHouse );
-            draw( false, { x: 140, y: 30 }, drawHouse );
+        function imagePxHandler() {
+            
+            var imgData = ctx.getImageData();
+
+            console.log(imgData);
         }
 
 
-        init();
+        // 加载图片完成后执行回调
+        function loadImg(imgPath, callback) {
+            
+            var img = new Image();
 
+            img.src = imgPath;
+
+            img.onload = function () {
+                callback && callback(img);
+            }
+        }
 
     </script>
 

@@ -237,6 +237,56 @@ function setShadow( shadowStyle ) {
     ctx.shadowBlur      = shadowStyle && shadowStyle.blur  || 2;
 }
 
+
+function happyRoadInit(ctx) {
+    
+    var n = 5, x, y;
+
+    // 画布标题
+    drawText(
+        '快乐栈道！',
+        {
+            font: '25px impact',
+            fillStyle: '#09EF2A',
+            textAlign: 'center',
+            point: { x: 150, y: 22 },
+            maxWidth: 400
+        }
+    );
+
+    // 画树
+    draw( false, { x: 121, y: 131 }, drawShadow, drawTree );
+    draw( false, { x: 80, y: 80 }, drawTree );
+
+    var roadImg = new Image();
+    roadImg.src = './imgs/stone.jpg';
+
+    roadImg.onload = function () {
+        
+        draw(
+            false,
+            { x: -100, y: 350 },
+            drawRoad,
+            roadImg
+        );
+
+        // 第二颗树
+        draw( false, { x: 282, y: 196 }, drawShadow, drawTree );
+        draw( true, { x: 240, y: 120 }, drawTree );
+        // draw( 2, { x: 240, y: 120 }, drawTree );
+    };
+
+    // 人物
+    draw( false, { x: 194, y: 192 }, drawShadow, drawPerson );
+    draw( false, { x: 176, y: 170 }, drawPerson );
+
+    // 房子
+    draw( false, { x: 160, y: 54 }, drawShadow, drawHouse );
+    draw( false, { x: 140, y: 30 }, drawHouse );
+}
+
+
+
 function isObject( obj ) {
     return Object.prototype.toString.call(obj) === '[object Object]';
 }
