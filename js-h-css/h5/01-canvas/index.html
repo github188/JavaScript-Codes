@@ -10,14 +10,24 @@
 
             /*background-color: #777070;*/
         }
+
+        #copy {
+            position:absolute;
+            left: 500px;
+
+            border: 1px solid blue;
+        }
     </style>
 </head>
 <body>
     
     <canvas id="cvs" width="300" height="300"></canvas>
 
+    <canvas id="copy" width="300" height="300"></canvas>
+<!-- 
     <script src="functions/gradient.js"></script>
-    <script src="functions/tree.js"></script>
+    <script src="functions/tree.js"></script> -->
+    <script src="functions/pixelHandler.js"></script>
     <script>
 
 
@@ -25,39 +35,52 @@
 
         var ctx = canvas.getContext('2d');
 
-        // 快乐栈道
+        var pixelProcessor = new PixelProcessor(canvas);
+
+        // ¿ìÀÖÕ»µÀ
         // happyRoadInit(ctx);
+
+        function imagePxHandler(img) {
+            
+            // °ÑÍ¼Æ¬»­µ½»­²¼ÉÏ
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            pixelProcessor.getPixelDatas(0, 0, canvas.width, canvas.height);
+
+            var copyCanvas = $('copy');
+
+            var redIndex = -1;
+
+            // var pixelDatas = ctx.getImageData(0, 0, canvas.width, canvas.height)
+            //     datas = pixelDatas.data;
+
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // console.log(pixelDatas.data);
+            // for (let i = 0, len = datas.length; i < len; i += 4 ) {
+            //     datas[i]     = 255 - datas[i];
+            //     datas[i + 1] = 255 - datas[i + 1];
+            //     datas[i + 2] = 255 - datas[i + 2];
+            //     // datas[i + 3] = 1 - datas[i + 3];
+            // }
+
+            // console.log(pixelDatas.data);
+
+            // ctx.putImageData(pixelDatas, 0 ,0);
+
+            reserveColor(ctx, 0, 0, canvas.width, canvas.height);
+
+            pixelProcessor.createMosaic(50, 50, 100, 100);
+
+        }
 
         loadImg(
             '../../../ungit-temp/images/yblh-01.jpg',
-            
-            function (img) {
-                
-                // 把图片画到画布上
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            }
+            imagePxHandler
         );
 
-
-
-        function imagePxHandler() {
-            
-            var imgData = ctx.getImageData();
-
-            console.log(imgData);
-        }
-
-
-        // 加载图片完成后执行回调
-        function loadImg(imgPath, callback) {
-            
-            var img = new Image();
-
-            img.src = imgPath;
-
-            img.onload = function () {
-                callback && callback(img);
-            }
+        function $(id) {
+            return document.getElementById(id);
         }
 
     </script>
