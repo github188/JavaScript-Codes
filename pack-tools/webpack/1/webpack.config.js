@@ -64,13 +64,15 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             // 指定需要单独打包的入口名称（与 entry 配置中的 key 对应）
             // name: [ 'vendor', 'hello' ]
-            name: 'vendor',
+            name: ['vendor', 'manifest'],
 
             minChunks: function (module) {
                 return module.context && module.context.indexOf('node_modules') !== -1;
             }
         }),
 
+        // 可以重新 new ，也可以在 name: 'vendor' 的地方修改
+        // name: ['vendor', 'manifest']
         new webpack.optimize.CommonsChunkPlugin({ 
             name: 'manifest' 
         }),

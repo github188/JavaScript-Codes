@@ -9,6 +9,13 @@ import '../styles/c.css';
 
 // import { moment } from 'moment';
 
-const moment = require('moment');
 
-console.log(moment().format());
+function determineDate() {
+    import('moment')
+        .then(function (moment) {
+            console.log(moment().format());
+        })
+        .catch(function (err) {
+            console.log('load moment module failed. ', err);
+        });
+}
