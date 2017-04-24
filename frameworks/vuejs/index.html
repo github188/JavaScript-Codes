@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue.js</title>
+</head>
+<body>
+
+	<div id="app">
+		<h1>{{ message }}</h1>
+
+		<span :title="titleMessage">这里是你看到的信息，请将鼠标放置在上面一会</span>
+
+		<div v-if="seen">看不见我。。。。。</div>
+
+		<ul><li v-for="name in names">{{ name }}</li></ul>
+
+		<h2 v-on:click="reverseMsg">反转文字</h2>
+
+		<p>我的名字叫：{{myName}}</p>
+
+		<label>输入姓名：</label>
+		<input type="text" name="name" v-model="myName" />
+
+		<br /><br /><br />
+		<label>人物列表：</label>
+		<ol><people-list 
+			v-for="p in peoples" 
+			v-bind:people="p" v-bind:age="30"></people-list></ol>
+	</div>
+
+	<script src="../../fw-libs/vue-2.0.js"></script>
+	<script>
+		
+		Vue.component('people-list', {
+			props: ['people', 'age'],
+			template: '<li>{{people.name}} ， {{age}}</li>'
+		});
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: 'Hello Vue.js !',
+				titleMessage: '时间' + new Date(),
+
+				seen: true,
+
+				names: ['lizc', 'fll', 'liwy'],
+
+				myName: 'lizc',
+
+				peoples: [
+					{ name: '蝴蝶君' },
+					{ name: '燕归人' },
+					{ name: '羽人非獍' },
+				],
+
+				ages: [ 20, 21, 19],
+			},
+
+			methods: {
+				reverseMsg: function () {
+					this.message = this.message.split('').reverse().join('');
+				}
+			}
+
+		});
+	</script>
+</body>
+</html>
