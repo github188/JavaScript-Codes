@@ -4,30 +4,34 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<style>
-		#center {
-			margin: auto;
-			position: absolute;
-			/*left: 0;*/
-			top: 0;
-			/*bottom: 0;*/
-			right: 0;
-
-			background-color: red;
-			width: 100px;
-			height: 100px;
-		}
 	</style>
 
 </head>
 <body>
 
-	<div id="center"></div>
-	
+	<script>
 
-	<script type="text/javascript">
-		'use strict';
+	function cached(fn) {
+		
+		var cache = Object.create(null);
+
+
+		return (function cachedFn(str) {
+			var hit = cache[str];
+
+
+		console.log('cache --- ' + JSON.stringify(cache));
+
+			return hit || (cache[str] = fn(str));
+		});
+	}
+
+	function getName(str) {
+		return str;
+	}
+
+
 
 	</script>
-
 </body>
 </html>
