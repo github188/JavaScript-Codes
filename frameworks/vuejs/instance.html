@@ -5,9 +5,23 @@
     <title>Vue 实例</title>
 </head>
 <body>
-<script src="../../fw-libs/vue2.0.js"></script> 
+<div id="app">
+	
+</div>
+<script src="../../fw-libs/vue-2.0.js"></script> 
     <script>
         
+        var data = {
+        	a: 1,
+        	b: 2
+        }
+
+        var vm = new Vue({
+        	el: '#app',
+        	data: data
+        });
+
+
     </script>
 </body>
 </html>
