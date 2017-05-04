@@ -7,10 +7,21 @@
 <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
 </head>
 <body>
-<<<<<<< HEAD
 <div id="example">
 
+    <h1>指令：v-text</h1>
+    <span v-text="spanText">Hello v-text</span>
+
     <h1>循环属性：v-for</h1>
+
+    <label>数组数据列表（指定索引）：</label>
+    <ul><li v-for="(person, index) in persons">{{person + ', ' + index}}</li></ul>
+    <label>对象数据列表（指定值，键，索引）：</label>
+    <ul><li v-for="(value, key, index) in car">{{ '汽车参数' + key + ': ' + value + ', ' + index}}</li></ul>
+    <label>对象数据列表（指定值，id）：</label>
+    <ul><li v-for="stu in students" :key="stu.id">{{ stu.name }}</li></ul>
+    
+
     <label>数组数据列表：</label>
     <ul><li v-for="person in persons">{{person}}</li></ul>
     <label>对象数据列表：</label>
@@ -21,9 +32,14 @@
 
     <h1>条件属性：v-if</h1>
     <button v-on:click="toggle">Show Message ?</button>
-    <p v-if="isToggle">I am showed !</p>
+    <p v-if="isToggle">I am showed !</p><br/><br/>
 
+    <button v-on:click="changeBgNum">点我 {{bgNum}}</button><br/><br/>
+    <span v-if="bgNum === 1" style="background-color:red;color:white;">我是红色</span>
+    <span v-else-if="bgNum === 2" style="background-color:green;color:white;">我是绿色</span>
+    <span v-else style="background-color:blue;color:white;">我是蓝色</span><br/><br/>
 
+<!--   -->
     <h1>Watched 属性</h1>
     <p>
       Ask a yes/no question:
@@ -70,6 +86,10 @@
     });
 
     var data = { 
+        bgNum: 1,
+
+        spanText: 'v-text to update textContent.',
+
         a: 'Hello Vue !',
         btnDisable: false,
         message: 'hello vue.js !',
@@ -91,6 +111,19 @@
         ],
 
         persons: ['Som', 'Bob', 'Coco'],
+
+        car: {
+            width: '180cm',
+            height: '200cm',
+            speed: '200km/h',
+        },
+
+        students: [
+            {name: 'Tom', id: 2},
+            {name: 'Dog', id: 4},
+            {name: 'Cat', id: 3},
+            {name: 'Tiger', id: 1},
+        ],
     };
 
     var vm = new Vue({
@@ -147,6 +180,14 @@
 
         // 方法
         methods: {
+
+            changeBgNum: function () {
+
+                if ( this.bgNum++ === 3 ) {
+                    this.bgNum = 1;
+                    return;
+                } 
+            },
 
             toggle: function () {
                 this.isToggle = !this.isToggle;   
@@ -254,24 +295,6 @@
     vm.$watch('a', function (newV, oldV) {
         console.log('a: ' + oldV + ' changed to ' + newV);  
     });
-=======
-<div id="app">
-	
-</div>
-<script src="../../fw-libs/vue-2.0.js"></script> 
-    <script>
-        
-        var data = {
-        	a: 1,
-        	b: 2
-        }
-
-        var vm = new Vue({
-        	el: '#app',
-        	data: data
-        });
-
->>>>>>> dca93e32012d7c210e9749646cf30a3ee4adeccf
 
     </script>
 </body>
