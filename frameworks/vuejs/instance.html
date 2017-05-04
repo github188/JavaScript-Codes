@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 实例</title>
+<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+</head>
+<body>
+<<<<<<< HEAD
+<div id="example">
+
+    <h1>循环属性：v-for</h1>
+    <label>数组数据列表：</label>
+    <ul><li v-for="person in persons">{{person}}</li></ul>
+    <label>对象数据列表：</label>
+    <ul><li v-for="people in peoples">{{people.name}}</li></ul>
+    <label>自定义组件列表：</label>
+    <ol><people-list v-for="people in peoples" v-bind:people="people"></people-list></ol>
+    
+
+    <h1>条件属性：v-if</h1>
+    <button v-on:click="toggle">Show Message ?</button>
+    <p v-if="isToggle">I am showed !</p>
+
+
+    <h1>Watched 属性</h1>
+    <p>
+      Ask a yes/no question:
+      <input v-model="question">
+    </p>
+    <p>{{ answer }}</p>
+
+
+    <h1>Compted 属性 vs Watched 属性</h1>
+    <label>Fist Name: </label><input type="text" v-model="firstName"><br/>
+    <label>Last Name: </label><input type="text" v-model="lastName"><br/>
+    <label>计算属性：</label><span>{{ fullName }}</span><br/>
+    <label>观察属性：</label><span>{{ fullName }}</span><br/>
+    
+
+    <h1>计算属性 vs Methods</h1>
+    <label>计算属性：</label><span>{{ cnow }}</span><br/>
+    <label>Methods: </label><span>{{ now() }}</span><br/>
+
+
+    <h1 v-once>{{a}}</h1>
+    <h2>{{a}}</h2>
+    <h3 v-bind:title="a">Hello v-bind</h3>
+    <input type="text" v-model="a">
+    <button v-bind:disabled="btnDisable">Click Me !</button>
+
+
+    <h1>Vue Filter: '|'</h1>
+    <span>{{ btnDisable }}</span>
+
+    <h1>Compted Attribute</h1>
+
+    <input type="text" v-model="message" /><br>
+
+    <span>Reversed Message: {{ reverseMessage() }}</span>
+</div>
+<script src="../../fw-libs/vue2.0.js"></script> 
+    <script>
+        
+
+    var NameComponent = Vue.component('people-list', {
+        props: ['people'],
+        template: '<li>{{people.name}}</li>'
+    });
+
+    var data = { 
+        a: 'Hello Vue !',
+        btnDisable: false,
+        message: 'hello vue.js !',
+        currTime: '',
+
+        firstName: 'li',
+        lastName: 'zc',
+        // fullName: 'lizc',
+
+        question: '',
+        answer: 'I cannot give you an answer until you ask a question!',
+
+        isToggle: false,
+
+        peoples: [
+            {name: 'Tom'},
+            {name: 'Lily'},
+            {name: 'Simon'}
+        ],
+
+        persons: ['Som', 'Bob', 'Coco'],
+    };
+
+    var vm = new Vue({
+        el: '#example',
+        data: data,
+
+        // 计算属性，只要绑定的属性不变，会先使用缓存的值
+        computed: {
+            reverseMessage: function () {
+                return this.message.split('').reverse().join('');
+            },
+
+            cnow: function () {
+                this.currTime = new Date(Date.now())
+                return this.currTime;
+            },
+
+            fullName: { // function () 
+
+                get: function () {
+                    return this.firstName + ' ' + this.lastName;
+                },
+
+                 set: function (newValue) {
+                    var name = newValue.split(' ');
+
+                    this.firstName = name[0];
+                    this.lastName = name[name.length - 1];
+                 }
+
+
+                // return this.firstName + ' ' + this.lastName;
+            },
+        },
+
+        // 观察属性，观察的属性发生变化，会做出响应（比如：改变其他属性的值）
+        watch: {
+            // firstName: function (newValue) {
+            //     console.log('firstName ---------- new: ' + newValue);
+            //     this.fullName = newValue + ' ' + this.lastName; 
+            // },
+
+            // lastName: function (newValue) {
+            //     console.log('lastName ---------- new: ' + newValue);
+            //     this.fullName = this.firstName + ' ' + newValue;
+            // },
+
+            // 如果 question 发生改变，这个函数就会运行
+            question: function (newQuestion) {
+              this.answer = 'Waiting for you to stop typing...'
+              this.getAnswer()
+            },
+        },
+
+        // 方法
+        methods: {
+
+            toggle: function () {
+                this.isToggle = !this.isToggle;   
+            },
+
+            reverseMessage: function () {
+                return this.message.split('').reverse().join('');
+            },
+
+            now: function () {
+                return new Date(Date.now());
+            },
+
+            // _.debounce 是一个通过 lodash 限制操作频率的函数。
+            // 在这个例子中，我们希望限制访问yesno.wtf/api的频率
+            // ajax请求直到用户输入完毕才会发出
+            // 学习更多关于 _.debounce function (and its cousin
+            // _.throttle), 参考: https://lodash.com/docs#debounce
+            getAnswer: _.debounce(
+              function () {
+                var vm = this
+                if (this.question.indexOf('?') === -1) {
+                  vm.answer = 'Questions usually contain a question mark. ;-)'
+                  return
+                }
+                vm.answer = 'Thinking...'
+                axios.get('https://yesno.wtf/api')
+                  .then(function (response) {
+                    vm.answer = _.capitalize(response.data.answer)
+                  })
+                  .catch(function (error) {
+                    vm.answer = 'Error! Could not reach the API. ' + error
+                  })
+              },
+              // 这是我们为用户停止输入等待的毫秒数
+              500
+            )
+        },
+
+        /**
+         * 组件被创建之前：
+         *     1. 观察数据：Observe Data
+         *     2. 初始化事件：Init Events
+         * @return {[type]} [description]
+         */
+        beforeCreate: function () {
+            console.log('beforeCreated');
+        },
+
+        /**
+         * 被创建之后
+         *     处理 'el' 和 'template' 选项
+         * @return {[type]} [description]
+         */
+        created: function () {
+            console.log('created');
+        },
+
+        /**
+         * 创建 vm.$el 代替 'el'
+         * @return {[type]} [description]
+         */
+        beforeMount: function () {
+            console.log('beforeMounted');
+        },
+
+        /**
+         * 组件已经加载完成，可以更新组件
+         * @return {[type]} [description]
+         */
+        mounted: function () {
+            console.log('mounted');
+        },
+
+        /**
+         * 数据发生变化 更新组件之前
+         * @return {[type]} [description]
+         */
+        beforeUpdate: function () {
+            console.log('beforeUpdate');
+        },
+
+        /**
+         * 组件已经更新完成
+         * @return {[type]} [description]
+         */
+        updated: function () {
+            console.log('updated');
+        },
+
+        /**
+         * 摧毁之前做的事情：
+         *     拆解 watchers, child components and event listeners
+         * @return {[type]} [description]
+         */
+        beforeDestroy: function () {
+            console.log('beforeDestroy');
+        },
+
+        destroyed: function () {
+            console.log('destroyed');
+        }
+    });
+
+    vm.$watch('a', function (newV, oldV) {
+        console.log('a: ' + oldV + ' changed to ' + newV);  
+    });
+=======
+<div id="app">
+	
+</div>
+<script src="../../fw-libs/vue-2.0.js"></script> 
+    <script>
+        
+        var data = {
+        	a: 1,
+        	b: 2
+        }
+
+        var vm = new Vue({
+        	el: '#app',
+        	data: data
+        });
+
+>>>>>>> dca93e32012d7c210e9749646cf30a3ee4adeccf
+
+    </script>
+</body>
+</html>
