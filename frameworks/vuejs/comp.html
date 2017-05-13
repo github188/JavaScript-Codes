@@ -3,11 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <title>class - style</title>
+    <style>
+    	.completed {
+    		text-decoration: line-through;
+    	}
+
+    	.red {
+    		background-color: red;
+    	}
+
+    	.big {
+    		font-size: 22px;
+    	}
+
+    	.rect {
+    		width: 100px;
+    		height: 100px;
+    	}
+    </style>
 </head>
 <body>
     <div id="app">
-        
+       	<counter heading="喜欢" color="blue"></counter> 
+       	<counter heading="不喜欢" color="red"></counter> 
+
+		<h3>数组内敛样式</h3>
+		<div v-bind:style="[bgStyle, colorStyle, fontStyle]">我是内联样式：数组格式</div>
+
+		<h3>自动前缀</h3>
+		<div v-bind:class="['rect', 'red']" v-bind:style="transformStyle">transform 自动前缀</div>
+		<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">多重值</div>
+
+		<h3>组件：任务列表</h3>
+		<tasks v-bind:tasks="tasks"></tasks>
     </div>
-    <script ></script>
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script>
+    
+    	// 计数组件
+	    Vue.component('counter', {
+
+	    	props: ['heading', 'color'],
+	    	template: '<div><span>{{ heading }} : </span><button v-on:click="countBtnClick" v-bind:style="btnBgColor">{{ count }}</button></div>',
+
+	    	data: function () {
+	    		return {	
+	    			count: 0,
+
+	    			btnBgColor: { background: this.$props.color }
+	    		};
+	    	},
+
+	    	methods: {
+	    		countBtnClick: function () {
+	    			this.count++;
+	    		}
+	    	}
+	    });
+
+	    // 任务组件
+	    Vue.component('tasks', {
+	    	props: ['tasks'],
+	    	template: '<ul><li \
+	    		v-on:click="taskClick(task)" \
+	    		v-bind:class="{completed: task.completed}" \
+	    		v-for="task in tasks">{{ task.name }}</li></ul>\
+	    	',
+
+	    	data: function () {
+	    		return {
+	    			completedCls: true
+	    		}
+	    	},
+
+	    	methods: {
+	    		taskClick: function (task) {
+	    			task.completed = !task.completed;
+	    		}
+	    	}
+	    })
+
+    	new Vue({
+    		el: '#app',
+
+    		data: {
+    			tasks: [
+    				{ name: 'yesterday', completed: true },
+    				{ name: 'today', completed: false },
+    				{ name: 'tomorrow', completed: false }
+    			],
+
+    			arrStyle: [
+    				{background: 'red'},
+    				{ color: 'white' },
+    				{ fontSize: '22px' }
+    			],
+
+    			bgStyle: { background: 'red' },
+
+    			colorStyle: { color: 'white' },
+
+    			fontStyle: { fontSize: '22px' },
+
+    			transformStyle: {
+    				transform: 'rotate(7deg)'
+    			}
+    		},
+
+    		methods: {
+    		}
+    	});
+    </script>
 </body>
 </html>
