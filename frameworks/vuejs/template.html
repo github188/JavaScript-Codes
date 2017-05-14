@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		.completed {
+			text-decoration: line-through;
+			/*color: red;*/
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<tpl-list :persons="persons"></tpl-list>
+	</div>
+	<template id="tpl-list">
+		<ul>
+			<li 
+				v-on:click="person.isCompleted = !person.isCompleted"
+				v-bind:class="{'completed': person.isCompleted}" 
+				v-for="person in persons">{{person.name}} , {{person.age}}
+			</li>
+		</ul>
+	</template>
+	<script type="text/javascript" src="./vue.js"></script>
+	<script>
+		Vue.component('tpl-list', {
+			template: '#tpl-list',
+			props: ['persons']
+		});	
+
+		new Vue({
+			el: '#app',
+
+			data: {
+				persons: [
+					{'name': 'lizc', 'age': '29', 'isCompleted': false},
+					{'name': 'fll', 'age': '25', 'isCompleted': true},
+					{'name': 'liwy', 'age': '1.5', 'isCompleted': false},
+				]
+			}
+		});
+	</script>
+</body>
+</html>

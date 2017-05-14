@@ -30,6 +30,8 @@
 		<h3>数组内敛样式</h3>
 		<div v-bind:style="[bgStyle, colorStyle, fontStyle]">我是内联样式：数组格式</div>
 
+		<div v-bind:style="[{background:'red'}, {fontSize: '22px'}]">css 普通样式</div>
+
 		<h3>自动前缀</h3>
 		<div v-bind:class="['rect', 'red']" v-bind:style="transformStyle">transform 自动前缀</div>
 		<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }">多重值</div>
@@ -40,7 +42,8 @@
 
     <script type="text/javascript" src="./vue.js"></script>
     <script>
-    
+   
+
     	// 计数组件
 	    Vue.component('counter', {
 
