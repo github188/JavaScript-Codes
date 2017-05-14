@@ -16,10 +16,13 @@
 	</div>
 	<template id="tpl-list">
 		<ul>
+			<h3>Person List <span v-show="remainPersonCount">(number: {{ remainPersonCount }})</span></h3>
 			<li 
 				v-on:click="person.isCompleted = !person.isCompleted"
 				v-bind:class="{'completed': person.isCompleted}" 
 				v-for="person in persons">{{person.name}} , {{person.age}}
+
+				<strong v-on:click="deletePerson(person)">X</strong>
 			</li>
 		</ul>
 	</template>
@@ -27,7 +30,22 @@
 	<script>
 		Vue.component('tpl-list', {
 			template: '#tpl-list',
-			props: ['persons']
+			props: ['persons'],
+			methods: {
+				deletePerson: function (person) {
+					// this.persons.$remove(person);
+					this.persons.splice(this.persons.indexOf(person), 1);
+				}
+			},
+
+			computed: {
+				remainPersonCount: function () {
+					return this.persons.filter(function (person) {
+						return ! person.isCompleted;
+					}).length;
+				}
+			}
+
 		});	
 
 		new Vue({
