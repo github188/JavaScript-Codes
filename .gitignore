@@ -6,7 +6,7 @@ node_modules/
 
 *.min.js
 
-fw-libs/
+# fw-libs/
 ungit-temp/
 
 *.o
