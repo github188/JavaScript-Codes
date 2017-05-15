@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slot</title>
+</head>
+<body>
+    <div id="app">
+        <slot-test>
+            <h3 slot="slot-outer1">slot outer 1</h3>
+            <h4 slot="slot-outer2">slot outer 2</h4>
+        </slot-test> 
+    </div>
+    <template id="slot-test-tpl">
+        <div class="root-view">
+            <h2>Vue Slot</h2>
+            <slot name="slot-outer1" text="hello slot outer 1"></slot>
+            <slot name="slot-outer2"></slot>
+            <!-- <slot></slot> -->
+        </div>
+    </template>
+    <script src="./vue.js"></script>
+    <script>
+
+        Vue.component('slot-test', {
+            template: '#slot-test-tpl'
+        }); 
+
+        new Vue({
+            el: '#app',
+
+        }); 
+    </script>
+</body>
+</html>

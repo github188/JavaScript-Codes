@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Form</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="message" />
+        <p>{{ message }}</p>
+
+        <input type="checkbox" id="checkbox" v-model="checked" />
+        <label for="checkbox-">{{ checked }}</label>
+
+        <hr>
+        <h2>多选框</h2>
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedNames }}</span>
+    
+        <hr>
+        <h2>单选框</h2>
+        <input type="radio" id="simon" value="Simon" v-model="picked" />
+        <label for="simon">Simon</label>
+        <input type="radio" id="tom" value="Tom" v-model="picked" />
+        <label for="tom">Tom</label>
+        <input type="radio" id="lily" value="Lily" v-model="picked" />
+        <label for="lily">Lily</label>
+
+        <br>
+        <span>Picked: {{ picked }}</span>
+
+        <hr>
+        <h2>选择列表</h2>
+
+        <select name="testSelect" id="testSelect" v-model="selected">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+
+        <span>Selected: {{ selected }}</span>
+
+        <hr>
+        <h2>多选列表</h2>
+
+        <select name="testMulSelect" id="testMulSelect" multiple v-model="selectedArr">
+            <option v-bind:value="option.value" v-for="option in options">{{ option.text }}</option>
+<!--        <option value="Tom">Tom Text</option>
+            <option value="Simon">Simon Text</option>
+            <option value="Cat">Cat Text</option>
+            <option value="Lily">Lily Text</option>
+            <option value="Bob">Bob Text</option> -->
+        </select>
+
+        <br>
+        <span>Selected: {{ selectedArr }}</span>
+
+        <hr>
+        <h2>input lazy</h2>
+
+        <!-- 不会绑定输入事件，而是绑定了 change 事件 -->
+        <input type="text" v-model.lazy="message">
+        <br>
+        <span>{{ message }}</span>
+
+
+        <hr>
+        <h2>.number 限制输入内容为数字</h2>
+
+        <!-- 不会绑定输入事件，而是绑定了 change 事件 -->
+        <input v-model.number="message" type="number">
+        <br>
+        <span>{{ typeof(message) }}</span>
+
+    </div>
+    <script src="vue.js"></script> 
+    <script>
+        new Vue({
+            el: '#app',
+
+            data: {
+                message: 'input something...',
+
+                checked: true,
+
+                checkedNames: [],
+
+                picked: '',
+
+                selected: 'A',
+
+                selectedArr: [],
+
+                options: [
+                    {value: 'Tom', text: 'Tom Text'},
+                    {value: 'Simon', text: 'Simon Text'},
+                    {value: 'Cat', text: 'Cat Text'},
+                    {value: 'Lily', text: 'Lily Text'},
+                    {value: 'Bob', text: 'Bob Text'},
+                ]
+            }
+        });
+    </script>
+</body>
+</html>

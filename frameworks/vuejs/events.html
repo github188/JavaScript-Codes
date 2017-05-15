@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue events</title>
+</head>
+<body>
+    <div id="app">
+        <event-test
+            title="Event Test Componenet"
+            btn-title="click me"
+        ></event-test>
+    </div> 
+
+    <template id="event-test-tpl">
+        <div class="root-view">
+            <h3>{{ title }}</h3>
+            <button v-on:keydown.delete="click" class="btn">{{ btnTitle }}</button>
+        </div>
+    </template>
+    <script src="./vue.js"></script> 
+    <script>
+
+        Vue.component('event-test', {
+            template: '#event-test-tpl',
+
+            props: ['title', 'btn-title'],
+
+            methods: {
+                click: function () {
+                    alert('hello vue');
+                }
+            }
+        });
+
+        new Vue({
+            el: '#app',
+
+            data: {
+
+            }
+        }); 
+    </script>
+</body>
+</html>
