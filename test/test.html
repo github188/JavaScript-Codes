@@ -11,26 +11,27 @@
 
 	<script>
 
-	function cached(fn) {
+	function isObject(a) {
+		return a !== null && typeof a === 'object';
+	}
+
+	function looseEqual(a, b) {
 		
-		var cache = Object.create(null);
+		var isObjectA = isObject(a),
+			isObjectB = isObject(b);
 
-
-		return (function cachedFn(str) {
-			var hit = cache[str];
-
-
-		console.log('cache --- ' + JSON.stringify(cache));
-
-			return hit || (cache[str] = fn(str));
-		});
+		if (isObjectA && isObjectB) { // 数组或对象
+			try {
+				return JSON.stringify(a) === JSON.stringify(b);
+			} catch(e) {
+				return a === b;
+			}
+		} else if ( !isObjectA && !isObjectB ) { // 普通类型
+			return String(a) === String(b);
+		} else {
+			return false;
+		}
 	}
-
-	function getName(str) {
-		return str;
-	}
-
-
 
 	</script>
 </body>
