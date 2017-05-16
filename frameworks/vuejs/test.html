@@ -16,14 +16,37 @@
 
             return function (obj) {
                 for ( var i = 0; i < segments.length; i++ ) {
-                    console.log(obj)
                     if ( !obj ) { return; }
+                    console.log(obj[segments[i]])
                     obj = obj[segments[i]];
                 }
 
-                    // console.log(obj)
+                    console.log('obj: ' + JSON.stringify(obj))
+                    console.log('test obj: ' + JSON.stringify(testObj))
                 return obj;
             };
+        }
+
+        var testObj = {
+            a: {
+                b: {
+                    c: {
+                        d: {
+                            dName: 'lizc'
+                        }
+                    }
+                }
+            }
+        }
+
+        var res = parsePath('a.b.c.d')(testObj);
+
+        var testArr = [1,2,3];
+
+        function test(arr) {
+            arr.splice(1,1);
+
+            return arr;
         }
     </script>
 </body>
