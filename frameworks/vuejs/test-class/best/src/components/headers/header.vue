@@ -17,7 +17,8 @@
         </div>
         <div v-if="seller.supports" class="supports-count">
             <span class="sp-count">{{seller.supports.length}}个</span>
-            <i class="icon-keyboard_arrow_right"></i>
+            <icon name="flag" class=""></icon>
+            <!-- <i class="icon-keyboard_arrow_right"></i> -->
         </div>
     </div>
     <div class="bulletin-wrapper"></div>
@@ -120,7 +121,6 @@ export default {
                 margin-right: 2px
             .icon-keyboard_arrow_right
                 font-size: 10px
-                line-height: 24px
                 
                 
 

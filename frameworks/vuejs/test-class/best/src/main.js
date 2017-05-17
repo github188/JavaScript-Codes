@@ -4,6 +4,10 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import App from './App';
 import router from './router';
+import Icon from 'vue-awesome/components/Icon';
+import './icons/index.js'
+
+import '@/common/stylus/index.styl';
 
 Vue.config.productionTip = false;
 
@@ -14,5 +18,5 @@ new Vue({
     el: '#app',
     router,
     template: '<App/>',
-    components: { App }
+    components: { App, Icon }
 });
