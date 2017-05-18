@@ -8,11 +8,6 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "icons": "node build/fa2json.js && node build/icons.js",
-    "fa2json": "node build/fa2json.js",
-    "predev": "npm run icons && npm run demo && npm run dev",
-    "prepublish": "npm run icons && npm run demo && npm run build && cp -r ./src/* . && rm index.js",
-    "publish": "rm -rf ./components && rm -rf ./icons",
     "lint": "eslint --ext .js,.vue src"
   },
   "keywords": [
@@ -21,6 +16,7 @@
   ],
   "dependencies": {
     "stylus-loader": "^3.0.1",
+    "svgfont2js": "^0.1.2",
     "vue": "^2.2.6",
     "vue-awesome": "^2.3.1",
     "vue-resource": "^1.3.1",
@@ -70,7 +66,6 @@
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0",
-    "file-loader": "^0.11.1",
     "font-awesome": "^4.7.0",
     "font-awesome-svg": "^0.4.0"
   },

@@ -17,7 +17,7 @@
         </div>
         <div v-if="seller.supports" class="supports-count">
             <span class="sp-count">{{seller.supports.length}}个</span>
-            <icon name="flag" class=""></icon>
+            <icon name="chevron-right" class="chevron-right"></icon>
             <!-- <i class="icon-keyboard_arrow_right"></i> -->
         </div>
     </div>
@@ -119,7 +119,7 @@ export default {
                 vertical-align: top
                 font-size: 10px
                 margin-right: 2px
-            .icon-keyboard_arrow_right
+            .chevron-right
                 font-size: 10px
                 
                 
