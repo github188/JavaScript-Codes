@@ -21,45 +21,47 @@
                 <!-- <i class="icon-keyboard_arrow_right"></i> -->
             </div>
         </div>
-        <div class="bulletin-wrapper"  @click="showDetail" transition="fade">
+        <div class="bulletin-wrapper"  @click="showDetail">
             <span class="bull-icon"></span><span class="bull-text">{{seller.bulletin}}</span>
             <icon name="chevron-right" class="chevron-right"></icon>
         </div>
         <div class="background">
             <img :src="seller.avatar" width="100%" height="100%">
         </div>
-        <div v-show="detailShow" class="detail">
-            <div class="detail-wrapper clearfix">
-                <div class="detail-main">
-                    <h1 class="detail-title">{{seller.name}}</h1>
-                    <div class="star-wrapper">
-                        <star :score="seller.score" :size="48"></star>
-                    </div>
-                    <div class="title">
-                        <div class="line"></div>
-                        <div class="text">优惠信息</div>
-                        <div class="line"></div>
-                    </div>
-                    <ul v-if="seller.supports" class="supports">
-                        <li v-for="support in seller.supports" class="support-item">
-                            <span class="sp-icon" :class="classMap[support.type]"></span>
-                            <span class="sp-text">{{support.description}}</span>
-                        </li>
-                    </ul>
-                    <div class="title">
-                        <div class="line"></div>
-                        <div class="text">商家公告</div>
-                        <div class="line"></div>
-                    </div>
-                    <div class="bulletin">
-                        <div class="content">{{seller.bulletin}}</div>
-                    </div>
-                </div> 
+        <transition name="fade">
+            <div v-show="detailShow" class="detail">
+                <div class="detail-wrapper clearfix">
+                    <div class="detail-main">
+                        <h1 class="detail-title">{{seller.name}}</h1>
+                        <div class="star-wrapper">
+                            <star :score="seller.score" :size="48"></star>
+                        </div>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="text">优惠信息</div>
+                            <div class="line"></div>
+                        </div>
+                        <ul v-if="seller.supports" class="supports">
+                            <li v-for="support in seller.supports" class="support-item">
+                                <span class="sp-icon" :class="classMap[support.type]"></span>
+                                <span class="sp-text">{{support.description}}</span>
+                            </li>
+                        </ul>
+                        <div class="title">
+                            <div class="line"></div>
+                            <div class="text">商家公告</div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="bulletin">
+                            <div class="content">{{seller.bulletin}}</div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="detail-close" @click="hideDetail">
+                    <icon name="close" class="close"></icon>
+                </div>
             </div>
-            <div class="detail-close" @click="hideDetail">
-                <icon name="close" class="close"></icon>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -103,7 +105,7 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus">
 
 @import '../../common/stylus/mixin.styl'
-
+    
 .header
     position: relative
     overflow: hidden
@@ -149,6 +151,7 @@ export default {
                     width: 12px
                     height: 12px
                     background-size: 12px 12px
+                    background-repeat: no-repeat
                     &.decrease
                         bg-img('imgs/decrease_1')
                     &.discount
@@ -222,13 +225,12 @@ export default {
         height: 100%
         z-index: 100
         overflow: auto
-        transition: all 0.5s
         backdrop-filter: blur(10px)
-        transition: all 0.5
-        &.fade-transition
-            opacity: 1
+        background-color: rgba(7, 17, 27, 0.8)
+        &.fade-enter-active, &.fade-leave-active
+            transition: all 0.5s
             background-color: rgba(7, 17, 27, 0.8)
-        &.fade-enter, &.fade-leave
+        &.fade-enter, &.fade-leave-active
             opacity: 0
             background-color: rgba(7, 17, 27, 0)
         .detail-wrapper
