@@ -15,6 +15,7 @@
     "Vue.js"
   ],
   "dependencies": {
+    "better-scroll": "^0.1.15",
     "stylus-loader": "^3.0.1",
     "svgfont2js": "^0.1.2",
     "vue": "^2.2.6",
