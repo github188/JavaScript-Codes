@@ -20,6 +20,10 @@
  * 2016/12/26 19:24:25
  * [DEL] 删除表生成器：TableGenerator, 挪到单独文件：table.js 中
  * [MOD] generateObj -> ccGenerateObj
+ *
+ * Tue Jun 20 19:10:41 2017
+ *
+ * [ADD] ccCompoKeyFunction: 组合键处理
  */
 
 
@@ -203,6 +207,139 @@ function ccGenerateObj(n, template, flag) {
 function ccloadXMLDoc() {
     
 }
+
+/**
+ * 用来处理组合键功能，默认组合键：9988
+ * @param  {Function} 组合键成功后的回调
+ * @param  {Array}  组合键数组
+ * @param  {Boolean} 组合键功能开关
+ * @return {Function} 返回启动组合键函数，该函数在按键监听函数中处理
+ */
+function ccCompoKeyFunction(callback, compoKeys, enable) {
+    // 只接受 enable === false 关闭组合键功能
+    if (typeof(enable) === 'boolean' && !enable) {
+        return function () {};
+    } 
+
+    var targetKeyArr = [57, 57, 56, 56];    // 组合键数组，默认：9988
+    var currKeyArr = [];        // 当前按下的键值组
+    var currKeyArrLen = 0;      // 键值组长度
+    var compoKeySwitch = true;  // 组合键开关
+    var lastKeyTime = "";       // 记录上一次按键时间点
+    var currKeyTime = "";       // 记录当前按下的按键时时间点
+    var seconds = 2;            // 组合键时间
+    var isTimeout = false;      // 两次按键是否超时过
+    var isSupportTimeout = false;   // 是否支持超时
+
+    if (arguments.length > 1 
+        && Object.prototype.toString.call(arguments[1]) === '[object Array]') {
+        var tmpArr = compoKeys;
+        var tmpValue = -1;
+        for (var i = 0; i < tmpArr.length; i++) {
+            tmpValue = tmpArr[i];
+            // 如果是普通 0-9 数字，转换成键值
+            if (tmpValue >= 0 && tmpValue <= 9) {
+                tmpArr[i] = tmpValue + 48;
+            }
+        }
+
+        targetKeyArr = [].slice.call(tmpArr, 0);
+    }
+
+    var debug = function (str) {
+        // return;
+        console.log(str);   
+    };  
+
+    // 重置数据
+    var reset = function () {
+        currKeyArr = [];
+        currKeyTime = "";
+        lastKeyTime = "";
+    };
+
+    // 缓存在允许时间内（seconds）按下的按键
+    var buffer = function (__code) {
+
+        if (compoKeySwitch) {
+
+            if (currKeyArr.length < targetKeyArr.length) {
+
+                debug('key index: ' + targetKeyArr.indexOf(__code));
+
+                // 缓存当前按键
+                currKeyArr.push(__code);
+                debug('current keys: ' + currKeyArr.toString());
+
+                // 判断按下的按键键值是否和组件键值匹配
+                for (var j = 0; j < currKeyArr.length; j++) {
+                    if (currKeyArr[j] !== targetKeyArr[j]) {
+                        reset();
+                        return;
+                    }
+                }
+
+                // 按键数达到组合键数了
+                if (currKeyArr.length === targetKeyArr.length) {
+
+                    // 这个 if 可省略
+                    if (currKeyArr.toString() === targetKeyArr.toString()) {
+                        // TODO 组合键成功，执行业务行为 
+                        debug('Got It ! > ' + currKeyArr.toString());
+
+                        if (callback) { callback(); }
+                    }
+
+                    // 组合成功或者按键数达到组合键键数量，都需要重置
+                    reset();
+                }
+            }
+        }
+    }
+
+    var checkWithTimeout = function () {
+        
+        // 下面是支持超时机制情况
+        var delta = currKeyTime - lastKeyTime;
+        debug('check ------ delta = ' + delta);
+
+        if (delta < seconds * 1000) {
+            isTimeout = false;
+            buffer(__keycode);
+        } else { // 两次按键超过允许值，重新开始
+            isTimeout = true;
+            reset();
+        }
+    };
+
+    // 校验按键是否超时，超时标识组合键失败
+    var check = function (__keycode) {
+
+        // 不支持两个键的间隔超时机制情况
+        if (!isSupportTimeout) {
+            isTimeout = false;
+            buffer(__keycode);
+        } else { // 支持超时机制
+            checkWithTimeout();
+        }
+
+    };
+
+    return function (__keycode) {
+
+        //记下此次按键的时间
+        lastKeyTime = currKeyTime;
+
+        currKeyTime = new Date().getTime();
+
+        if (!lastKeyTime || lastKeyTime == "") {
+            lastKeyTime = currKeyTime;
+        }
+
+        check(__keycode);
+    }
+}
+
 
 
 ////////////////////////////////////////////////////////////////
