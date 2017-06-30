@@ -414,5 +414,56 @@ function pcPX2Num( pxString ) {
     return parseInt( pxString.replace( /px/ ), 10 );
 }
 
+/**
+ * 将数组转换成对象
+ *  比如：[1,2,3] 
+ *  1. 如果 keys 没有 => {1:1, 2:2, 3:3}
+ *  2. 如果 keys 不全['a', 'b'] => {3:3, 'a':1, 'b':2}
+ *  3. 如果 keys 全['a', 'b', 'c'] => {'a':1, 'b':2, 'c':3}
+ * @param  {Array}
+ * @param  {Array}
+ * @return {Object}
+ */
+function array2Obj(array, keys) {
+
+    if (!array || this.type(array) !== 'array' || array.length <= 0) {
+        return {};
+    }
+
+    const obj = {};
+
+    if (array.map) {
+        array.map((v, i) => {
+            if (keys && keys[i]) {
+                obj[keys[i]] = v;
+            } else {
+                obj[v] = v;
+            }
+        });
+    } else {
+        for (let i = 0; i < array.length; i++) {
+            if (keys && keys[i]) {
+                obj[keys[i]] = v;
+            } else {
+                obj[v] = v;
+            }
+        }
+    }
+
+    return obj;
+}
+
+// 数据类型
+function type(obj) {
+    return (
+        Object.prototype.toString
+            .call(obj)
+            .split(' ')[1]
+            .replace(/]/, '')
+            .toLowerCase()
+    );
+}
+
+
 
 ////////////////////////////////// myApis.js end ///////////////////////////////////////////
