@@ -1,10 +1,55 @@
+<style scoped>
+#mp-debug {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 40%;
+    height: 100%;
+    background-color: black;
+    color: white;
+    z-index: 10000000;
+    word-wrap: break-word;
+    opacity: 0.5;
+    overflow: scroll;
+}
 
-<style lang="stylus" rel="text/stylus">
-@import './mp.styl'
+.info {
+	background-color: #fff;
+	opacity: 0.6;
+	width: 400px;
+	height: 200px;
+	font-size: 18px;
+	color: red;
+}
+
+.info div {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+}
+
+.time {
+	width: 100%;
+	height: 100%;
+	line-height: 30px;
+	text-align: left;
+}
+
+.tips {
+	position: absolute;
+	right: 3px;
+	bottom: 2px;
+	width: 100%;
+	text-align: right;
+	font-size: 12px;
+	color: red;
+	background: transparent;
+}
 
 </style>
+
 <template>
-	<div class="mp-wrapper">
+	<div>
 		<div class="info">
 			<div class="time">
 				当前时间/总时长：<span class="currTime">{{currTime}}</span>&nbsp;/&nbsp;<span class="totalTime">{{totalTime}}</span>	
@@ -16,7 +61,7 @@
 			<div class="volume">当前音量：{{currVolume}}<span v-if="isMute">&nbsp;&nbsp;&nbsp;&nbsp;静音</span></div>
 			<div class="tips" v-if="isTipShow">{{tips}}</div>
 		</div>
-		<div class="mp-debug" id="mp-debug" v-if="isDebug"></div>
+		<div id="mp-debug" v-if="isDebug"></div>
 	</div>
 </template>
 
