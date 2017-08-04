@@ -1,0 +1,21 @@
+html, body {
+    background-color: transparent;
+    background: url('../../assets/yiyeshu.jpeg');
+    background-size: cover;
+}
+
+.box {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    background-color: green;
+    border-radius: 10px;
+
+    transition: width 2s;
+}
+
+.my-box {
+    width: 200px;
+    height: 200px;
+    background-color: black;
+}
