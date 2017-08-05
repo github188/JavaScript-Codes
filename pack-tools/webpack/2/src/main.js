@@ -1,5 +1,8 @@
 import Name from './name.js';
 import './styles/main.css';
+import './styles/a.scss';
+import './styles/a.styl';
+import './styles/a.less';
 import '../assets/simon-test.csv';
 import Data from '../assets/data.json';
 import XmlData from '../assets/data.xml';
@@ -7,6 +10,7 @@ import _ from 'lodash';
 
 import Vue from 'Vue';
 import App from './components/App.vue';
+new Vue(App).$mount('#app');
 
 const app = () => {
     console.log('js name: ' + Name.app + ', vendor name: ' + Name.vendor);

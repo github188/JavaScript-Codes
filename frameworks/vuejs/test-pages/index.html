@@ -7,7 +7,7 @@
 <body>
 
 	<div id="app">
-		<h1>{{ message }}</h1>
+		<h1 @keypress.37.39="handler(msg, $event)" @keydown.37.39="handler(msg, $event)">{{ message }}</h1>
 
 		<span :title="titleMessage">这里是你看到的信息，请将鼠标放置在上面一会</span>
 
@@ -15,7 +15,7 @@
 
 		<ul><li v-for="name in names">{{ name }}</li></ul>
 
-		<h2 v-on:click="reverseMsg">反转文字</h2>
+		<h2 v-on:click="reverseMsg" @keypress.37.39="handler(msg, $event)" @keydown.37.39="handler(msg, $event)">反转文字</h2>
 
 		<p>我的名字叫：{{myName}}</p>
 
@@ -29,7 +29,7 @@
 			v-bind:people="p" v-bind:age="30"></people-list></ol>
 	</div>
 
-	<script src="../../fw-libs/vue-2.0.js"></script>
+	<script src="../../../fw-libs/vue-2.0.js"></script>
 	<script>
 		
 		Vue.component('people-list', {
@@ -61,6 +61,9 @@
 			methods: {
 				reverseMsg: function () {
 					this.message = this.message.split('').reverse().join('');
+				},
+				handler(msg, e) {
+					console.log(e);
 				}
 			}
 

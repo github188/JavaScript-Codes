@@ -1,0 +1,34 @@
+
+$blackColor: #000;
+$w100: 100px;
+
+.a-color {
+    background-color: $blackColor;
+}
+
+.a-width {
+    width: $w100;
+}
+
+.content {
+    h1 {
+        color: #fff;
+    }
+    span {
+        width: $w100;
+        &.head {
+            font-size: 22px;
+        }
+    }
+}
+
+.scss {
+    background-color: $blackColor;
+    h1 {
+        color: white;
+        font-size: 22px;
+    }
+    span {
+        color: red;
+    }
+}

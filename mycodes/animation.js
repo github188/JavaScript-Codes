@@ -27,9 +27,10 @@
 
 	3. 淡入淡出
 	function inout() {
-		fadeFn(el, 'in', 0, 0, function (el, v) {
+		fadeFn(el, 'in', 20, 0.2, function (el, v) {
+			console.log('inout - ' + v);
 			el.style.border = '10px solid rgba(6, 127, 210, ' + v + ')';
-		}, true)();
+		}, true)(20, 100, 1);
 	}
 
 	4. 目标函数
@@ -65,9 +66,16 @@ function fadeFn(el, inout, refV, opacity, handler, circle) {
  			}
 
  			if (circle) {
- 				value = refV = Math.abs(refV - 100);
- 				opacity = Math.abs(opacity - 1);
- 				inout = inout === 'in' ? 'out' : 'in';
+ 				// value = refV = Math.abs(refV - 100);
+ 				// opacity = Math.abs(opacity - 1);
+ 				// inout = inout === 'in' ? 'out' : 'in';
+ 				if (inout === 'in') {
+ 					inout = 'out';
+ 					value = end;
+ 				} else {
+ 					inout = 'in';
+ 					value = start;
+ 				}
  				fade(start, end, stepV);
  			} else {
  				clearTimeout(timer);
